@@ -35,7 +35,7 @@
 
 // variables.less
 $theme-primary: white;
-$theme-dark: #444;
+$theme-dark: #222;
 
 // Import partials from `sass_dir` (defaults to `_sass`)
 @import
@@ -53,6 +53,16 @@ body.post {
 
 .navbar-default {
     background-color: black;
+}
+
+.header-content-inner {
+    img {
+        width: 50px;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 .post-container {
@@ -89,7 +99,4 @@ body.post {
         margin-left: auto;
         margin-right: auto;
     }
-}
-
-.post {
 }
