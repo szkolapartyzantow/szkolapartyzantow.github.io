@@ -34,7 +34,7 @@
 // }
 
 // variables.less
-$theme-primary: #F05F40;
+$theme-primary: white;
 $theme-dark: #222;
 
 // Import partials from `sass_dir` (defaults to `_sass`)
@@ -42,3 +42,11 @@ $theme-dark: #222;
         "mixins",
         "base"
 ;
+
+body {
+    background-color: black;
+}
+
+.navbar-default {
+    background-color: black;
+}
