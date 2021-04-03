@@ -47,6 +47,46 @@ body {
     background-color: black;
 }
 
+body.post {
+    background-color: white;
+}
+
 .navbar-default {
     background-color: black;
+}
+
+.post-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 10px 740px 10px 1fr 1fr;
+    align-items: center;
+    margin-top: 1%;
+}
+
+.post-container > * {
+    grid-column: 4;
+}
+
+.post-container > image-full {
+    grid-column: 1 / -1;
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.post-container > image-mid {
+    grid-column: 2 / -2;
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.post {
 }
