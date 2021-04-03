@@ -138,9 +138,9 @@ aside {
             }
             .nav > li > a,
             .nav > li > a:focus {
-                color: $theme-dark;
+                color: $theme-primary;
                 &:hover {
-                    color: $theme-primary;
+                    color: $theme-dark;
                 }
             }
         }
