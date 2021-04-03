@@ -57,7 +57,10 @@ body.post {
 
 .post-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 10px minmax(240px, 740px) 10px 1fr 1fr;
+    grid-template-columns: 1fr 1fr 10px 90% 10px 1fr 1fr;
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr 10px 60% 10px 1fr 1fr;
+    }
     align-items: center;
     margin-top: 1%;
 }
