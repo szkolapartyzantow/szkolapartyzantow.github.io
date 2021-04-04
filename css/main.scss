@@ -99,6 +99,10 @@ p.footer_text {
     font-size: 18px;
 }
 
+#mainNav {
+    @include transition-all;
+}
+
 .navbar-fixed-bottom {
     padding-top: 5px;
 }
