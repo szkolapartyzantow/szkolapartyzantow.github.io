@@ -97,18 +97,8 @@ p.footer-text {
     text-align: center;
     vertical-align: middle;
     font-size: 12px;
+    margin-bottom: 0px;
 }
-
-#mainNav {
-    @include transition-all;
-}
-
-// .navbar {
-//     min-height: 15px;
-//     @media (min-width: 768px) {
-//         min-height: 15px
-//     }
-// }
 
 .navbar-fixed-bottom, .navbar-static-bottom {
     padding-top: 5px;
@@ -116,7 +106,7 @@ p.footer-text {
     min-height: 25px;
     height: 25px;
     @media (min-width: 768px) {
-        height: 25px
+        height: 25px;
     }
 }
 
