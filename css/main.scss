@@ -91,24 +91,33 @@ header {
     }
 }
 
-p.footer_text {
+p.footer-text {
     color: $theme-primary;
     @include sans-serif-font;
     text-align: center;
     vertical-align: middle;
-    font-size: 18px;
+    font-size: 12px;
 }
 
 #mainNav {
     @include transition-all;
 }
 
-.navbar-fixed-bottom {
-    padding-top: 5px;
-}
+// .navbar {
+//     min-height: 15px;
+//     @media (min-width: 768px) {
+//         min-height: 15px
+//     }
+// }
 
-.navbar-static-bottom {
+.navbar-fixed-bottom, .navbar-static-bottom {
     padding-top: 5px;
+    line-height: 25px;
+    min-height: 25px;
+    height: 25px;
+    @media (min-width: 768px) {
+        height: 25px
+    }
 }
 
 .header-content-inner {
