@@ -79,7 +79,14 @@ header {
 }
 
 .btn-xl {
-    padding: 15px 15px;
+    padding: 15px 10px;
+}
+
+header {
+    background-image: url('../img/header_vertical.png');
+    @media (min-width: 768px) {
+    background-image: url('../img/header.jpg');
+    }
 }
 
 .header-content-inner {
