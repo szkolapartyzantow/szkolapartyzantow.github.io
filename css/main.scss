@@ -44,11 +44,13 @@ $theme-dark: #222;
 ;
 
 body {
+    color: $theme-primary;
     background-color: black;
 }
 
 body.post {
     background-color: white;
+    color: black;
 }
 
 .navbar-default {
@@ -98,6 +100,10 @@ p.footer_text {
 }
 
 .navbar-fixed-bottom {
+    padding-top: 5px;
+}
+
+.navbar-static-bottom {
     padding-top: 5px;
 }
 
