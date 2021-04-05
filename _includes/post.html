@@ -1,3 +1,7 @@
 <div class="post-container">
-{{ content }}
+    <{{ page.image-type }}>
+        <img src={{ page.image-src }}>
+    </{{ page.image-type }}>
+    <h1>{{ page.title | escape }}</h1>
+    {{ content }}
 </div>
