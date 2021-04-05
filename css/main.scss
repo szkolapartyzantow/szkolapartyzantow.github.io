@@ -149,6 +149,22 @@ p.footer-text {
     align-items: center;
     margin-top: 50px;
     margin-bottom: 50px;
+
+    a {
+        color: black;
+        text-decoration: underline;
+        font-size: 16px;
+        @media (min-width: 768px) {
+            font-size: 18px;
+        }
+    }
+
+    ul, ol, li, ul li, ol li {
+        font-size: 16px;
+        @media (min-width: 768px) {
+            font-size: 18px;
+        }
+    }
 }
 
 .post-container > * {
@@ -175,4 +191,39 @@ p.footer-text {
         margin-left: auto;
         margin-right: auto;
     }
+}
+
+img.image-inline-small {
+    width: 80%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#toc-container {
+    background: #f9f9f9 none repeat scroll 0 0;
+    border: 1px solid #aaa;
+    display: table;
+    font-size: 95%;
+    margin-bottom: 1em;
+    padding: 20px;
+    width: auto;
+    a {
+        color: black;
+    }
+}
+
+.toc-title {
+    font-weight: 700;
+    text-align: center;
+}
+
+ul.toc-list {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#toc-container li, #toc-container ul, #toc-container ul li{
+    list-style: outside none none !important;
 }
