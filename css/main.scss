@@ -88,9 +88,9 @@ header {
 }
 
 header {
-    background-image: url('../img/header_vertical.png');
+    background-image: url('/img/header_vertical.png');
     @media (min-width: 768px) {
-        background-image: url('../img/header.jpg');
+        background-image: url('/img/header.jpg');
     }
 }
 
