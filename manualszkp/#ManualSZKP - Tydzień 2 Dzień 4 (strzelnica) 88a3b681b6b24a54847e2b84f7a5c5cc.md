@@ -1,0 +1,94 @@
+# #ManualSZKP - Tydzień 2/Dzień 4 (strzelnica)
+
+Witamy w kolejnym dniu treningowym z cyklu #ManualSZKP!  Kolejna sobota, koniec tygodnia - czas na strzelanie.
+
+PAMIĘTAJ! KONTROLUJ WARUNKI BEZPIECZEŃSTWA PRZED PRZYSTĄPIENIEM DO STRZELANIA I NIEUSTANNIE W JEGO TRAKCIE!
+
+1. Broń traktuj jak załadowaną do momentu sprawdzenia.
+2. Nie kieruj lufy w kierunku niczego, czego nie chcesz zniszczyć.
+3. Kontroluj otoczenie celu przed oddaniem strzału.
+4. Palec na język spustowy przenieś dopiero, gdy chcesz oddać strzał.
+
+ĆWICZENIA
+
+#1 ROZGRZEWKA NA SUCHO - PRACA NA SPUŚCIE
+
+Na początek ćwiczenie z zeszłego tygodnia, poświęćcie na nie kilkanaście sekund:
+
+1. Stań tak, abyś stojąc w postawie miał lufę pistoletu 2 cm przed czymś jasnym - białą kartką, ścianą etc.
+2. Odciągnij zamek aby naciągnąć iglicę.
+3. Wyceluj broń w jasne tło (nie zgrywaj przyrządów na niczym konkretnym, chodzi o to, aby były kontrastowo widoczne na jasnym tle).
+4. Oddaj suchy strzał. Obserwuj przyrządy czy nie widzisz drgań/ruchu muszki.
+5. Powtórz ćwiczenie kilkanaście razy dbając o to, aby zgrane przyrządy w momencie oddawania strzału były nieruchomo.
+
+Po rozgrzewce możemy przejść do właściwego treningu.
+
+#2 ROZGRZEWKA NA SUCHO - DOBYCIE I PREZENTACJA BRONI
+
+Zanim zaczniecie strzelać, poświęćcie około 5 minut na dobycie i prezentację broni na sucho. Najpierw z postawy niskiej/wysokiej gotowości, potem z ręką na kaburze, a na koniec w pełnym cyklu - dokładnie tak, jak robiliście to na sucho w ciągu tygodnia.
+
+#3 DOBYCIE I PREZENTACJA BRONI - POSTAWA NISKIEJ/WYSOKIEJ GOTOWOŚCI
+
+Amunicja: 15 sztuk/jeden magazynek
+
+Tarcza: Koło 9 cm - [https://bit.ly/2F8uTAy](https://bit.ly/2F8uTAy)
+
+Odległość: 5 metrów
+
+1. Ustaw na timerze losowy czas startu i par time o sekundę dłuższy niż ten, który osiągnąłeś w poniedziałek.
+2. Załaduj broń. Stań w postawie niskiej/wysokiej gotowości.
+3. Włącz timer.
+4. Na dźwięk timera zacznij przyjmować postawę do oddania strzału - powinieneś to robić tak długo, ile ustawiłeś czasu na timerze, nie spiesz się.
+5. Powinieneś zakończyć zgrywanie przyrządów na celu tuż przed drugim dźwiękiem timera.
+6. Na drugi dźwięk timera oddaj strzał.
+7.  Zgraj ponownie przyrządy na celu i zapracuj na resecie.
+8. Jeśli miałeś jakieś problemy z wykonaniem ćwiczenia, powtórz je bez zmiany czasu na timerze.
+9. Jeśli nie trafiłeś - powtórz ćwiczenie bez zmiany czasu na timerze.
+10. Jeśli wszystko poszło dobrze, zmniejsz czas o 0.1 i powtórz ćwiczenie.
+11. Zapisz najniższy czas do jakiego udało ci się zejść i wykonać ćwiczenie poprawnie, kończąc trafieniem - porównaj z czasem który osiągnąleś "na sucho".
+
+#4 DOBYCIE I PREZENTACJA BRONI - RĘKA NA KABURZE
+
+Amunicja: 15 sztuk/jeden magazynek
+
+Tarcza: Koło 9 cm - [https://bit.ly/2F8uTAy](https://bit.ly/2F8uTAy)
+
+Odległość: 5 metrów
+
+1. Ustaw na timerze losowy czas startu i par time o sekundę dłuższy niż ten, który osiągnąłeś w środę.
+2. Załaduj broń. Schowaj ją do kabury. Stań w postawie, z jedną ręką na broni, a drugą na wysokości klatki piersiowej.
+3. Włącz timer.
+4. Na dźwięk timera zacznij przyjmować postawę do oddania strzału - powinieneś to robić tak długo, ile ustawiłeś czasu na timerze, nie spiesz się.
+5. Powinieneś zakończyć zgrywanie przyrządów na celu tuż przed drugim dźwiękiem timera.
+6. Na drugi dźwięk timera oddaj strzał.
+7.  Zgraj ponownie przyrządy na celu i zapracuj na resecie.
+8. Jeśli miałeś jakieś problemy z wykonaniem ćwiczenia, powtórz je bez zmiany czasu na timerze.
+9. Jeśli nie trafiłeś - powtórz ćwiczenie bez zmiany czasu na timerze.
+10. Jeśli wszystko poszło dobrze, zmniejsz czas o 0.1 i powtórz ćwiczenie.
+11. Zapisz najniższy czas do jakiego udało ci się zejść i wykonać ćwiczenie poprawnie, kończąc trafieniem - porównaj z czasem który osiągnąłeś "na sucho".
+
+#5 DOBYCIE I PREZENTACJA BRONI - RĘKA NA KABURZE
+
+Amunicja: 2 magazynki po 10 sztuk
+
+Tarcza: Koło 9 cm - [https://bit.ly/2F8uTAy](https://bit.ly/2F8uTAy)
+
+Odległość: 5 metrów
+
+1. Ustaw na timerze losowy czas startu i par time o sekundę dłuższy niż ten, który osiągnąłeś w piątek.
+2. Załaduj broń. Schowaj ją do kabury. Stań w luźnej postawie.
+3. Włącz timer.
+4. Na dźwięk timera zacznij przyjmować postawę do oddania strzału - powinieneś to robić tak długo, ile ustawiłeś czasu na timerze, nie spiesz się.
+5. Powinieneś zakończyć zgrywanie przyrządów na celu tuż przed drugim dźwiękiem timera.
+6. Na drugi dźwięk timera oddaj strzał.
+7.  Zgraj ponownie przyrządy na celu i zapracuj na resecie.
+8. Jeśli miałeś jakieś problemy z wykonaniem ćwiczenia, powtórz je bez zmiany czasu na timerze.
+9. Jeśli nie trafiłeś - powtórz ćwiczenie bez zmiany czasu na timerze.
+10. Jeśli wszystko poszło dobrze, zmniejsz czas o 0.1 i powtórz ćwiczenie.
+11. Zapisz najniższy czas do jakiego udało ci się zejść i wykonać ćwiczenie poprawnie, kończąc trafieniem - porównaj z czasem który osiągnąłeś "na sucho".
+
+Standardowo - czasy które osiągnęliście w tych ćwiczeniach to wasz "parametr". Ćwicząc na sucho i regularnie trenując na strzelnicy jesteście w stanie go zmniejszać. Istotne jest jednak, aby ćwiczyć z timerem, a nie po prostu stać i strzelać bez przykładania żadnej miary do naszego strzelania - w ten sposób nie będziecie się rozwijać.
+
+Jeśli macie jakieś pytania lub wątpliwości - zachęcamy do pisania komentarzy lub wysyłania wiadomości prywatnych. Jeśli ćwiczycie razem z nami - dajcie nam znać i tagujcie posty w social mediach tagiem #ManualSZKP. Możecie też nas oznaczać w waszych relacjach na FB/IG.
+
+Miłego treningu i do zobaczenia w poniedziałek - przyszły tydzień poświęcimy na przenoszenie ognia między celami.

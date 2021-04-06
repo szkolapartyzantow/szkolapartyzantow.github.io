@@ -1,0 +1,93 @@
+# #ManualSZKP - Tydzień 1/Dzień 4 (strzelnica)
+
+Witamy w kolejnym dniu treningowym z cyklu #ManualSZKP!  Dzisiaj sobota, a więc czas na sprawdzenie tego co ćwiczyliśmy cały tydzień -  na strzelnicy. UWAGA: jedno z ćwiczeń może wymagać załadowania magazynków zanim pojedziemy na strzelnicę, przeczytaj cały post zanim wybierzesz się na oś!
+
+Bardzo ważnym aspektem treningowym jest weryfikacja tego co trenujemy na sucho - na osi. Strzelanie pozwoli nam zweryfikować, czy na pewno wszystko co trenowaliśmy na sucho działa. Obnaża niedoskonałości chwytu, postawy, celowania etc. Dlatego bardzo ważne jest, aby często weryfikować swój trening manuala w trakcie rzeczywistego strzelania - tym częściej im bardziej początkujący jesteśmy.
+
+Treningi w naszym cyklu będziemy planować tak, aby mieściły się w maksymalnie 50 sztukach amunicji i 30 minutach. Po pierwsze po to, aby nie drenować waszego budżetu, a po drugie aby pokazać, że wartościowy trening nie musi być czaso/amunicjożerny.
+
+PAMIĘTAJ! KONTROLUJ WARUNKI BEZPIECZEŃSTWA PRZED PRZYSTĄPIENIEM DO STRZELANIA I NIEUSTANNIE W JEGO TRAKCIE!
+
+1. Broń traktuj jak załadowaną do momentu sprawdzenia.
+2. Nie kieruj lufy w kierunku niczego, czego nie chcesz zniszczyć.
+3. Kontroluj otoczenie celu przed oddaniem strzału.
+4. Palec na język spustowy przenieś dopiero, gdy chcesz oddać strzał.
+
+ĆWICZENIA
+
+#1 ROZGRZEWKA NA SUCHO
+
+Bardzo ważny element treningu. Zanim przystąpimy do strzelania warto się rozgrzać krótkim ćwiczeniem na sucho, aby pierwsze strzały nie były dla naszego ciała "zaskoczeniem". Ponieważ dzisiaj wszystkie strzały będziemy oddawać na celność, z pozycji statycznej, proponujemy następującą rozgrzewkę:
+
+1. Stań tak, abyś stojąc w postawie miał lufę pistoletu 2 cm przed czymś jasnym - białą kartką, ścianą etc.
+2. Odciągnij zamek aby naciągnąć iglicę.
+3. Wyceluj broń w jasne tło (nie zgrywaj przyrządów na niczym konkretnym, chodzi o to, aby były kontrastowo widoczne na jasnym tle).
+4. Oddaj suchy strzał. Obserwuj przyrządy czy nie widzisz drgań/ruchu muszki.
+5. Powtórz ćwiczenie kilkanaście razy dbając o to, aby zgrane przyrządy w momencie oddawania strzału były nieruchomo.
+
+Po rozgrzewce możemy przejść do właściwego treningu.
+
+#2 STRZELANIE STATYCZNE NA 25 METRÓW
+
+Amunicja: 1 magazynek - 15 sztuk
+
+Tarcza: Bullseye - [https://bit.ly/2QXvM1t](https://bit.ly/2QXvM1t)
+
+Odległość: 25 metrów
+
+To ćwiczenie jest jednocześnie sprawdzianem, który powinno się robić raz na jakiś czas i zapisywać jego wyniki. Pozwoli nam to sprawdzić nasz "parametr" w danym ćwiczeniu, porównywać go, i obserwować, czy nasz trening dąży w dobrym kierunku (parametr poprawia się, lub nie zmienia jeśli doszliśmy do zadowalającego poziomu) czy też nie (parametr się pogarsza).
+
+1. Załaduj broń.
+2. Oddaj 15 strzałów do tarczy. Każdy strzał oddawaj spokojnie, we własnym tempie. Możesz odpoczywać między strzałami opierając broń o stolik (pamiętaj o zasadach bezpieczeństwa).
+3. Na ćwiczenie możesz poświęcić nawet 5 minut - to bardzo dużo czasu (20 sekund na każdy strzał).
+4. Pamiętaj każdorazowo o kontroli swojej postawy i chwytu.
+5. Jeśli nie trafiłeś - przeanalizuj swoje postępowanie od początku do końca i zastanów się, dlaczego tak się stało (postawa, chwyt, zgranie przyrządów, praca na języku spustowym).
+6. Po zakończeniu strzelania zapisz swój wynik.
+
+#3 "NIESPODZIANKA"
+
+Amunicja: 15 sztuk (sposób ładowania magazynków w opisie ćwiczenia)
+
+Tarcza: Koło 9 cm - [https://bit.ly/2F8uTAy](https://bit.ly/2F8uTAy)
+
+Odległość: 5 metrów
+
+To ćwiczenie najlepiej jest wykonywać z partnerem, ale można też przejść je samemu, o ile mamy kilka zbijaków.
+
+1. Jeśli ćwiczenie będziesz wykonywał samodzielnie, załaduj 2 magazynki w taki sposób, aby 15 sztuk amunicji wymieszać ze zbijakami. Zrób to najlepiej dzień wcześniej, aby nie pamiętać ułożenia, ewentualnie poproś kogoś z domowników, aby zrobił to za ciebie.
+2. Jeśli ćwiczenie wykonujesz z partnerem, powinien on stać za tobą i podawać ci załadowaną broń. Ładować powinien albo jeden nabój, albo nic.
+3. Załadowaną samodzielnie lub przez partnera broń wyceluj w tarczę i oddaj strzał. Jeśli trafił ci się zbijak lub brak naboju w komorze nabojowej, to oczywiście strzał nie padnie. Musisz wtedy zwrócić uwagę na to, czy przyrządy poruszyły się, czy też były nieruchomo, cały czas w celu.
+4. Jeśli przyrządy były nieruchome, wszystko jest w porządku.
+5. Jeśli przyrządy "zanurkowały" w dół, masz problem z przedwczesnym, podświadomym kompensowaniem odrzutu. Jeśli zdarza ci się to regularnie - sposób poradzenia sobie z tym opisujemy pod ćwiczeniem.
+6. Jeśli nie trafiłeś - przeanalizuj swoje postępowanie od początku do końca i zastanów się, dlaczego tak się stało (postawa, chwyt, zgranie przyrządów, praca na języku spustowym).
+7. Ćwiczenie kontynuuj do skończenia się amunicji.
+
+Jeśli masz problem z "nurkowaniem" przyrządów, najepszym rozwiązaniem jest dużo treningu na sucho. Ćwiczenia takie jak dzisiejsze ćwiczenie rozgrzewkowe, czy też po prostu oddawanie bardzo wielu suchych strzałów do małego celu. Po kilku dniach systematycznego ćwiczenia problemy powinny zniknąć.
+
+#4 POJEDYNCZY STRZAŁ Z TIMEREM
+
+Amunicja: 2 magazynki po 10 sztuk
+
+Tarcza: Koło 9 cm - [https://bit.ly/2F8uTAy](https://bit.ly/2F8uTAy)
+
+Odległość: 5 metrów
+
+To ćwiczenie identyczne jak to, które robiliście w piątek, ale tym razem z faktycznym strzelaniem.
+
+1. Ustaw w timerze losowy czas pierwszego dźwięku. Wyłącz par time.
+2. Załaduj broń.
+3. Włącz timer.
+4. Przyjmij postawę strzelecką. Zgraj przyrządy na celu. Wybierz luz na języku spustowym.
+5. Na dźwięk timera oddaj strzał.
+6. Zgraj ponownie przyrządy na celu.
+7. Zwolnij język spustowy do "kliknięcia" resetu i ściągnij go tak, aby ponownie wybrać cały luz i dojść do "ściany".
+8. Jeśli nie trafiłeś - przeanalizuj swoje postępowanie od początku do końca i zastanów się, dlaczego tak się stało (postawa, chwyt, zgranie przyrządów, praca na języku spustowym)
+9. Zrestartuj timer, wykonaj ćwiczenie do wyczerpania amunicji w magazynku.
+
+Po wyczerpaniu amunicji w pierwszym magazynku odpocznij 2-3 minuty i wykonaj ćwiczenie ponownie, ładując drugi magazynek. Pierwszy magazynek strzelaj do górnego, drugi do dolnego kółka.
+
+Aby uznać ćwiczenie za "zaliczone powinieneś mieć minimum 16/20 trafień (80%).
+
+Jeśli macie jakieś pytania lub wątpliwości - zachęcamy do pisania komentarzy lub wysyłania wiadomości prywatnych. Jeśli ćwiczycie razem z nami - dajcie nam znać i tagujcie posty w social mediach tagiem #ManualSZKP. Możecie też nas oznaczać w waszych relacjach na FB/IG.
+
+Miłego treningu i do zobaczenia w poniedziałek - przyszły tydzień poświęcimy na dobycie broni z kabury.

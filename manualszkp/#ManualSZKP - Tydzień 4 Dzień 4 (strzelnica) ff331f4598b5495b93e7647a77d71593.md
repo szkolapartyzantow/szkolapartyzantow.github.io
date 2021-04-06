@@ -1,0 +1,58 @@
+# #ManualSZKP - Tydzień 4/Dzień 4 (strzelnica)
+
+Witamy w kolejnym dniu treningowym z cyklu #ManualSZKP!  Kolejna sobota, koniec tygodnia - czas na strzelanie.
+
+PAMIĘTAJ! KONTROLUJ WARUNKI BEZPIECZEŃSTWA PRZED PRZYSTĄPIENIEM DO STRZELANIA I NIEUSTANNIE W JEGO TRAKCIE!
+
+1. Broń traktuj jak załadowaną do momentu sprawdzenia.
+2. Nie kieruj lufy w kierunku niczego, czego nie chcesz zniszczyć.
+3. Kontroluj otoczenie celu przed oddaniem strzału.
+4. Palec na język spustowy przenieś dopiero, gdy chcesz oddać strzał.
+
+ĆWICZENIA
+
+#1 ROZGRZEWKA NA SUCHO - PRACA NA SPUŚCIE
+
+Na początek standardowe ćwiczenie, poświęćcie na nie kilkanaście sekund:
+
+1. Stań tak, abyś stojąc w postawie miał lufę pistoletu 2 cm przed czymś jasnym - białą kartką, ścianą etc.
+2. Odciągnij zamek aby naciągnąć iglicę.
+3. Wyceluj broń w jasne tło (nie zgrywaj przyrządów na niczym konkretnym, chodzi o to, aby były kontrastowo widoczne na jasnym tle).
+4. Oddaj suchy strzał. Obserwuj przyrządy czy nie widzisz drgań/ruchu muszki.
+5. Powtórz ćwiczenie kilkanaście razy dbając o to, aby zgrane przyrządy w momencie oddawania strzału były nieruchomo.
+
+Po rozgrzewce możemy przejść do właściwego treningu.
+
+#2 USUWANIE AWARII - ZACIĘCIE
+
+Amunicja: 2 magazynki x10 sztuk
+
+Tarcza: Koło 9 cm - [https://bit.ly/2F8uTAy](https://bit.ly/2F8uTAy)
+
+Odległość: 5 metrów
+
+1. Załaduj magazynki losowo ze zbijakami. Jeśli masz dużo zbijaków - na 10 sztuk amunicji powinny przypadać 3. Jeśli masz mniej, ładuj mniej sztuk do magazynka, tak, aby na 5 sztuk przypadał jeden zbijak - a później doładuj ponownie.
+2. Przygotuj broń do ćwiczenia - załaduj ją i wykonaj press check. Schowaj broń do kabury.
+3. Wykonaj dobycie i prezentację broni. Oddaj strzał do celu.
+4. Jeśli trafiłeś na zbijak, oddaj strzał po usunięciu awarii.
+5. Schowaj broń do kabury. Powtórz ćwiczenie od punktu 3. do momentu skończenia amunicji.
+
+#2 USUWANIE AWARII - SZYBKA i TAKTYCZNA ZMIANA MAGAZYNKA
+
+Amunicja: 2 magazynki po 15 sztuk + jeden pusty
+
+Tarcza: Koło 9 cm - [https://bit.ly/2F8uTAy](https://bit.ly/2F8uTAy)
+
+Odległość: 5 metrów
+
+1. Przygotuj broń - załaduj pełnym magazynkiem i wykonaj press check.
+2. Wykonaj taktyczną zmianę magazynka, zmieniając pełen magazynek na pusty.
+3. Schowaj broń do kabury.
+4. Wykonaj dobycie i prezentację broni. Oddaj strzał do celu.
+5. Wykonaj szybką zmianę magazynka. Oddaj strzał do celu.
+6. Rozładuj broń. Powtórz ćwiczenie od punkty 1.
+7. Kontynuuj do wyczerpania amunicji.
+
+Jeśli macie jakieś pytania lub wątpliwości - zachęcamy do pisania komentarzy lub wysyłania wiadomości prywatnych. Jeśli ćwiczycie razem z nami - dajcie nam znać i tagujcie posty w social mediach tagiem #ManualSZKP. Możecie też nas oznaczać w waszych relacjach na FB/IG.
+
+To był ostatni post z cyklu #ManualSZKP. Mamy nadzieję, że czegoś się razem z nami nauczyliście i zobaczyliście, że strzelectwo można również trenować w domu i daje to wymierne wyniki na tarczy, gdy przychodzi do strzelania. Do zobaczenia w przyszłości w kolejnych postach.

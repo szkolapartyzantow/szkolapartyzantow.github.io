@@ -1,0 +1,45 @@
+# #ManualSZKP - Tydzień 2 / Dzień 3
+
+Witamy w kolejnym dniu treningowym z cyklu #ManualSZKP! Dzisiaj będziemy dalej pracować nad dobyciem broni z kabury i prezentacją.
+
+To ostatni trening na sucho w tym tygodniu, połączymy więc wszystko z całość i przećwiczymy pełny ciąg kaburowy. Zaczynać będziemy z rękami luźno wzdłuż ciała, dojdą nam więc dwa elementy - przeniesienie dłoni na pistolet w kaburze i podniesienie drugiej dłoni do klatki piersiowej. Nad tym drugim nie będziemy się skupiać, jedyne o czym musicie pamiętać, to że ręka wspomagająca do klatkie piersiowej idzie natychmiast gdy zaczynacie dobywać broni, tak więc powinna się znaleźć na pozycji w momencie gdy drugi dłoń jeszcze nie wyciągnęła broni z kabury.
+
+Co do reki strzelającej, pamiętajcie o tym, że po dobyciu broni nie będziecie mieć możliwości poprawić chwytu, dlatego tak jak w środę - dłoń musi być ułożona idealnie na chwycie. Zgodnie z zasadą, że przyspieszamy gdy możemy, a zwalniamy gdy musimy - przenieść rękę na pistolet możecie najszybciej jak się da, ale zwolnijcie w momencie układania dłoni na pistolecie, tak, aby nie zrobić tego niechlujnie, ponieważ ten błąd wpłynie później mniej lub bardziej na wasze strzelanie.
+
+Dobycie broni z kabury umiesczonej pod ubraniem to bardziej zaawansowane zagadnienie i zakładamy, że jeżeli ćwiczycie w takiej konfiguracji, to wiecie jak robić to poprawnie. Wspomnimy tylko, że ta sytuacja różni się jedynie tym, że przed dobyciem broni należy kaburę odsłonić spod ubrania - sposób wykonania tej czynności zależy od rodzaju ubrania, budowy kabury i jej ułożenia na ciele.
+
+W obu przypadkach pamiętajcie o tym, że cały ciąg kaburowy powinien odbywać się bez zbędnych ruchów i w naturalnej postawie - bez przechylania na boki/pochylania do przodu.
+
+A teraz czas na ćwiczenie.
+
+PAMIĘTAJ! PRZED PRZYSTĄPIENIEM DO TRENINGU NA SUCHO SPRAWDŹ WARUNKI BEZPIECZEŃSTWA!
+
+1. Nie przechowuj amunicji w pobliżu miejsca, w którym ćwiczysz.
+2. Upewnij się dokładnie, zanim przystąpisz do ćwiczeń, że twoja broń i wszystkie magazynki są rozładowane: sprawdź wszystkie magazynki w ładownicach, wyjmuj magazynek z broni i go sprawdź, sprawdź komorę nabojową.
+3. Upewnij się, że nie pomyliłeś zbijaków z amunicją!
+
+ĆWICZENIA
+
+Tarcza: Koło 3 cm - [https://bit.ly/2EV6Xku](https://bit.ly/2EV6Xku)
+
+Odległość: 3 metry
+
+Wyposażenie: pistolet, kabura, timer
+
+Ćwiczenie wykonuj według własnych preferencji - w pasie z oporządzeniem lub z kabury do skrytego noszenia broni. Możesz też wykonać ćwiczenie dwukrotnie, za każdym razem w innej konfiguracji sprzętowej. Jeśli twoja kabura posiada zabezpieczenie, upewnij się, że jest ono w pozycji zamkniętej/zablokowanej, tak abyś musiał je zwolnić zanim zaczniesz dobywać broni.
+
+1. Ustaw na timerze losowy czas startu i par time 3 sekundy.
+2. Odciągnij zamek pistoletu aby napiąć iglicę. Włóż pistolet do kabury. Stań w luźnej postawie, z rękami zwieszonymi luźno wzdłuż ciała. 
+3. Włącz timer.
+4. Na dźwięk timera zacznij przyjmować postawę do oddania strzału - powinieneś to robić tak długo, ile ustawiłeś czasu na timerze, czyli na początku bardzo powoli, przez 3 sekundy.
+5. Powinieneś zakończyć zgrywanie przyrządów na celu tuż przed drugim dźwiękiem timera.
+6. Na drugi dźwięk timera oddaj strzał.
+7. Trzymając ściągnięty język spustowy odciągnij zamek. Zagraj ponownie przyrządy na celu i zapracuj na resecie.
+8. Jeśli miałeś jakieś problemy z wykonaniem ćwiczenia, powtórz je bez zmiany czasu na timerze.
+9. Jeśli wszystko poszło dobrze, zmniejsz czas o 0.1 i powtórz ćwiczenie.
+10. Pamiętaj o kontroli postawy i chwytu za każdym razem, nie rób ćwiczenia na "odwal się".
+11. Zapisz najniższy czas do jakiego udało ci się zejść i wykonać ćwiczenie poprawnie.
+
+Jeśli macie jakieś pytania lub wątpliwości - zachęcamy do pisania komentarzy lub wysyłania wiadomości prywatnych. Jeśli ćwiczycie razem z nami - dajcie nam znać i tagujcie posty w social mediach tagiem #ManualSZKP. Możecie też nas oznaczać w waszych relacjach na FB/IG.
+
+Miłego treningu i do zobaczenia jutro - na strzelnicy.
