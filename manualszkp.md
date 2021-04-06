@@ -1,8 +1,9 @@
 ---
 layout: post
 title: ManualSZKP
+image-type: image-full
 ---
-<img class="image-inline-small" src="img/manualszkp/wprowadzenie.jpg">
+<img class="image-inline-small" src="/img/manualszkp/wprowadzenie.jpg">
 Manual, trening na sucho, dry fire training. Nieodłączna część treningu strzeleckiego, która powinna stanowić 70-80% czasu poświęconego na treningi z bronią palną. Przynajmniej w teorii, bo bardzo często spotykamy początkujących strzelców, którym nikt nigdy nie wytłumaczył i nie pokazał, że lwią część fundamentalnych umiejętności strzeleckich mogą wyćwiczyć w domu, całkowicie za darmo, nie wydając pieniędzy na amunicję i stanowisko.
 
 Czas spędzony na strzelnicy jest dużo bardziej wartościowy, jeśli nie będziemy go marnować na ćwiczenie czynności nie związanych lub związanych pośrednio ze strzelaniem - chwytu, postawy, usuwania awarii, przenoszenia punktu celowania między celami itp. Ponadto część problemów zdiagnozowanych w trakcie strzelania dużo efektywniej rozwiązuje się trenując na sucho (np. niewłaściwą pracę na spuście broni krótkiej prowadzącą do zrywania strzałów). Uprościć to można do stwierdzenia, które usłyszeliśmy w podcaście Center Mass - "Trening na strzelnicy powinien się skupiać jedynie na tej chwili, w której broń robi "BANG", pozostałe elementy strzelania możesz wyćwiczyć na sucho w domu".
