@@ -1,0 +1,47 @@
+# #ManualSZKP - Tydzień 2 / Dzień 1
+
+Witamy w kolejnym dniu, a zarazem kolejnym tygodniu treningowym z cyklu #ManualSZKP! Dzisiaj zaczniemy pracować nad dobyciem broni z kabury i prezentacją. Jednocześnie będziemy wykorzystywać wszystko co ćwiczyliśmy w zeszłym tygodniu.
+
+Dzisiaj jeszcze kabura nie będzie nam potrzebna, ponieważ cały proces dobycia i prezentacji podzielimy sobie na etapy, które będziemy ćwiczyć po kolei, systematycznie dodając kolejne trudności. Dzisiejszy dzień poświęcimy na oddanie strzału z postawy niskiej/wysokiej gotowości.
+
+Jeśli chodzi o samą postawę niskiej/wysokiej gotowości, to aby ją przyjąć stajemy w postawie opisanej w pierwszym poście naszego cyklu, ale:
+
+1. Broń trzymamy blisko ciała, mniej więcej w tym miejscu w którym wypadają wasze dłonie gdy klaszczecie.
+2. Palce ręki wspomagającej dotykają palców ręki strzelającej, ale nie zamykamy w pełni chwytu.
+3. Lufa pistoletu skierowana jest pod skosem w dół (niska gotowość) lub w górę (wysoka gotowość). 
+
+Dokonując prezentacji pistoletu z postawy niskiej/wysokiej gotowości pamiętaj o tym, że pistolet powinien wykonywać ruch w linii prostej, bez "podbierania od dołu" ani "wędkowania z góry" (patrz film). Zamykanie chwytu zaczynamy od palców, które są nieruchome, a następnie domykamy dłoń kładąc poduszkę dłoni na chwycie. Robimy to systematycznie wraz z prostowaniem rąk, jeśli zamknięcie chwyt na samym początku gdy dłoń jest jeszcze przy klatce piersiowej, to po wyprostowaniu rąk otworzy wam się on i nie będziecie w stanie przyłożyć pełnej siły do pistoletu.
+
+Palec powinien zostać przeniesiony na język spustowy już na samym początku ruchu, tak, aby w momencie zgrania przyrządów na celu mieć już wybrany na nim luz - dążymy do tego, aby docelowo oddać strzał dokładniej w tej chwili w której nasze przyrządy będą w celu.
+
+A teraz czas na ćwiczenie.
+
+PAMIĘTAJ! PRZED PRZYSTĄPIENIEM DO TRENINGU NA SUCHO SPRAWDŹ WARUNKI BEZPIECZEŃSTWA!
+
+1. Nie przechowuj amunicji w pobliżu miejsca, w którym ćwiczysz.
+2. Upewnij się dokładnie, zanim przystąpisz do ćwiczeń, że twoja broń i wszystkie magazynki są rozładowane: sprawdź wszystkie magazynki w ładownicach, wyjmuj magazynek z broni i go sprawdź, sprawdź komorę nabojową.
+3. Upewnij się, że nie pomyliłeś zbijaków z amunicją!
+
+ĆWICZENIA
+
+Tarcza: Koło 3 cm - [https://bit.ly/2EV6Xku](https://bit.ly/2EV6Xku)
+
+Odległość: 3 metry
+
+Wyposażenie: pistolet, timer
+
+1. Ustaw na timerze losowy czas startu i par time 3 sekundy.
+2. Stań w postawie niskiej/wysokiej gotowości. Odciągnij zamek pistoletu aby napiąć iglicę.
+3. Włącz timer.
+4. Na dźwięk timera zacznij przyjmować postawę do oddania strzału - powinieneś to robić tak długo, ile ustawiłeś czasu na timerze, czyli na początku bardzo powoli, przez 3 sekundy.
+5. Powinieneś zakończyć zgrywanie przyrządów na celu tuż przed drugim dźwiękiem timera.
+6. Na drugi dźwięk timera oddaj strzał.
+7. Trzymając ściągnięty język spustowy odciągnij zamek. Zagraj ponownie przyrządy na celu i zapracuj na resecie.
+8. Jeśli miałeś jakieś problemy z wykonaniem ćwiczenia, powtórz je bez zmiany czasu na timerze.
+9. Jeśli wszystko poszło dobrze, zmniejsz czas o 0.1 i powtórz ćwiczenie.
+10. Pamiętaj o kontroli postawy i chwytu za każdym razem, nie rób ćwiczenia na "odwal się".
+11. Zapisz najniższy czas do jakiego udało ci się zejść i wykonać ćwiczenie poprawnie.
+
+Jeśli macie jakieś pytania lub wątpliwości - zachęcamy do pisania komentarzy lub wysyłania wiadomości prywatnych. Jeśli ćwiczycie razem z nami - dajcie nam znać i tagujcie posty w social mediach tagiem #ManualSZKP. Możecie też nas oznaczać w waszych relacjach na FB/IG.
+
+Miłego treningu i do zobaczenia w środę - gdzie zaczniemy już używać kabury.

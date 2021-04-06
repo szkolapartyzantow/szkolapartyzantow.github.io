@@ -33,3 +33,28 @@ Jeśli chodzi o timer strzelecki, wystarczy nam dowolna aplikacja w której moż
 - losowy czas od "START" do pierwszego sygnału dźwiękowego (abyśmy mogli samodzielnie ćwiczyć)
 - czas "PAR TIME", czyli czas drugiego sygnału dźwiękowego
 Wykrywanie czasu oddania strzału nie będzie nam potrzebne.
+
+Linki do poszczególnych dni treningowych znajdziecie poniżej:
+### Tydzień 1
+* [Dzień 1](/manualszkp/t1d1)
+* [Dzień 2](/manualszkp/t1d2)
+* [Dzień 3](/manualszkp/t1d3)
+* [Dzień 4 - strzelnica](/manualszkp/t1d4)
+
+### Tydzień 2
+* [Dzień 1](/manualszkp/t2d1)
+* [Dzień 2](/manualszkp/t2d2)
+* [Dzień 3](/manualszkp/t2d3)
+* [Dzień 4 - strzelnica](/manualszkp/t2d4)
+
+### Tydzień 3
+* [Dzień 1](/manualszkp/t3d1)
+* [Dzień 2](/manualszkp/t3d2)
+* [Dzień 3](/manualszkp/t3d3)
+* [Dzień 4 - strzelnica](/manualszkp/t3d4)
+
+### Tydzień 4
+* [Dzień 1](/manualszkp/t4d1)
+* [Dzień 2](/manualszkp/t4d2)
+* [Dzień 3](/manualszkp/t4d3)
+* [Dzień 4 - strzelnica](/manualszkp/t4d4)

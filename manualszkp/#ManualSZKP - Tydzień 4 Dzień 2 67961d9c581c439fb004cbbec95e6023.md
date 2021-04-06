@@ -1,0 +1,54 @@
+# #ManualSZKP - Tydzień 4 / Dzień 2
+
+Witamy w kolejnym dniu treningowym z cyklu #ManualSZKP! Dzisiaj przerobimy kolejny temat z zakresu usuwania awarii broni krótkiej.
+
+Dzisiaj zajmiemy się usuwaniem awarii, której objawem jest brak strzału po naciśnięciu spustu, a spowodowana może być:
+
+1. Nie zbiciem spłonki w naboju przez iglicę.
+2. Brakiem naboju w komorze - co może się zdarzyć na przykład, gdy przez źle złożony chwyt przytrzymacie dźwignię blokady zamka i nie zatrzyma się on w tylnym położeniu po skończeniu się amunicji w magazynku.
+
+Identyfikacja awarii:
+
+1. Po naciśnięciu języka spustowego pada suchy strzał.
+2. Zamek broni jest w pełni zamknięty.
+
+Procedura usunięcia:
+
+1. Dokonaj identyfikacji awarii.
+2. Cofnij lekko pistolet, tak abyś mógł wygodnie usuwać awarię.
+3. Dobij magazynek energicznym uderzeniem dłoni.
+4. Przeładuj broń.
+5. Upewnij się, że zamek wykonał pełen cykl i jest zamknięty.
+
+A teraz czas na ćwiczenie.
+
+PAMIĘTAJ! PRZED PRZYSTĄPIENIEM DO TRENINGU NA SUCHO SPRAWDŹ WARUNKI BEZPIECZEŃSTWA!
+
+1. Nie przechowuj amunicji w pobliżu miejsca, w którym ćwiczysz.
+2. Upewnij się dokładnie, zanim przystąpisz do ćwiczeń, że twoja broń i wszystkie magazynki są rozładowane: sprawdź wszystkie magazynki w ładownicach, wyjmuj magazynek z broni i go sprawdź, sprawdź komorę nabojową.
+3. Upewnij się, że nie pomyliłeś zbijaków z amunicją!
+
+ĆWICZENIA
+
+Tarcza: koło 3 cm - [https://bit.ly/2EV6Xku](https://bit.ly/2EV6Xku)
+
+Odległość: 3 - 5 metrów
+
+Wyposażenie: pistolet, kabura, ładownica na jeden magazynek, magazynek, zbijak
+
+1. Odciągnij zamek w pistolecie bez podpiętego magazynka, aby napiąć iglicę.
+2. Załaduj zbijak do magazynka. Umieść magazynek w gnieździe broni. Schowaj broń do kabury
+3. Wykonaj dobycie i prezentację broni. Zgraj przyrządy na celu.
+4. Oddaj strzał i wykonaj procedurę usunięcia zacięcia. Zgraj ponownie przyrządy na celu.
+5. Skontroluj chwyt i postawę.
+6. Wykonaj ćwiczenie ponownie, od początku.
+
+Ćwiczenie można też łączyć z treningiem z poniedziałku - jeśli załadujecie do broni z napiętą iglicą pusty magazynek, to po próbie usunięcia zacięcia zamek zostanie w tylnym położeniu i będziecie musieli wykonać procedurę zmiany magazynka.
+
+Pamiętajcie, aby początkowo ćwiczenie wykonywać powoli i dokładnie, aby nie wpoić sobie złych nawyków. Gdy zaczniecie wykonywać płynnie wszystkie ruchy bez myślenia nad nimi, możecie zacząć zwiększać tempo.
+
+Pamiętajcie też, aby skupić się na złożeniu poprawnego chwytu po wykonaniu wymiany. Nic wam po szybkiej wymianie, jeśli później po pierwszym strzale chwyt wam się rozpadnie, bo był złożony niechlujnie i za szybko.
+
+Jeśli macie jakieś pytania lub wątpliwości - zachęcamy do pisania komentarzy lub wysyłania wiadomości prywatnych. Jeśli ćwiczycie razem z nami - dajcie nam znać i tagujcie posty w social mediach tagiem #ManualSZKP. Możecie też nas oznaczać w waszych relacjach na FB/IG.
+
+Miłego treningu i do zobaczenia w piątek.

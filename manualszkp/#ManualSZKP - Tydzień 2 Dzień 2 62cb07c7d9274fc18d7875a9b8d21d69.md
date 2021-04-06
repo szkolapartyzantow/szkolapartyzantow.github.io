@@ -1,0 +1,52 @@
+# #ManualSZKP - Tydzień 2 / Dzień 2
+
+Witamy w kolejnym dniu treningowym z cyklu #ManualSZKP! Dzisiaj będziemy dalej pracować nad dobyciem broni z kabury i prezentacją.
+
+Ostatnim razem ćwiczyliśmy prezentację broni z postawy niskiej/wysokiej gotowości. Dzisiaj pójdziemy krok dalej i będziemy ćwiczyć ją zaczynając z ręki spoczywającej na broni w kaburze.
+
+Dłoń spoczywająca na broni powinna być umieszczona w docelowej pozycji, nie będziesz miał możliwości zmiany chwytu po jej wyciągnięciu. Dlatego pierwszą rzeczą na jaką powinieneś zwrócić uwagę jest kabura i jej umiejscowienie na ciele. Budowa kabury powinna pozwolić na poprawny chwyt broni. Jej umiejscowienie na ciele powinno pozwolić na poprawny chwyt broni w naturalnej postawie ciała, bez odchylania się na boki czy pochylania do przodu. Jeśli uznasz, że twoja kabura na to nie pozwala, pokombinuj z jej ułożeniem lub zacznij rozglądać się nad innym modelem.
+
+Druga dłoń powinna być umiesczona przy klatce piersiowej, w tym miejscu, w którym dłonie będziemy łączyć na broni - czyli mniej więcej w tym miejscu, w którym wypadają wasze ręce gdy klaszczecie. Dzisiaj będziemy zaczynać ćwiczenie z takiego ustawienia, ale gdy w przyszłości będziemy ćwiczyć pełny cykl dobycia broni, to w momencie gdy jedna ręka będzie szła na broń w kaburze, druga od razu będzie podnoszona do klatki piersiowej i będzie czekała na broń.
+
+Jeśli chodzi o samo dobycie broni, powinniście pamiętać o następujących kwestiach:
+
+- ruch wydobywający broń z kabury powinien być zdecydowany i szybki
+- po dobyciu broń powinna od razu zostać skierowana w przód (dla strzelca stricte sportowego nie jest to bardzo istotne, ale w strzelectwie obronnym umożliwa, po odpowiednim treningu, oddawanie strzałów na bliską odległość tuż po dobyciu z kabury)
+- dobywając broni nie powinieneś wykonywać zbędnych ruchów, przechylać się na bok, do przodu etc. - twoja postawa powinna być cały czas taka sama, a ruszać powinny się jedynie ręce
+- przyspieszaj tam, gdzie możesz, zwalniaj tam, gdzie musisz - wyszarpanie broni z kabury i podniesienie jej do drugiej ręki nie wymaga precyzji, możesz tutaj przyspieszyć. Dokładając dłoń do dłoni zwolnij, aby zrobić to wystarczająco precyzyjnie.
+
+Jeśli twoja kabura posiada jakiekolwiek zabezpieczenie, które należy zwolnić zanim będzie można wyciągnąć z niej broń - zawsze ćwicz z zablokowanym. Nie ułatwiaj sobie zadania, ponieważ na zawodach i w realnej sytuacji nie będziesz miał takiej możliwości.
+
+A teraz czas na ćwiczenie.
+
+PAMIĘTAJ! PRZED PRZYSTĄPIENIEM DO TRENINGU NA SUCHO SPRAWDŹ WARUNKI BEZPIECZEŃSTWA!
+
+1. Nie przechowuj amunicji w pobliżu miejsca, w którym ćwiczysz.
+2. Upewnij się dokładnie, zanim przystąpisz do ćwiczeń, że twoja broń i wszystkie magazynki są rozładowane: sprawdź wszystkie magazynki w ładownicach, wyjmuj magazynek z broni i go sprawdź, sprawdź komorę nabojową.
+3. Upewnij się, że nie pomyliłeś zbijaków z amunicją!
+
+ĆWICZENIA
+
+Tarcza: Koło 3 cm - [https://bit.ly/2EV6Xku](https://bit.ly/2EV6Xku)
+
+Odległość: 3 metry
+
+Wyposażenie: pistolet, kabura, timer
+
+Ćwiczenie wykonuj według własnych preferencji - w pasie z oporządzeniem lub z kabury do skrytego noszenia broni. Możesz też wykonać ćwiczenie dwukrotnie, za każdym razem w innej konfiguracji sprzętowej. Jeśli twoja kabura posiada zabezpieczenie, upewnij się, że jest ono w pozycji zamkniętej/zablokowanej, tak abyś musiał je zwolnić zanim zaczniesz dobywać broni.
+
+1. Ustaw na timerze losowy czas startu i par time 3 sekundy.
+2. Stań w postawie, z jedną ręką na kaburze a drugą przy klatce piersiowej. Odciągnij zamek pistoletu aby napiąć iglicę.
+3. Włącz timer.
+4. Na dźwięk timera zacznij przyjmować postawę do oddania strzału - powinieneś to robić tak długo, ile ustawiłeś czasu na timerze, czyli na początku bardzo powoli, przez 3 sekundy.
+5. Powinieneś zakończyć zgrywanie przyrządów na celu tuż przed drugim dźwiękiem timera.
+6. Na drugi dźwięk timera oddaj strzał.
+7. Trzymając ściągnięty język spustowy odciągnij zamek. Zagraj ponownie przyrządy na celu i zapracuj na resecie.
+8. Jeśli miałeś jakieś problemy z wykonaniem ćwiczenia, powtórz je bez zmiany czasu na timerze.
+9. Jeśli wszystko poszło dobrze, zmniejsz czas o 0.1 i powtórz ćwiczenie.
+10. Pamiętaj o kontroli postawy i chwytu za każdym razem, nie rób ćwiczenia na "odwal się".
+11. Zapisz najniższy czas do jakiego udało ci się zejść i wykonać ćwiczenie poprawnie.
+
+Jeśli macie jakieś pytania lub wątpliwości - zachęcamy do pisania komentarzy lub wysyłania wiadomości prywatnych. Jeśli ćwiczycie razem z nami - dajcie nam znać i tagujcie posty w social mediach tagiem #ManualSZKP. Możecie też nas oznaczać w waszych relacjach na FB/IG.
+
+Miłego treningu i do zobaczenia w piątek.
