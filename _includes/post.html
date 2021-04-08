@@ -2,6 +2,43 @@
     <{{ page.image-type }}>
         <img src={{ page.image-src }}>
     </{{ page.image-type }}>
+
+    {% if page.index-link And page.index-link != "" And page.index-link != nil %}
+        <table class="next-index-previous">
+            <tr>
+                <td>
+                    {% if page.previous-link And page.previous-link != "" And page.previous-link != nil %}
+                    <a href={{ page.previous-link }}>&lt&nbsp&nbspPoprzedni</a>
+                    {% endif %}
+                </td>
+                <td><a href={{ page.index-link }}>Spis Treści</a></td>
+                <td>
+                    {% if page.next-link And page.next-link != "" And page.next-link != nil %}
+                    <a href={{ page.next-link }}>Nastepny&nbsp&nbsp&gt</a>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+
     <h1>{{ page.title | escape }}</h1>
     {{ content }}
+
+    {% if page.index-link And page.index-link != "" And page.index-link != nil %}
+        <table class="next-index-previous">
+            <tr>
+                <td>
+                    {% if page.previous-link And page.previous-link != "" And page.previous-link != nil %}
+                    <a href={{ page.previous-link }}>&lt&nbsp&nbspPoprzedni</a>
+                    {% endif %}
+                </td>
+                <td><a href={{ page.index-link }}>Spis Treści</a></td>
+                <td>
+                    {% if page.next-link And page.next-link != "" And page.next-link != nil %}
+                    <a href={{ page.next-link }}>Nastepny&nbsp&nbsp&gt</a>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    {% endif %}
 </div>
