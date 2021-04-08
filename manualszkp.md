@@ -35,7 +35,7 @@ Jeśli chodzi o timer strzelecki, wystarczy nam dowolna aplikacja w której moż
 Wykrywanie czasu oddania strzału nie będzie nam potrzebne.
 
 Linki do poszczególnych dni treningowych znajdziecie poniżej:
-### Tydzień 1
+### <a name="spistresci"></a>Tydzień 1
 * [Dzień 1](/manualszkp/t1d1)
 * [Dzień 2](/manualszkp/t1d2)
 * [Dzień 3](/manualszkp/t1d3)
