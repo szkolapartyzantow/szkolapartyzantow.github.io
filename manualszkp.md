@@ -1,7 +1,6 @@
 ---
 layout: post
 title: ManualSZKP
-image-type: image-full
 ---
 <img class="image-inline-small" src="/img/manualszkp/wprowadzenie.jpg">
 Manual, trening na sucho, dry fire training. Nieodłączna część treningu strzeleckiego, która powinna stanowić 70-80% czasu poświęconego na treningi z bronią palną. Przynajmniej w teorii, bo bardzo często spotykamy początkujących strzelców, którym nikt nigdy nie wytłumaczył i nie pokazał, że lwią część fundamentalnych umiejętności strzeleckich mogą wyćwiczyć w domu, całkowicie za darmo, nie wydając pieniędzy na amunicję i stanowisko.

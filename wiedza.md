@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Wiedza
-image-type: image-full
 ---
 
 W tym dziale znajdziecie informacje o naszych inicjatywach edukacyjnych - zarówno w formie pisanej jak i filmów na YT. Część z tych materiałów ukazała się w formie postów na naszych profilach IG/FB i zostały tutaj zarchiwizowane.
