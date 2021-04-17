@@ -1,7 +1,9 @@
 <div class="post-container">
-    <{{ page.image-type }}>
-        <img src={{ page.image-src }}>
-    </{{ page.image-type }}>
+    {% if page.image-type And page.image-type != "" And page.image-type != nil %}
+        <{{ page.image-type }}>
+            <img src={{ page.image-src }}>
+        </{{ page.image-type }}>
+    {% endif %}
 
     {% if page.index-link And page.index-link != "" And page.index-link != nil %}
         <table class="next-index-previous">

@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Karta Poszkodowanego TCCC
-image-type: image-full
 ---
 
 Prawidłowe udokumentowanie stanu pacjenta, wykonanych procedur medycznych i podanych leków jest niezwykle istotne przed przekazaniem pacjenta do wyższego poziomu opieki. Pozwala też na analizę skuteczności procedur i technik pomocy poszkodowanym. Dlatego też wytyczne TCCC wielokrotnie podkreślają konieczność wypełnienia Karty Poszkodowanego TCCC (DD Form 1830). Poniższy artykuł opisuje, jak to zrobić.
