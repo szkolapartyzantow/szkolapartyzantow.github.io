@@ -231,6 +231,17 @@ img.image-inline-big {
     }
 }
 
+img.image-inline-full {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    @media (min-width: 768px) {
+        width: 100%;
+    }
+}
+
 #toc-container {
     background: #f9f9f9 none repeat scroll 0 0;
     border: 1px solid #aaa;
