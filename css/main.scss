@@ -45,7 +45,7 @@ $theme-dark: #222;
 
 body {
     color: $theme-primary;
-    background-color: black;
+    background-color: #121212;
 }
 
 p {
@@ -55,9 +55,13 @@ p {
     }
 }
 
+h1, h2, h3 {
+    color: #ceff51;
+}
+
 body.post {
-    background-color: white;
-    color: black;
+    background-color: #121212;
+    color: whitesmoke;
 }
 
 .navbar-default {
@@ -151,7 +155,7 @@ p.footer-text {
     margin-bottom: 50px;
 
     a {
-        color: black;
+        color: #ceff51;
         text-decoration: underline;
         font-size: 16px;
         @media (min-width: 768px) {
@@ -171,7 +175,7 @@ p.footer-text {
         @media (min-width: 768px) {
             font-size: 18px;
         }
-        border: 1px solid black;
+        border: 1px solid white;
     }
 
     th, td {
@@ -243,7 +247,7 @@ img.image-inline-full {
 }
 
 #toc-container {
-    background: #f9f9f9 none repeat scroll 0 0;
+    background: #343434 none repeat scroll 0 0;
     border: 1px solid #aaa;
     display: table;
     font-size: 95%;
@@ -251,13 +255,15 @@ img.image-inline-full {
     padding: 20px;
     width: auto;
     a {
-        color: black;
+        color: #ceff51;
+        text-decoration: none;
     }
 }
 
 .toc-title {
     font-weight: 700;
     text-align: center;
+    color: #ceff51;
 }
 
 ul.toc-list {
@@ -286,5 +292,9 @@ ul.toc-list {
 
     td {
         width: 33%;
+    }
+
+    a {
+        text-decoration: none;
     }
 }
