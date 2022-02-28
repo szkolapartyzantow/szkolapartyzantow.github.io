@@ -14,7 +14,7 @@ layout: merch
         <ul>
             <li>Grafika "Gorilla Warfare" na klatce piersiowej</li>
             <li>Małe logo Szkoły Partyzantów z tyłu pod karkiem</li>
-            <li>Materiał: 98% elastan / 2% bawełna</li>
+            <li>Materiał: 98% bawełna / 2% elastan</li>
             <li>Kolor: czarny</li>
             <li>Wyprodukowano w Polsce</li>
             <li>Preorder. Zakończenie: 06.03.2022</li>
