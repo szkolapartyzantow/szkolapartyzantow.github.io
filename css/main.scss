@@ -108,7 +108,7 @@ p.footer-text {
     text-align: center;
     vertical-align: middle;
     font-size: 12px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .navbar-fixed-bottom, .navbar-static-bottom {
@@ -287,6 +287,17 @@ img.image-inline-big {
     }
 }
 
+img.image-inline-vertical {
+    width: 70%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    @media (min-width: 768px) {
+        width: 70%;
+    }
+}
+
 img.image-inline-full {
     width: 100%;
     height: auto;
@@ -378,8 +389,32 @@ a.merch-order-button {
     text-decoration: none;
     font-weight: bold;
     display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    font-size: 24px;
+    margin: 40px 2px 20px 0;
     cursor: pointer;
     width: 100%;
+}
+
+ul.merch-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li.merch-gallery-item {
+    margin: 0 5px 5px 0;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    width: calc(50% - 5px);
+
+    figure {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+    }
 }
