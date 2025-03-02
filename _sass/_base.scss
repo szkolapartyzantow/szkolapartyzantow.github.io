@@ -351,3 +351,11 @@ body {
     -webkit-tap-highlight-color: $theme-dark;
 }
 
+.patronite-post {
+  @include sans-serif-font;
+  text-align: center;
+  a {
+    text-decoration: underline;
+    color: yellow;
+  }
+}
