@@ -159,12 +159,12 @@ p.footer-text {
     @include sans-serif-font;
     display: grid;
     grid-template-columns: 1fr 1fr 10px 90% 10px 1fr 1fr;
-    @media (min-width: 768px) {
-        grid-template-columns: 1fr 1fr 10px 45% 10px 1fr 1fr;
-    }
     align-items: center;
     margin-top: 50px;
     margin-bottom: 50px;
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr 10px 45% 10px 1fr 1fr;
+    }
 
     a {
         color: #ceff51;
@@ -184,10 +184,10 @@ p.footer-text {
 
     table, td, tr, table td, table tr, table tr td, tr td {
         font-size: 16px;
+        border: 1px solid white;
         @media (min-width: 768px) {
             font-size: 18px;
         }
-        border: 1px solid white;
     }
 
     th, td {
@@ -240,12 +240,12 @@ p.footer-text {
     @include sans-serif-font;
     display: grid;
     grid-template-columns: 1fr 1fr 10px 90% 10px 1fr 1fr;
-    @media (min-width: 768px) {
-        grid-template-columns: 1fr 1fr 10px 55% 10px 1fr 1fr;
-    }
     align-items: center;
     margin-top: 50px;
     margin-bottom: 50px;
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr 10px 55% 10px 1fr 1fr;
+    }
 
     a {
         color: #ceff51;
@@ -265,10 +265,10 @@ p.footer-text {
 
     table, td, tr, table td, table tr, table tr td, tr td {
         font-size: 16px;
+        border: 1px solid white;
         @media (min-width: 768px) {
             font-size: 18px;
         }
-        border: 1px solid white;
     }
 
     th, td {
@@ -361,13 +361,13 @@ ul.toc-list {
     width: 100%;
     font-size: 16px;
     text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: none !important;
     @media (min-width: 768px) {
         font-size: 18px;
     }
-    margin-top: 20px;
-    margin-bottom: 20px;
 
-    border: none !important;
     table, td, tr, table td, table tr, table tr td, tr td {
         border: none !important;
     }
@@ -384,11 +384,11 @@ ul.toc-list {
 .merch-info-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     @media (min-width: 768px) {
         flex-direction: row;
     }
-    align-items: center;
-    justify-content: center;
 }
 
 .merch-main-photo {
