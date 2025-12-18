@@ -1,23 +1,32 @@
-import "./index.css";
-import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
+import { useMemo, type ComponentType } from "react";
 import { AppSidebar } from "./components/app-sidebar";
+import { Home } from "./components/home";
+import { GeneratorUstawienVTX } from "./components/generator-ustawien-vtx";
+import { KalkulatorLOS } from "./components/kalkulator-los";
+import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
+import { useHash } from "@/hooks/use-hash";
+import "./index.css";
+
+const components: Record<string, ComponentType> = {
+  "kalkulator-los": KalkulatorLOS,
+  "generator-ustawien-vtx": GeneratorUstawienVTX,
+};
 
 export function App() {
+  const hash = useHash();
+  const Component = useMemo(() => {
+    const componentName = hash.slice(1);
+    return components[componentName] ?? Home;
+  }, [hash]);
+
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-          </div>
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
-        </div>
+        <Component />
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }
 
 export default App;

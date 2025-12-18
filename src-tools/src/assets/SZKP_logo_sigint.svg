@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1600 1600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1.33333,0,0,1.33333,0,0)">
+        <g id="SIGINT">
+            <g id="Delta" transform="matrix(1,0,0,1,-14,14)">
+                <path d="M634,120L1033.37,799.962C1033.37,799.962 1051.39,833.16 1049,841C1046.61,848.84 1019.02,847 1019.02,847L244.229,847C244.229,847 220.912,848.333 218,844C210.97,833.541 228.372,810.613 228.372,810.613L634,120ZM598,335L860,783L336,783L598,335Z" style="fill:rgb(51,51,51);"/>
+            </g>
+            <g id="Bolt_bottom" transform="matrix(1.65755,0,0,1.65755,-449.106,-439.558)">
+                <path d="M371.39,855.427L540.313,700.044L500.665,695.995L598.328,621.289L636.793,656.248L598.408,682.514L627.114,691.109L371.39,855.427Z" style="fill:rgb(245,202,1);"/>
+            </g>
+            <g id="Bolt_middle" transform="matrix(1.65755,0,0,1.65755,-449.106,-439.558)">
+                <path d="M593.314,625.125L662.836,572.573L703.409,605.768L636.285,656.592L593.314,625.125Z" style="fill:rgb(244,201,8);stroke:rgb(244,201,8);stroke-width:0.13px;"/>
+            </g>
+            <g id="Bolt_up" transform="matrix(1.65755,0,0,1.65755,-449.106,-439.558)">
+                <path d="M661.988,573.237L701.918,606.864L821.527,518.44L768.196,520.363L894.459,398.901L661.845,533.123L712.053,534.609L661.988,573.237Z" style="fill:rgb(245,202,1);"/>
+            </g>
+        </g>
+    </g>
+</svg>
