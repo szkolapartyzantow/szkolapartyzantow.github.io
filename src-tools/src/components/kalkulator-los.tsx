@@ -240,15 +240,6 @@ export function KalkulatorLOS() {
     <PageContainer title="Kalkulator LOS (Line of Sight) Anteny">
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calculator className="h-5 w-5" />
-              Parametry Lotu
-            </CardTitle>
-            <CardDescription>
-              Wprowadź dane anteny, przeszkód i docelowego dystansu.
-            </CardDescription>
-          </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Częstotliwość</Label>
@@ -278,7 +269,7 @@ export function KalkulatorLOS() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="targetDistance">Dystans Celu (m)</Label>
+                <Label htmlFor="targetDistance">Docelowy Dystans (m)</Label>
                 <Input
                   id="targetDistance"
                   type="number"
@@ -292,7 +283,6 @@ export function KalkulatorLOS() {
 
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mb-2">
-                <AlertTriangle className="h-4 w-4" />
                 Najbliższa Przeszkoda
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -321,26 +311,14 @@ export function KalkulatorLOS() {
         </Card>
 
         <Card className="bg-muted/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Plane className="h-5 w-5" />
-              Wyniki Obliczeń
-            </CardTitle>
-            <CardDescription>
-              Wymagana wysokość lotu i kąt anteny.
-            </CardDescription>
-          </CardHeader>
           <CardContent>
             {results ? (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <Label className="text-muted-foreground">Minimalna Wysokość drona (AGL)</Label>
+                  <Label className="text-muted-foreground">Minimalna Wysokość Lotu Drona (AGL)</Label>
                   <div className="text-4xl font-bold text-primary">
                     {results.droneAltitudeM.toFixed(0)} m
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Aby utrzymać LOS i strefę Fresnela.
-                  </p>
                 </div>
 
                 <div className="space-y-1">
@@ -402,7 +380,7 @@ export function KalkulatorLOS() {
       {graphData.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Wysokość lotu w zależności od dystansu</CardTitle>
+            <CardTitle>Minimalna wysokość lotu w zależności od dystansu</CardTitle>
           </CardHeader>
           <CardContent>
             <SimpleLineChart data={graphData} />
