@@ -12,6 +12,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarFooter,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { Card, CardContent } from "./ui/card"
 import patroniteLogo from "../assets/patronite-logo-SVG-02.svg"
@@ -38,6 +39,13 @@ import { useHash } from "@/hooks/use-hash";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const activeHash = useHash()
+  const { isMobile, setOpenMobile } = useSidebar()
+
+  const handleMenuClick = () => {
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }
 
   return (
     <Sidebar {...props}>
@@ -45,7 +53,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="h-auto">
-              <a href="#">
+              <a href="#" onClick={handleMenuClick}>
                 <div className="bg-sidebar-secondary text-sidebar-primary-foreground flex items-center justify-center rounded-lg">
                   <img src={SZKPLogo} className="size-20" alt="SZKP Logo" />
                 </div>
@@ -67,7 +75,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {item.items.map((subItem) => (
                   <SidebarMenuItem key={subItem.title}>
                     <SidebarMenuButton asChild isActive={activeHash === subItem.url}>
-                      <a href={subItem.url}>{subItem.title}</a>
+                      <a href={subItem.url} onClick={handleMenuClick}>{subItem.title}</a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
