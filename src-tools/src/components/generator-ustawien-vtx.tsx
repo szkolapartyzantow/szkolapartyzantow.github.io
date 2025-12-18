@@ -1,9 +1,9 @@
 import * as React from "react"
+import { PageContainer } from "./page-container"
 
 export function GeneratorUstawienVTX() {
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">Generator ustawień VTX</h1>
-    </div>
+    <PageContainer title="Generator ustawień VTX">
+    </PageContainer>
   )
 }

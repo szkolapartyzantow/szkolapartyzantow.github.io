@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { PageContainer } from "./page-container"
 
 const FREQUENCIES = [
   { value: "0.44", label: "440 MHz" },
@@ -236,12 +237,7 @@ export function KalkulatorLOS() {
   }, [results, targetDistance, antennaHeight]);
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <div className="flex items-center gap-2 mb-6">
-        <Radio className="h-8 w-8 text-primary" />
-        <h1 className="text-3xl font-bold">Kalkulator LOS (Line of Sight) Anteny</h1>
-      </div>
-
+    <PageContainer title="Kalkulator LOS (Line of Sight) Anteny">
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card>
           <CardHeader>
@@ -413,6 +409,6 @@ export function KalkulatorLOS() {
           </CardContent>
         </Card>
       )}
-    </div>
+    </PageContainer>
   )
 }

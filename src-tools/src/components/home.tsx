@@ -1,13 +1,11 @@
 import * as React from "react"
 import { Card, CardContent } from "./ui/card"
 import patroniteLogo from "../assets/patronite-logo-SVG-02.svg"
+import { PageContainer } from "./page-container"
 
 export function Home() {
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <div className="flex items-center gap-2 mb-6">
-        <h1 className="text-3xl font-bold">Szkoła Partyzantów - Narzędzia</h1>
-      </div>
+    <PageContainer title="Szkoła Partyzantów - Narzędzia">
       <Card>
         <CardContent>
           <p>Zbiór różnych opracowanych przez nas narzędzi.</p>
@@ -18,6 +16,6 @@ export function Home() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   )
 }
