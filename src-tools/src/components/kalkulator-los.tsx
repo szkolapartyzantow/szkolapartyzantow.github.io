@@ -118,10 +118,10 @@ interface SimpleLineChartProps {
   height?: number
 }
 
-function SimpleLineChart({ data, width = 600, height = 300 }: SimpleLineChartProps) {
+function SimpleLineChart({ data, width = 750, height = 500 }: SimpleLineChartProps) {
   if (!data || data.length === 0) return null;
 
-  const padding = { top: 20, right: 30, bottom: 40, left: 50 };
+  const padding = { top: 20, right: 30, bottom: 50, left: 40 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
 
@@ -141,7 +141,13 @@ function SimpleLineChart({ data, width = 600, height = 300 }: SimpleLineChartPro
 
   return (
     <div className="w-full overflow-x-auto">
-      <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="font-sans text-xs">
+      <svg
+        width="100%"
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        className="font-sans text-sm"
+        style={{ minWidth: width }}
+      >
         <g transform={`translate(${padding.left}, ${padding.top})`}>
           {/* Y Axis Grid & Labels */}
           {yTicks.map((tick, i) => (
@@ -197,18 +203,18 @@ function SimpleLineChart({ data, width = 600, height = 300 }: SimpleLineChartPro
 
         {/* Labels */}
         <text x={width / 2} y={height - 5} textAnchor="middle" fill="#374151" fontWeight="bold">Dystans (m)</text>
-        <text x={0} y={130} textAnchor="middle" transform={`rotate(-90, 15, ${height / 2})`} fill="#374151" fontWeight="bold">Wysokość (m)</text>
+        <text x={0} y={220} textAnchor="middle" transform={`rotate(-90, 15, ${height / 2})`} fill="#374151" fontWeight="bold">Wysokość (m)</text>
       </svg>
     </div>
   );
 }
 
 export function KalkulatorLOS() {
-  const [frequency, setFrequency] = React.useState<string>("5.8")
-  const [antennaHeight, setAntennaHeight] = React.useState<string>("1.65")
+  const [frequency, setFrequency] = React.useState<string>("0.915")
+  const [antennaHeight, setAntennaHeight] = React.useState<string>("1")
   const [obstacleHeight, setObstacleHeight] = React.useState<string>("8")
-  const [obstacleDistance, setObstacleDistance] = React.useState<string>("55")
-  const [targetDistance, setTargetDistance] = React.useState<string>("5000")
+  const [obstacleDistance, setObstacleDistance] = React.useState<string>("50")
+  const [targetDistance, setTargetDistance] = React.useState<string>("3000")
 
   const calculateResult = () => {
     return computeLOS(
@@ -259,7 +265,7 @@ export function KalkulatorLOS() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="antennaHeight">Wys. Anteny (m)</Label>
+                <Label htmlFor="antennaHeight">Wysokość anteny (m)</Label>
                 <Input
                   id="antennaHeight"
                   type="number"
@@ -269,7 +275,7 @@ export function KalkulatorLOS() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="targetDistance">Docelowy Dystans (m)</Label>
+                <Label htmlFor="targetDistance">Docelowy dystans (m)</Label>
                 <Input
                   id="targetDistance"
                   type="number"
@@ -297,7 +303,7 @@ export function KalkulatorLOS() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="obstacleDistance">Dystans (m)</Label>
+                  <Label htmlFor="obstacleDistance">Odległość od anteny (m)</Label>
                   <Input
                     id="obstacleDistance"
                     type="number"
