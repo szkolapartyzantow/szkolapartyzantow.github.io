@@ -112,102 +112,7 @@ function computeLOS(
   }
 }
 
-interface SimpleLineChartProps {
-  data: { x: number; y: number }[]
-  width?: number
-  height?: number
-}
 
-function SimpleLineChart({ data, width = 750, height = 500 }: SimpleLineChartProps) {
-  if (!data || data.length === 0) return null;
-
-  const padding = { top: 20, right: 30, bottom: 50, left: 40 };
-  const chartWidth = width - padding.left - padding.right;
-  const chartHeight = height - padding.top - padding.bottom;
-
-  const maxX = Math.max(...data.map(d => d.x));
-  const maxY = Math.max(...data.map(d => d.y));
-  const effectiveMaxY = maxY <= 0 ? 10 : maxY; // Handle flat 0 case
-
-  const scaleX = (x: number) => (x / maxX) * chartWidth;
-  const scaleY = (y: number) => chartHeight - (y / effectiveMaxY) * chartHeight;
-
-  // Generate Path
-  const points = data.map(d => `${scaleX(d.x)},${scaleY(d.y)}`).join(" ");
-
-  // Grid lines (approx 5 vertical, 5 horizontal)
-  const xTicks = [0, maxX * 0.25, maxX * 0.5, maxX * 0.75, maxX];
-  const yTicks = [0, effectiveMaxY * 0.25, effectiveMaxY * 0.5, effectiveMaxY * 0.75, effectiveMaxY];
-
-  return (
-    <div className="w-full overflow-x-auto">
-      <svg
-        width="100%"
-        height={height}
-        viewBox={`0 0 ${width} ${height}`}
-        className="font-sans text-sm"
-        style={{ minWidth: width }}
-      >
-        <g transform={`translate(${padding.left}, ${padding.top})`}>
-          {/* Y Axis Grid & Labels */}
-          {yTicks.map((tick, i) => (
-            <g key={`y-${i}`}>
-              <line
-                x1={0} y1={scaleY(tick)}
-                x2={chartWidth} y2={scaleY(tick)}
-                stroke="#e5e7eb" strokeDasharray="4 4"
-              />
-              <text
-                x={-10} y={scaleY(tick)}
-                textAnchor="end" dominantBaseline="middle"
-                fill="#6b7280"
-              >
-                {tick.toFixed(0)}m
-              </text>
-            </g>
-          ))}
-
-          {/* X Axis Grid & Labels */}
-          {xTicks.map((tick, i) => (
-            <g key={`x-${i}`}>
-              <line
-                x1={scaleX(tick)} y1={0}
-                x2={scaleX(tick)} y2={chartHeight}
-                stroke="#e5e7eb" strokeDasharray="4 4"
-              />
-              <text
-                x={scaleX(tick)} y={chartHeight + 20}
-                textAnchor="middle"
-                fill="#6b7280"
-              >
-                {tick.toFixed(0)}m
-              </text>
-            </g>
-          ))}
-
-          {/* Axes Lines */}
-          <line x1={0} y1={0} x2={0} y2={chartHeight} stroke="#9ca3af" strokeWidth="2" />
-          <line x1={0} y1={chartHeight} x2={chartWidth} y2={chartHeight} stroke="#9ca3af" strokeWidth="2" />
-
-          {/* Data Line */}
-          <polyline
-            points={points}
-            fill="none"
-            stroke="currentColor"
-            className="text-primary"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </g>
-
-        {/* Labels */}
-        <text x={width / 2} y={height - 5} textAnchor="middle" fill="#374151" fontWeight="bold">Dystans (m)</text>
-        <text x={0} y={220} textAnchor="middle" transform={`rotate(-90, 15, ${height / 2})`} fill="#374151" fontWeight="bold">Wysokość (m)</text>
-      </svg>
-    </div>
-  );
-}
 
 export function KalkulatorLOS() {
   const [frequency, setFrequency] = React.useState<string>("0.915")
@@ -263,7 +168,7 @@ export function KalkulatorLOS() {
 
   const results = calculateResult()
 
-  const graphData = React.useMemo(() => {
+  const tableData = React.useMemo(() => {
     if (!results) return [];
 
     const d_t = parseFloat(targetDistance);
@@ -271,10 +176,29 @@ export function KalkulatorLOS() {
 
     if (isNaN(d_t) || d_t <= 0) return [];
 
-    return [
-      { x: 0, y: h_a },
-      { x: d_t, y: results.droneAltitudeM }
-    ];
+    const stepSize = 100;
+    const points = [];
+
+    // Linear interpolation
+    // slope = (endHeight - startHeight) / totalDist
+    const slope = (results.droneAltitudeM - h_a) / d_t;
+
+    for (let d = 0; d <= d_t; d += stepSize) {
+      points.push({
+        dist: d,
+        height: h_a + slope * d
+      });
+    }
+
+    // Ensure the exact target distance is included if it wasn't a multiple of 100
+    if (Math.abs(points[points.length - 1].dist - d_t) > 0.01) {
+      points.push({
+        dist: d_t,
+        height: results.droneAltitudeM
+      });
+    }
+
+    return points;
   }, [results, targetDistance, antennaHeight]);
 
   return (
@@ -445,13 +369,38 @@ export function KalkulatorLOS() {
         </Card>
       </div>
 
-      {graphData.length > 0 && (
+      {tableData.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Minimalna wysokość lotu w zależności od dystansu</CardTitle>
+            <CardTitle>Tabela wysokości lotu w zależności od dystansu</CardTitle>
           </CardHeader>
           <CardContent>
-            <SimpleLineChart data={graphData} />
+            <div className="relative w-full overflow-auto max-h-[500px]">
+              <table className="w-full caption-bottom text-sm">
+                <thead className="[&_tr]:border-b sticky top-0 bg-background z-10">
+                  <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                      Dystans (m)
+                    </th>
+                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                      Wysokość (m)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="[&_tr:last-child]:border-0">
+                  {tableData.map((point) => (
+                    <tr key={point.dist} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                      <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                        {point.dist.toFixed(0)}
+                      </td>
+                      <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                        {point.height.toFixed(0)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </CardContent>
         </Card>
       )}
