@@ -13,6 +13,7 @@ import {
   SidebarRail,
   SidebarFooter,
   useSidebar,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Card, CardContent } from "./ui/card"
 import patroniteLogo from "../assets/patronite-logo-SVG-02.svg"
@@ -50,21 +51,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild className="h-auto">
-              <a href="#" onClick={handleMenuClick}>
-                <div className="bg-sidebar-secondary text-sidebar-primary-foreground flex items-center justify-center rounded-lg">
-                  <img src={SZKPLogo} className="size-20" alt="SZKP Logo" />
-                </div>
-                <div className="grid flex-1 text-left leading-tight">
-                  <span className="truncate font-bold text-lg">Szkoła Partyzantów</span>
-                  <span className="truncate font-medium text-lg">Narzędzia</span>
-                </div>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <div className="flex items-center gap-2">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton size="lg" asChild className="h-auto">
+                <a href="#" onClick={handleMenuClick}>
+                  <div className="bg-sidebar-secondary text-sidebar-primary-foreground flex items-center justify-center rounded-lg">
+                    <img src={SZKPLogo} className="size-20" alt="SZKP Logo" />
+                  </div>
+                  <div className="grid flex-1 text-left leading-tight">
+                    <span className="truncate font-bold text-lg">Szkoła Partyzantów</span>
+                    <span className="truncate font-medium text-lg">Narzędzia</span>
+                  </div>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+          <SidebarTrigger className="md:hidden h-14 w-14 [&_svg]:size-8" />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         {data.navMain.map((item) => (
