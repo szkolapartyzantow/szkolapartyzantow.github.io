@@ -57,9 +57,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div className="bg-sidebar-secondary text-sidebar-primary-foreground flex items-center justify-center rounded-lg">
                   <img src={SZKPLogo} className="size-20" alt="SZKP Logo" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Szkoła Partyzantów</span>
-                  <span className="truncate text-xs">Narzędzia</span>
+                <div className="grid flex-1 text-left leading-tight">
+                  <span className="truncate font-bold text-lg">Szkoła Partyzantów</span>
+                  <span className="truncate font-medium text-lg">Narzędzia</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -74,7 +74,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {item.items.map((subItem) => (
                   <SidebarMenuItem key={subItem.title}>
-                    <SidebarMenuButton asChild isActive={activeHash === subItem.url}>
+                    <SidebarMenuButton asChild isActive={activeHash === subItem.url} size="lg">
                       <a href={subItem.url} onClick={handleMenuClick}>{subItem.title}</a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

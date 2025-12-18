@@ -1,8 +1,8 @@
 import * as React from "react"
-import { Calculator, Plane, Radio, AlertTriangle, ArrowRight, ChevronDown } from "lucide-react"
+import { ArrowRight, ChevronDown, Plus, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Collapsible,
   CollapsibleContent,
@@ -118,10 +118,10 @@ interface SimpleLineChartProps {
   height?: number
 }
 
-function SimpleLineChart({ data, width = 600, height = 300 }: SimpleLineChartProps) {
+function SimpleLineChart({ data, width = 750, height = 500 }: SimpleLineChartProps) {
   if (!data || data.length === 0) return null;
 
-  const padding = { top: 20, right: 30, bottom: 40, left: 50 };
+  const padding = { top: 20, right: 30, bottom: 50, left: 40 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
 
@@ -141,7 +141,13 @@ function SimpleLineChart({ data, width = 600, height = 300 }: SimpleLineChartPro
 
   return (
     <div className="w-full overflow-x-auto">
-      <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="font-sans text-xs">
+      <svg
+        width="100%"
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        className="font-sans text-sm"
+        style={{ minWidth: width }}
+      >
         <g transform={`translate(${padding.left}, ${padding.top})`}>
           {/* Y Axis Grid & Labels */}
           {yTicks.map((tick, i) => (
@@ -197,27 +203,62 @@ function SimpleLineChart({ data, width = 600, height = 300 }: SimpleLineChartPro
 
         {/* Labels */}
         <text x={width / 2} y={height - 5} textAnchor="middle" fill="#374151" fontWeight="bold">Dystans (m)</text>
-        <text x={0} y={130} textAnchor="middle" transform={`rotate(-90, 15, ${height / 2})`} fill="#374151" fontWeight="bold">Wysokość (m)</text>
+        <text x={0} y={220} textAnchor="middle" transform={`rotate(-90, 15, ${height / 2})`} fill="#374151" fontWeight="bold">Wysokość (m)</text>
       </svg>
     </div>
   );
 }
 
 export function KalkulatorLOS() {
-  const [frequency, setFrequency] = React.useState<string>("5.8")
-  const [antennaHeight, setAntennaHeight] = React.useState<string>("1.65")
-  const [obstacleHeight, setObstacleHeight] = React.useState<string>("8")
-  const [obstacleDistance, setObstacleDistance] = React.useState<string>("55")
-  const [targetDistance, setTargetDistance] = React.useState<string>("5000")
+  const [frequency, setFrequency] = React.useState<string>("0.915")
+  const [antennaHeight, setAntennaHeight] = React.useState<string>("1")
+  const [targetDistance, setTargetDistance] = React.useState<string>("3000")
+
+  const [obstacles, setObstacles] = React.useState<{ id: number; height: string; distance: string }[]>([
+    { id: 1, height: "8", distance: "50" }
+  ])
+
+  const addObstacle = () => {
+    setObstacles(prev => [
+      ...prev,
+      { id: Math.max(0, ...prev.map(o => o.id)) + 1, height: "0", distance: "0" }
+    ])
+  }
+
+  const removeObstacle = (id: number) => {
+    if (obstacles.length <= 1) return;
+    setObstacles(prev => prev.filter(o => o.id !== id))
+  }
+
+  const updateObstacle = (id: number, field: 'height' | 'distance', value: string) => {
+    setObstacles(prev => prev.map(o =>
+      o.id === id ? { ...o, [field]: value } : o
+    ))
+  }
 
   const calculateResult = () => {
-    return computeLOS(
-      parseFloat(frequency),
-      parseFloat(antennaHeight),
-      parseFloat(obstacleHeight),
-      parseFloat(obstacleDistance),
-      parseFloat(targetDistance)
-    )
+    const f = parseFloat(frequency)
+    const h_a = parseFloat(antennaHeight)
+    const d_t = parseFloat(targetDistance)
+
+    if (isNaN(f) || isNaN(h_a) || isNaN(d_t)) return null
+
+    let worstResult: ReturnType<typeof computeLOS> | null = null
+
+    for (const obs of obstacles) {
+      const h_o = parseFloat(obs.height)
+      const d_o = parseFloat(obs.distance)
+
+      const res = computeLOS(f, h_a, h_o, d_o, d_t)
+
+      if (res) {
+        if (!worstResult || res.droneAltitudeM > worstResult.droneAltitudeM) {
+          worstResult = res
+        }
+      }
+    }
+
+    return worstResult
   }
 
   const results = calculateResult()
@@ -259,7 +300,7 @@ export function KalkulatorLOS() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="antennaHeight">Wys. Anteny (m)</Label>
+                <Label htmlFor="antennaHeight">Wysokość anteny (m)</Label>
                 <Input
                   id="antennaHeight"
                   type="number"
@@ -269,7 +310,7 @@ export function KalkulatorLOS() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="targetDistance">Docelowy Dystans (m)</Label>
+                <Label htmlFor="targetDistance">Docelowy dystans (m)</Label>
                 <Input
                   id="targetDistance"
                   type="number"
@@ -283,29 +324,56 @@ export function KalkulatorLOS() {
 
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mb-2">
-                Najbliższa Przeszkoda
+                {obstacles.length > 1 ? "Przeszkody" : "Najbliższa Przeszkoda"}
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="obstacleHeight">Wysokość (m)</Label>
-                  <Input
-                    id="obstacleHeight"
-                    type="number"
-                    step="0.1"
-                    value={obstacleHeight}
-                    onChange={(e) => setObstacleHeight(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="obstacleDistance">Dystans (m)</Label>
-                  <Input
-                    id="obstacleDistance"
-                    type="number"
-                    value={obstacleDistance}
-                    onChange={(e) => setObstacleDistance(e.target.value)}
-                  />
-                </div>
+
+              <div className="space-y-4">
+                {obstacles.map((obstacle, index) => (
+                  <div key={obstacle.id} className="grid grid-cols-2 gap-4 relative group">
+                    <div className="space-y-2">
+                      <Label htmlFor={`obs-h-${obstacle.id}`}>Wysokość (m)</Label>
+                      <Input
+                        id={`obs-h-${obstacle.id}`}
+                        type="number"
+                        step="0.1"
+                        value={obstacle.height}
+                        onChange={(e) => updateObstacle(obstacle.id, 'height', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`obs-d-${obstacle.id}`}>Odległość od anteny (m)</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id={`obs-d-${obstacle.id}`}
+                          type="number"
+                          value={obstacle.distance}
+                          onChange={(e) => updateObstacle(obstacle.id, 'distance', e.target.value)}
+                        />
+                        {obstacles.length > 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="shrink-0 text-muted-foreground hover:text-destructive"
+                            onClick={() => removeObstacle(obstacle.id)}
+                            title="Usuń przeszkodę"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full mt-2 border-dashed"
+                onClick={addObstacle}
+              >
+                <Plus className="mr-2 h-4 w-4" /> Dodaj przeszkodę
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -315,14 +383,14 @@ export function KalkulatorLOS() {
             {results ? (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <Label className="text-muted-foreground">Minimalna Wysokość Lotu Drona (AGL)</Label>
+                  <Label className="text-muted-foreground">Minimalna wysokość lotu</Label>
                   <div className="text-4xl font-bold text-primary">
                     {results.droneAltitudeM.toFixed(0)} m
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-muted-foreground">Wymagany Kąt Anteny</Label>
+                  <Label className="text-muted-foreground">Wymagany kat odchylenia anteny</Label>
                   <div className="text-2xl font-semibold">
                     {results.antennaAngleTotalDeg.toFixed(2)}°
                   </div>
