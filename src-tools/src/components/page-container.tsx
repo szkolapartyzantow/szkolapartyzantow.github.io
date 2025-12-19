@@ -1,9 +1,9 @@
-import * as React from "react"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import * as React from "react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 interface PageContainerProps {
-  title: string
-  children?: React.ReactNode
+  title: string;
+  children?: React.ReactNode;
 }
 
 export function PageContainer({ title, children }: PageContainerProps) {
@@ -15,5 +15,5 @@ export function PageContainer({ title, children }: PageContainerProps) {
       </div>
       {children}
     </div>
-  )
+  );
 }

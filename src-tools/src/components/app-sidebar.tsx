@@ -1,5 +1,5 @@
-import * as React from "react"
-import SZKPLogo from "@/assets/SZKP_logo_sigint.svg"
+import * as React from "react";
+import SZKPLogo from "@/assets/SZKP_logo_sigint.svg";
 import {
   Sidebar,
   SidebarContent,
@@ -14,9 +14,9 @@ import {
   SidebarFooter,
   useSidebar,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { Card, CardContent } from "./ui/card"
-import patroniteLogo from "../assets/patronite-logo-SVG-02.svg"
+} from "@/components/ui/sidebar";
+import { Card, CardContent } from "./ui/card";
+import patroniteLogo from "../assets/patronite-logo-SVG-02.svg";
 
 const data = {
   navMain: [
@@ -34,19 +34,19 @@ const data = {
       ],
     },
   ],
-}
+};
 
 import { useHash } from "@/hooks/use-hash";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const activeHash = useHash()
-  const { isMobile, setOpenMobile } = useSidebar()
+  const activeHash = useHash();
+  const { isMobile, setOpenMobile } = useSidebar();
 
   const handleMenuClick = () => {
     if (isMobile) {
-      setOpenMobile(false)
+      setOpenMobile(false);
     }
-  }
+  };
 
   return (
     <Sidebar {...props}>
@@ -79,7 +79,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {item.items.map((subItem) => (
                   <SidebarMenuItem key={subItem.title}>
                     <SidebarMenuButton asChild isActive={activeHash === subItem.url} size="lg">
-                      <a href={subItem.url} onClick={handleMenuClick}>{subItem.title}</a>
+                      <a href={subItem.url} onClick={handleMenuClick}>
+                        {subItem.title}
+                      </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -101,5 +103,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
