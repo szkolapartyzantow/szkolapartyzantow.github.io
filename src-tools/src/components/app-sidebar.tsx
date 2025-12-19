@@ -95,6 +95,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <Card>
             <CardContent>
               <div className="flex flex-col items-center justify-center">
+                <span className="mb-2 font-bold text-muted-foreground">Wspieraj nas na:</span>
                 <img src={patroniteLogo} alt="Patronite" className="h-10 w-auto" />
               </div>
             </CardContent>
