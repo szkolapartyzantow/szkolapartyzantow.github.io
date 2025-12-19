@@ -6,23 +6,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { DropdownSelect } from "./dropdown-select";
 import { PageContainer } from "./page-container";
 
-const FREQUENCIES = [
-  { value: "0.44", label: "440 MHz" },
-  { value: "0.868", label: "868 MHz" },
-  { value: "0.915", label: "915 MHz" },
-  { value: "1.3", label: "1.3 GHz" },
-  { value: "2.4", label: "2.4 GHz" },
-  { value: "5.8", label: "5.8 GHz" },
+enum FREQUENCIES {
+  F_440_MHZ = "0.44",
+  F_868_MHZ = "0.868",
+  F_915_MHZ = "0.915",
+  F_1_3_GHZ = "1.3",
+  F_2_4_GHZ = "2.4",
+  F_5_8_GHZ = "5.8",
+}
+
+export const FREQUENCIES_DROPDOWN_MAP = [
+  { value: FREQUENCIES.F_440_MHZ, label: "440 MHz" },
+  { value: FREQUENCIES.F_868_MHZ, label: "868 MHz" },
+  { value: FREQUENCIES.F_915_MHZ, label: "915 MHz" },
+  { value: FREQUENCIES.F_1_3_GHZ, label: "1.3 GHz" },
+  { value: FREQUENCIES.F_2_4_GHZ, label: "2.4 GHz" },
+  { value: FREQUENCIES.F_5_8_GHZ, label: "5.8 GHz" },
 ];
 
 function computeLOS(
@@ -115,7 +118,7 @@ function computeLOS(
 }
 
 export function KalkulatorLOS() {
-  const [frequency, setFrequency] = React.useState<string>("0.915");
+  const [frequency, setFrequency] = React.useState<string>(FREQUENCIES.F_915_MHZ);
   const [antennaHeight, setAntennaHeight] = React.useState<string>("1");
   const [targetDistance, setTargetDistance] = React.useState<string>("3000");
 
@@ -171,21 +174,13 @@ export function KalkulatorLOS() {
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Częstotliwość</Label>
-              <Select value={frequency} onValueChange={setFrequency}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Wybierz częstotliwość" />
-                </SelectTrigger>
-                <SelectContent>
-                  {FREQUENCIES.map((f) => (
-                    <SelectItem key={f.value} value={f.value}>
-                      {f.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <DropdownSelect
+              label="Częstotliwość"
+              items={FREQUENCIES_DROPDOWN_MAP}
+              value={frequency}
+              onValueChange={setFrequency}
+              placeholder="Wybierz częstotliwość"
+            />
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
