@@ -122,6 +122,8 @@ const VTX_CHANNEL_DROPDOWN_MAP = [
   { value: CHANNEL.CHANNEL_8, label: CHANNEL.CHANNEL_8 },
 ];
 
+const CUSTOM_VTX_ID = "custom";
+
 function getPowerLevelsFromTable(table: string): PowerLevel[] {
   const levels: PowerLevel[] = [];
   const lines = table.split("\n");
@@ -268,10 +270,10 @@ function generateConfig(vtxData: VtxData): string {
   if (vtxData.switch_type === SWITCH_TYPE.POS3) {
     switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_1} 900 1100
 vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_2} 1400 1600
-vtx 2 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_3} 1900 2100`
+vtx 2 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_3} 1900 2100`;
   } else {
     switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_1} 900 1400
-vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_3} 1600 2100`
+vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_3} 1600 2100`;
   }
 
   return `serial ${vtxData.port} ${vtxData.protocol} 115200 57600 0 115200
@@ -318,7 +320,7 @@ export function GeneratorUstawienVTX() {
       .then((text) => {
         const data = parseCSV(text);
         const map: Record<string, VtxData> = {};
-        const options = [];
+        const options = [{ value: CUSTOM_VTX_ID, label: "Własna tabela VTX" }];
         for (const item of data) {
           map[item.id] = item;
           options.push({ value: item.id, label: item.name });
@@ -326,11 +328,13 @@ export function GeneratorUstawienVTX() {
         setVtxDataMap(map);
         setVtxOptions(options);
 
-        // Select first VTX by default
         if (data.length > 0) {
           const first = data[0]!;
           setCurrentVtx(first);
           setConfigText(generateConfig(first));
+        } else {
+          // Fallback to custom
+          handleVtxChange(CUSTOM_VTX_ID);
         }
       })
       .catch((err) => console.error("Error fetching VTX data:", err));
@@ -339,11 +343,40 @@ export function GeneratorUstawienVTX() {
   // Update config whenever currentVtx changes
   React.useEffect(() => {
     if (currentVtx) {
+      if (currentVtx.id === CUSTOM_VTX_ID) {
+        const bands = getBandsFromTable(currentVtx.table);
+        const levels = getPowerLevelsFromTable(currentVtx.table);
+        if (bands.length === 0 || levels.length === 0) {
+          setConfigText("");
+          return;
+        }
+      }
       setConfigText(generateConfig(currentVtx));
     }
   }, [currentVtx]);
 
   const handleVtxChange = (val: string) => {
+    if (val === CUSTOM_VTX_ID) {
+      setCurrentVtx({
+        id: CUSTOM_VTX_ID,
+        name: "Własna tabela VTX",
+        manufacturer: "Custom",
+        protocol: PROTOCOL.SMART_AUDIO,
+        port: UART.UART1,
+        power_1: 0,
+        power_2: 0,
+        power_3: 0,
+        warning: 0,
+        table: "",
+        switch_type: SWITCH_TYPE.POS3,
+        vtx_power_aux: AUX.AUX1,
+        default_band: 1,
+        default_channel: CHANNEL.CHANNEL_1,
+        power_levels: [],
+      });
+      return;
+    }
+
     const selected = vtxDataMap[val];
     if (selected) {
       const bands = getBandsFromTable(selected.table);
@@ -360,6 +393,33 @@ export function GeneratorUstawienVTX() {
     if (currentVtx) {
       setCurrentVtx({ ...currentVtx, ...updates });
     }
+  };
+
+  const handleCustomTableChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newTable = e.target.value;
+    const powerLevels = getPowerLevelsFromTable(newTable);
+    const bands = getBandsFromTable(newTable);
+
+    if (!currentVtx) return;
+
+    const updates: Partial<VtxData> = {
+      table: newTable,
+      power_levels: powerLevels,
+    };
+
+    if (powerLevels.length > 0) {
+      updates.power_1 = powerLevels[0]?.index ?? 0;
+      updates.power_2 = powerLevels[1]?.index ?? powerLevels[0]?.index ?? 0;
+      updates.power_3 =
+        powerLevels[2]?.index ?? powerLevels[1]?.index ?? powerLevels[0]?.index ?? 0;
+    }
+
+    if (bands.length > 0) {
+      const defaultBand = bands.find((b) => b.value === 5) ? 5 : bands[0]!.value;
+      updates.default_band = defaultBand;
+    }
+
+    updateCurrentVtx(updates);
   };
 
   const copyToClipboard = () => {
@@ -389,6 +449,32 @@ export function GeneratorUstawienVTX() {
               placeholder="Wybierz VTX"
               searchable
             />
+
+            {currentVtx.id === CUSTOM_VTX_ID && (
+              <div className="space-y-2">
+                <Label>Wklej tabelę VTX poniżej:</Label>
+                {currentVtx.table.length > 0 &&
+                  (getBandsFromTable(currentVtx.table).length === 0 ||
+                    getPowerLevelsFromTable(currentVtx.table).length === 0) && (
+                    <Label className="text-red-500 block">Błąd parsowania tabeli VTX!</Label>
+                  )}
+                <Textarea
+                  value={currentVtx.table}
+                  onChange={handleCustomTableChange}
+                  className="font-mono text-xs whitespace-pre overflow-x-auto min-h-[150px]"
+                  placeholder={`vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5786 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+...
+vtxtable powerlevels 5
+vtxtable powerlabels 25 100 200 400 600
+vtxtable powervalues 14 20 23 26 28`}
+                  rows={11}
+                />
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-4">
               <DropdownSelect
                 label="UART"
@@ -507,9 +593,7 @@ export function GeneratorUstawienVTX() {
           setIsErrorOpen(open);
           if (!open) {
             if (vtxOptions.length > 0) {
-              const firstId = vtxOptions[0]!.value;
-              const firstVtx = vtxDataMap[firstId];
-              if (firstVtx) setCurrentVtx(firstVtx);
+              handleVtxChange(vtxOptions[0]!.value);
             }
           }
         }}
