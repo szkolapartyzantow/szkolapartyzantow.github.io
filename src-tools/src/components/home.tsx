@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import patroniteLogo from "../assets/patronite-logo-SVG-02.svg";
 import { PageContainer } from "./page-container";

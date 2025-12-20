@@ -1,6 +1,6 @@
 export const TOOLS = [
   {
-    title: "Kalkulator LOS Anteny",
+    title: "Kalkulator LOS anteny",
     description: 'Oblicz na jakiej wysokości musisz lecieć, aby Twoja antena "widziała" drona.',
     url: "#kalkulator-los",
   },

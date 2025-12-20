@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { getToolByUrl } from "@/lib/tools";
+import { ToolHelp } from "./tool-help";
 
 enum AUX {
   AUX1,
@@ -282,12 +283,12 @@ vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_3} 1600 2100`;
 # Tabela VTX
 ${vtxData.table}
 
-# Ustawienia przełącznika
-${switch_settings}
-
 # Domyślne pasmo/kanał
 set vtx_band = ${vtxData.default_band}
 set vtx_channel = ${vtxData.default_channel}
+
+# Ustawienia przełącznika
+${switch_settings}
 
 save
 `;
@@ -461,6 +462,48 @@ export function GeneratorUstawienVTX() {
 
   return (
     <PageContainer title={toolInfo?.title || "Generator ustawień VTX"}>
+      <ToolHelp>
+        <p>
+          Narzędzie pozwala nam wygenerować komendy do Betaflight, które dla danej tabeli VTX
+          skonfigurują zmianę mocy VTX za pomocą wybranego przełącznika.
+        </p>
+        <br />
+        <p>
+          Jeśli Twojego VTX nie ma na liście, możesz wybrać opcję "Własna tabela VTX" i wkleić
+          ręcznie tabelę dla Twojego nadajnika. Jeśli się z nami skontaktujesz (najlepiej przez
+          Instagram), dodamy ten VTX do naszej bazy.
+        </p>
+        <br />
+        <p>
+          Po wygenerowaniu komend naciśnij przycisk "Kopiuj", aby skopiować je do schowka, i wklej
+          je do CLI w Betaflight, aby je zastosować.
+        </p>
+        <br />
+        <ul className="list-disc">
+          <li>
+            <b>UART</b> - UART do którego VTX jest podłączony.
+          </li>
+          <li>
+            <b>Protokół</b> - protokół którego VTX używa do komunikacji.
+          </li>
+          <li>
+            <b>Domyślne pasmo/kanał</b> - kanał i pasmo które zostanie ustawione jako domyślne -
+            będzie aktywne po włączeniu drona.
+          </li>
+          <li>
+            <b>AUX do kontroli mocy VTX</b> - numer AUX przełącznika, którego chcesz użyć do zmiany
+            mocy VTX. Do sprawdzenia w zakładce Receiver (Odbiornik) w Betaflight.
+          </li>
+          <li>
+            <b>Typ przełącznika</b> - wybierz czy Twój przełącznik jest 3 czy 2 pozycyjny.
+          </li>
+          <li>
+            <b>Moc 1/2/3</b> - ustawienia mocy. Moc 1 z zasady powinna być najniższa i odpowiada
+            górnemu położeniu przełącznika.
+          </li>
+        </ul>
+      </ToolHelp>
+
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card>
           <CardContent className="space-y-4">
@@ -601,6 +644,7 @@ vtxtable powervalues 14 20 23 26 28`}
               onChange={(e) => setConfigText(e.target.value)}
               className="font-mono text-xs whitespace-pre overflow-x-auto"
               rows={configText.split("\n").length + 1}
+              readOnly
             />
 
             <Button onClick={copyToClipboard} className="w-full">

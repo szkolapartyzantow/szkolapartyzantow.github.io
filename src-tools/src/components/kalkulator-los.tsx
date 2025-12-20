@@ -2,7 +2,7 @@ import * as React from "react";
 import { ArrowRight, ChevronDown, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { DropdownSelect } from "./dropdown-select";
 import { PageContainer } from "./page-container";
 import { getToolByUrl } from "@/lib/tools";
+import { ToolHelp } from "./tool-help";
 
 enum FREQUENCIES {
   F_440_MHZ = "0.44",
@@ -172,7 +173,31 @@ export function KalkulatorLOS() {
 
   const toolInfo = getToolByUrl("#kalkulator-los");
   return (
-    <PageContainer title={toolInfo?.title || "Kalkulator LOS Anteny"}>
+    <PageContainer title={toolInfo?.title || "Kalkulator LOS anteny"}>
+      <ToolHelp>
+        <p>
+          Kalkulator pozwala obliczyć nam, na jakiej wysokości powinniśmy lecieć dronem, aby na
+          docelowym dystansie do którego chcemy dolecieć nasza antena "widziała" drona bez przeszkód
+          po drodze, co zwiększy prawdopodobieństwo utrzymania łączności. Kalkulator podaje też, pod
+          jakim kątem powinniśmy odchylić antenę.
+        </p>
+        <br />
+        <ul className="list-disc">
+          <li>
+            <b>Wysokość anteny</b> - odległość od podłoża do anteny. Jeśli umieściłeś antenę na
+            maszcie, podaj wysokość masztu. Jeśli masz antenę na głowie - podaj swój wzrost itp.
+          </li>
+          <li>
+            <b>Docelowy dystans</b> - odległośc od anteny na jaką chcesz maksymalnie odlecieć
+            dronem.
+          </li>
+          <li>
+            <b>Przeszkody</b> - podaj wysokość przeszkód i ich odległość od anteny. Jeśli
+            wprowadzisz dane kilku przeszkód, wynik podany zostanie dla "najgorszej", czyli tej,
+            która najbardziej przeszkadza po drodze.
+          </li>
+        </ul>
+      </ToolHelp>
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card>
           <CardContent className="space-y-4">
@@ -215,7 +240,7 @@ export function KalkulatorLOS() {
               </div>
 
               <div className="space-y-4">
-                {obstacles.map((obstacle, index) => (
+                {obstacles.map((obstacle) => (
                   <div key={obstacle.id} className="grid grid-cols-2 gap-4 relative group">
                     <div className="space-y-2">
                       <Label htmlFor={`obs-h-${obstacle.id}`}>Wysokość (m)</Label>
