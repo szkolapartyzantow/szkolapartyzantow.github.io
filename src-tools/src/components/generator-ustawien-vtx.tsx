@@ -2,6 +2,7 @@ import * as React from "react";
 import { PageContainer } from "./page-container";
 import { Card, CardContent } from "./ui/card";
 import { DropdownSelect } from "./dropdown-select";
+import type { SelectItemData, SelectItemGroup } from "./dropdown-select";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
@@ -294,7 +295,7 @@ save
 
 export function GeneratorUstawienVTX() {
   const [vtxDataMap, setVtxDataMap] = React.useState<Record<string, VtxData>>({});
-  const [vtxOptions, setVtxOptions] = React.useState<{ value: string; label: string }[]>([]);
+  const [vtxOptions, setVtxOptions] = React.useState<(SelectItemData | SelectItemGroup)[]>([]);
   const [currentVtx, setCurrentVtx] = React.useState<VtxData | null>(null);
   const [configText, setConfigText] = React.useState<string>("");
   const [isErrorOpen, setIsErrorOpen] = React.useState(false);
@@ -320,11 +321,33 @@ export function GeneratorUstawienVTX() {
       .then((text) => {
         const data = parseCSV(text);
         const map: Record<string, VtxData> = {};
-        const options = [{ value: CUSTOM_VTX_ID, label: "Własna tabela VTX" }];
         for (const item of data) {
           map[item.id] = item;
-          options.push({ value: item.id, label: item.name });
         }
+
+        const grouped: { [key: string]: VtxData[] } = {};
+        for (const item of data) {
+          const m = item.manufacturer || "Inne";
+          if (!grouped[m]) {
+            grouped[m] = [];
+          }
+          grouped[m]!.push(item);
+        }
+
+        const options: (SelectItemData | SelectItemGroup)[] = [
+          { value: CUSTOM_VTX_ID, label: "Własna tabela VTX" },
+        ];
+
+        for (const manufacturer in grouped) {
+          options.push({
+            label: manufacturer,
+            items: grouped[manufacturer]!.map((item) => ({
+              value: item.id,
+              label: item.name,
+            })),
+          });
+        }
+
         setVtxDataMap(map);
         setVtxOptions(options);
 
@@ -592,9 +615,7 @@ vtxtable powervalues 14 20 23 26 28`}
         onOpenChange={(open) => {
           setIsErrorOpen(open);
           if (!open) {
-            if (vtxOptions.length > 0) {
-              handleVtxChange(vtxOptions[0]!.value);
-            }
+            handleVtxChange(CUSTOM_VTX_ID);
           }
         }}
       >

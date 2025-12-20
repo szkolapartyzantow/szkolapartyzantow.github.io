@@ -16,7 +16,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -26,9 +28,18 @@ export interface SelectItemData {
   label: string;
 }
 
-interface DropdownSelectProps {
+export interface SelectItemGroup {
   label: string;
   items: SelectItemData[];
+}
+
+function isGroup(item: SelectItemData | SelectItemGroup): item is SelectItemGroup {
+  return "items" in item && "label" in item;
+}
+
+interface DropdownSelectProps {
+  label: string;
+  items: (SelectItemData | SelectItemGroup)[];
   value: any;
   onValueChange: (value: any) => void;
   placeholder?: string;
@@ -49,9 +60,19 @@ export function DropdownSelect({
 }: DropdownSelectProps) {
   const [open, setOpen] = React.useState(false);
 
-  if (searchable) {
-    const selectedItem = items.find((item) => item.value === value);
+  const selectedItem = React.useMemo(() => {
+    for (const itemOrGroup of items) {
+      if (isGroup(itemOrGroup)) {
+        const found = itemOrGroup.items.find((item) => item.value === value);
+        if (found) return found;
+      } else {
+        const item = itemOrGroup as SelectItemData;
+        if (item.value === value) return item;
+      }
+    }
+  }, [items, value]);
 
+  if (searchable) {
     return (
       <div className={`space-y-2 ${className || ""}`}>
         <Label>{label}</Label>
@@ -72,8 +93,33 @@ export function DropdownSelect({
               <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
               <CommandList>
                 <CommandEmpty>No item found.</CommandEmpty>
-                <CommandGroup>
-                  {items.map((item) => (
+                {items.map((itemOrGroup) => {
+                  if (isGroup(itemOrGroup)) {
+                    return (
+                      <CommandGroup key={itemOrGroup.label} heading={itemOrGroup.label}>
+                        {itemOrGroup.items.map((item) => (
+                          <CommandItem
+                            key={item.value}
+                            value={item.label}
+                            onSelect={() => {
+                              onValueChange(item.value);
+                              setOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === item.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {item.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    );
+                  }
+                  const item = itemOrGroup as SelectItemData;
+                  return (
                     <CommandItem
                       key={item.value}
                       value={item.label}
@@ -90,8 +136,8 @@ export function DropdownSelect({
                       />
                       {item.label}
                     </CommandItem>
-                  ))}
-                </CommandGroup>
+                  );
+                })}
               </CommandList>
             </Command>
           </PopoverContent>
@@ -108,11 +154,27 @@ export function DropdownSelect({
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
-          {items.map((item) => (
-            <SelectItem key={item.value} value={item.value}>
-              {item.label}
-            </SelectItem>
-          ))}
+          {items.map((itemOrGroup) => {
+            if (isGroup(itemOrGroup)) {
+              return (
+                <SelectGroup key={itemOrGroup.label}>
+                  {/* @ts-ignore */}
+                  <SelectLabel>{itemOrGroup.label}</SelectLabel>
+                  {itemOrGroup.items.map((item) => (
+                    <SelectItem key={item.value} value={item.value}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              );
+            }
+            const item = itemOrGroup as SelectItemData;
+            return (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
     </div>
