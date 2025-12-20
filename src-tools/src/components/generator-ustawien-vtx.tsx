@@ -87,10 +87,18 @@ set vtx_channel = 1
 save
 `;
 
-const VTX_TEMPLATES = [
-  { value: 0, label: "TBS Unify Pro32 HV" },
-  { value: 1, label: "TBS Unify Pro32 HV copy" },
-];
+interface VtxData {
+  id: string;
+  name: string;
+  manufacturer: string;
+  protocol: string;
+  default_port: string;
+  default_power_1: number;
+  default_power_2: number;
+  default_power_3: number;
+  warning: number;
+  table: string;
+}
 
 const AUX_DROPDOWN_MAP = [
   { value: AUX.AUX1, label: "AUX1" },
@@ -112,6 +120,7 @@ const SWITCH_DROPDOWN_MAP = [
 const VTX_PROTOCOL_DROPDOWN_MAP = [
   { value: PROTOCOL.SMART_AUDIO, label: "SmartAudio" },
   { value: PROTOCOL.TRAMP, label: "Tramp" },
+  { value: 99, label: "Unknown" },
 ];
 
 const VTX_UART_DROPDOWN_MAP = [
@@ -145,8 +154,75 @@ const VTX_CHANNEL_DROPDOWN_MAP = [
   { value: CHANNEL.CHANNEL_8, label: "Channel 8" },
 ];
 
+function parseCSV(text: string): VtxData[] {
+  const rows: string[][] = [];
+  let currentRow: string[] = [];
+  let currentField = "";
+  let inQuote = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    if (inQuote) {
+      if (char === '"' && nextChar === '"') {
+        currentField += '"';
+        i++;
+      } else if (char === '"') {
+        inQuote = false;
+      } else {
+        currentField += char;
+      }
+    } else {
+      if (char === '"') {
+        inQuote = true;
+      } else if (char === ",") {
+        currentRow.push(currentField);
+        currentField = "";
+      } else if (char === "\n" || char === "\r") {
+        if (char === "\r" && nextChar === "\n") i++;
+        if (currentRow.length > 0 || currentField.length > 0) {
+          currentRow.push(currentField);
+          rows.push(currentRow);
+        }
+        currentRow = [];
+        currentField = "";
+      } else {
+        currentField += char;
+      }
+    }
+  }
+  if (currentRow.length > 0 || currentField.length > 0) {
+    currentRow.push(currentField);
+    rows.push(currentRow);
+  }
+
+  // Remove header
+  const dataRows = rows.slice(1);
+
+  return dataRows
+    .map((row) => {
+      if (row.length < 10) return null;
+      return {
+        id: row[0],
+        name: row[1],
+        manufacturer: row[2],
+        protocol: row[3],
+        default_port: row[4],
+        default_power_1: parseInt(row[5], 10),
+        default_power_2: parseInt(row[6], 10),
+        default_power_3: parseInt(row[7], 10),
+        warning: parseInt(row[8], 10),
+        table: row[9],
+      };
+    })
+    .filter((x): x is VtxData => x !== null);
+}
+
 export function GeneratorUstawienVTX() {
-  const [vtx, setVtx] = React.useState<Number>(0);
+  const [vtx, setVtx] = React.useState<string>("");
+  const [vtxDataMap, setVtxDataMap] = React.useState<Record<string, VtxData>>({});
+  const [vtxOptions, setVtxOptions] = React.useState<{ value: string; label: string }[]>([]);
   const [vtxUart, setVtxUart] = React.useState<Number>(UART.UART1);
   const [vtxProtocol, setVtxProtocol] = React.useState<Number>(PROTOCOL.SMART_AUDIO);
   const [vtxPowerAuxChannel, setVtxPowerAuxChannel] = React.useState<string>(AUX.AUX2);
@@ -156,6 +232,54 @@ export function GeneratorUstawienVTX() {
 
   const [includeVtxTable, setIncludeVtxTable] = React.useState<boolean>(true);
   const [configText, setConfigText] = React.useState<string>(VTX_CONFIG_TEMPLATE);
+
+  React.useEffect(() => {
+    fetch(
+      "https://docs.google.com/spreadsheets/d/1pSce3OR-ZkvILul03hWvtaR-mHh861qv2u8pIxIHbWQ/export?format=csv"
+    )
+      .then((res) => res.text())
+      .then((text) => {
+        const data = parseCSV(text);
+        const map: Record<string, VtxData> = {};
+        const options = [];
+        for (const item of data) {
+          map[item.id] = item;
+          options.push({ value: item.id, label: item.name });
+        }
+        setVtxDataMap(map);
+        setVtxOptions(options);
+      })
+      .catch((err) => console.error("Error fetching VTX data:", err));
+  }, []);
+
+  const handleVtxChange = (val: string) => {
+    setVtx(val);
+    const selected = vtxDataMap[val];
+    if (selected) {
+      // Protocol
+      if (selected.protocol.toLowerCase().includes("smartaudio")) {
+        setVtxProtocol(PROTOCOL.SMART_AUDIO);
+      } else if (selected.protocol.toLowerCase().includes("tramp")) {
+        setVtxProtocol(PROTOCOL.TRAMP);
+      } else {
+        // Default or unknown?
+        // setVtxProtocol(99);
+      }
+
+      // UART
+      const portMatch = selected.default_port.match(/UART\s*(\d+)/i);
+      if (portMatch) {
+        const portNum = parseInt(portMatch[1], 10);
+        // Enum is 0-based for UART1..6
+        if (portNum >= 1 && portNum <= 6) {
+          setVtxUart(portNum - 1);
+        }
+      }
+
+      // Table
+      setConfigText(selected.table);
+    }
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(configText);
@@ -170,9 +294,9 @@ export function GeneratorUstawienVTX() {
           <CardContent className="space-y-4">
             <DropdownSelect
               label="VTX"
-              items={VTX_TEMPLATES}
+              items={vtxOptions}
               value={vtx}
-              onValueChange={setVtx}
+              onValueChange={handleVtxChange}
               placeholder="Wybierz VTX"
               searchable
             />
