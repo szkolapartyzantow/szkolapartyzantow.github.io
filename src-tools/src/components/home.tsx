@@ -3,19 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import patroniteLogo from "../assets/patronite-logo-SVG-02.svg";
 import { PageContainer } from "./page-container";
 
-const tools = [
-  {
-    title: "Kalkulator LOS Anteny",
-    description: 'Oblicz na jakiej wysokości musisz lecieć, aby Twoja antena "widziała" drona.',
-    url: "#kalkulator-los",
-  },
-  {
-    title: "Generator ustawień VTX",
-    description:
-      "Wygeneruj konfigurację VTX - tabelę oraz zmianę mocy/pasma/kanału za pomocą przełączników.",
-    url: "#generator-ustawien-vtx",
-  },
-];
+import { TOOLS } from "../lib/tools";
 
 export function Home() {
   return (
@@ -38,7 +26,7 @@ export function Home() {
         </Card>
 
         <div className="grid gap-4 md:grid-cols-2">
-          {tools.map((tool) => (
+          {TOOLS.map((tool) => (
             <a key={tool.url} href={tool.url} className="block group">
               <Card className="h-full transition-colors hover:bg-muted/50">
                 <CardHeader>

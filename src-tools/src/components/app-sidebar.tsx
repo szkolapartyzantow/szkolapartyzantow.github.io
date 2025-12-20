@@ -17,21 +17,13 @@ import {
 } from "@/components/ui/sidebar";
 import { Card, CardContent } from "./ui/card";
 import patroniteLogo from "../assets/patronite-logo-SVG-02.svg";
+import { TOOLS } from "@/lib/tools";
 
 const data = {
   navMain: [
     {
       title: "Drony",
-      items: [
-        {
-          title: "Kalkulator LOS Anteny",
-          url: "#kalkulator-los",
-        },
-        {
-          title: "Generator ustawień VTX",
-          url: "#generator-ustawien-vtx",
-        },
-      ],
+      items: TOOLS,
     },
   ],
 };

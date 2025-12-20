@@ -5,6 +5,7 @@ import { DropdownSelect } from "./dropdown-select";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
+import { getToolByUrl } from "@/lib/tools";
 
 enum AUX {
   AUX1 = "0",
@@ -160,8 +161,10 @@ export function GeneratorUstawienVTX() {
     navigator.clipboard.writeText(configText);
   };
 
+  const toolInfo = getToolByUrl("#generator-ustawien-vtx");
+
   return (
-    <PageContainer title="Generator ustawień VTX">
+    <PageContainer title={toolInfo?.title || "Generator ustawień VTX"}>
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card>
           <CardContent className="space-y-4">

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { DropdownSelect } from "./dropdown-select";
 import { PageContainer } from "./page-container";
+import { getToolByUrl } from "@/lib/tools";
 
 enum FREQUENCIES {
   F_440_MHZ = "0.44",
@@ -169,8 +170,9 @@ export function KalkulatorLOS() {
 
   const results = calculateResult();
 
+  const toolInfo = getToolByUrl("#kalkulator-los");
   return (
-    <PageContainer title="Kalkulator LOS (Line of Sight) Anteny">
+    <PageContainer title={toolInfo?.title || "Kalkulator LOS Anteny"}>
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card>
           <CardContent className="space-y-4">
