@@ -180,6 +180,7 @@ export function KalkulatorLOS() {
               value={frequency}
               onValueChange={setFrequency}
               placeholder="Wybierz częstotliwość"
+              fullWidth={false}
             />
 
             <div className="grid grid-cols-2 gap-4">

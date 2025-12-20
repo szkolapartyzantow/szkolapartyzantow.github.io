@@ -34,6 +34,7 @@ interface DropdownSelectProps {
   placeholder?: string;
   className?: string;
   searchable?: boolean;
+  fullWidth?: boolean;
 }
 
 export function DropdownSelect({
@@ -44,6 +45,7 @@ export function DropdownSelect({
   placeholder = "Select option",
   className,
   searchable = false,
+  fullWidth = true,
 }: DropdownSelectProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -59,13 +61,13 @@ export function DropdownSelect({
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-full justify-between font-normal"
+              className={cn("justify-between font-normal", fullWidth ? "w-full" : "w-fit")}
             >
               {selectedItem ? selectedItem.label : placeholder}
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-125 p-0">
+          <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
             <Command>
               <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
               <CommandList>
@@ -102,7 +104,7 @@ export function DropdownSelect({
     <div className={`space-y-2 ${className || ""}`}>
       <Label>{label}</Label>
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger>
+        <SelectTrigger className={fullWidth ? "w-full" : "w-fit"}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
