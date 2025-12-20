@@ -44,6 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader>
         <div className="flex items-center gap-2 md:mt-5">
+          <SidebarTrigger className="md:hidden h-14 w-14 [&_svg]:size-8" />
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild className="h-auto">
@@ -59,7 +60,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-          <SidebarTrigger className="md:hidden h-14 w-14 [&_svg]:size-8" />
         </div>
       </SidebarHeader>
       <SidebarContent>
