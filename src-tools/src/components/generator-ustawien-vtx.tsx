@@ -5,23 +5,31 @@ import { DropdownSelect } from "./dropdown-select";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import { getToolByUrl } from "@/lib/tools";
 
 enum AUX {
-  AUX1 = "0",
-  AUX2 = "1",
-  AUX3 = "2",
-  AUX4 = "3",
-  AUX5 = "4",
-  AUX6 = "5",
-  AUX7 = "6",
-  AUX8 = "7",
+  AUX1,
+  AUX2,
+  AUX3,
+  AUX4,
+  AUX5,
+  AUX6,
+  AUX7,
+  AUX8,
 }
 
 enum SWITCH_TYPE {
   POS2,
   POS3,
-  POS6,
 }
 
 enum UART {
@@ -34,23 +42,12 @@ enum UART {
 }
 
 enum PROTOCOL {
-  SMART_AUDIO,
-  TRAMP,
-}
-
-enum BAND {
-  A,
-  B,
-  E,
-  F,
-  R,
-  BAND6,
-  BAND7,
-  BAND8,
+  SMART_AUDIO = "2048",
+  TRAMP = "8192",
 }
 
 enum CHANNEL {
-  CHANNEL_1,
+  CHANNEL_1 = 1,
   CHANNEL_2,
   CHANNEL_3,
   CHANNEL_4,
@@ -60,44 +57,28 @@ enum CHANNEL {
   CHANNEL_8,
 }
 
-const VTX_CONFIG_TEMPLATE = `serial 0 2048 115200 57600 0 115200
-
-# Tabela VTX
-vtxtable bands 6
-vtxtable channels 8
-vtxtable band 1 BAND_A   A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
-vtxtable band 2 BAND_B   B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
-vtxtable band 3 BAND_E   E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
-vtxtable band 4 AIRWAVE  F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
-vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
-vtxtable band 6 LOWRACE  L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
-vtxtable powerlevels 4
-vtxtable powervalues 14 27 30 34
-vtxtable powerlabels 25 500 1 2.5
-
-# Ustawienia przycisku
-vtx 0 2 0 0 1 900 1100
-vtx 1 2 0 0 3 1400 1600
-vtx 2 2 0 0 4 1900 2100
-
-# Domyślne pasmo/kanał
-set vtx_band = 1
-set vtx_channel = 1
-
-save
-`;
+interface PowerLevel {
+  index: number;
+  label: string;
+  value: string;
+}
 
 interface VtxData {
   id: string;
   name: string;
   manufacturer: string;
-  protocol: string;
-  default_port: string;
-  default_power_1: number;
-  default_power_2: number;
-  default_power_3: number;
+  protocol: PROTOCOL;
+  port: UART;
+  power_1: number;
+  power_2: number;
+  power_3: number;
   warning: number;
   table: string;
+  switch_type: SWITCH_TYPE;
+  vtx_power_aux: AUX;
+  default_band: number;
+  default_channel: CHANNEL;
+  power_levels: PowerLevel[];
 }
 
 const AUX_DROPDOWN_MAP = [
@@ -114,13 +95,11 @@ const AUX_DROPDOWN_MAP = [
 const SWITCH_DROPDOWN_MAP = [
   { value: SWITCH_TYPE.POS2, label: "2POS" },
   { value: SWITCH_TYPE.POS3, label: "3POS" },
-  { value: SWITCH_TYPE.POS6, label: "6POS" },
 ];
 
 const VTX_PROTOCOL_DROPDOWN_MAP = [
   { value: PROTOCOL.SMART_AUDIO, label: "SmartAudio" },
   { value: PROTOCOL.TRAMP, label: "Tramp" },
-  { value: 99, label: "Unknown" },
 ];
 
 const VTX_UART_DROPDOWN_MAP = [
@@ -130,17 +109,6 @@ const VTX_UART_DROPDOWN_MAP = [
   { value: UART.UART4, label: "UART 4" },
   { value: UART.UART5, label: "UART 5" },
   { value: UART.UART6, label: "UART 6" },
-];
-
-const VTX_BAND_DROPDOWN_MAP = [
-  { value: BAND.A, label: "A" },
-  { value: BAND.B, label: "B" },
-  { value: BAND.E, label: "E" },
-  { value: BAND.F, label: "F" },
-  { value: BAND.R, label: "R" },
-  { value: BAND.BAND6, label: "Pasmo 6 z tabeli VTX" },
-  { value: BAND.BAND7, label: "Pasmo 7 z tabeli VTX" },
-  { value: BAND.BAND8, label: "Pasmo 8 z tabeli VTX" },
 ];
 
 const VTX_CHANNEL_DROPDOWN_MAP = [
@@ -153,6 +121,51 @@ const VTX_CHANNEL_DROPDOWN_MAP = [
   { value: CHANNEL.CHANNEL_7, label: "Channel 7" },
   { value: CHANNEL.CHANNEL_8, label: "Channel 8" },
 ];
+
+function getPowerLevelsFromTable(table: string): PowerLevel[] {
+  const levels: PowerLevel[] = [];
+  const lines = table.split("\n");
+  let labels: string[] = [];
+  let values: string[] = [];
+
+  for (const line of lines) {
+    const parts = line.trim().split(/\s+/);
+    if (parts.length < 3) continue;
+
+    if (parts[0] === "vtxtable" && parts[1] === "powerlabels") {
+      labels = parts.slice(2);
+    } else if (parts[0] === "vtxtable" && parts[1] === "powervalues") {
+      values = parts.slice(2);
+    }
+  }
+
+  // Combine labels and values
+  for (let i = 0; i < labels.length; i++) {
+    levels.push({
+      index: i + 1,
+      label: labels[i] || "",
+      value: values[i] || "",
+    });
+  }
+
+  return levels;
+}
+
+function getBandsFromTable(table: string): { value: number; label: string }[] {
+  const bands: { value: number; label: string }[] = [];
+  const lines = table.split("\n");
+  for (const line of lines) {
+    const parts = line.trim().split(/\s+/);
+    if (parts[0] === "vtxtable" && parts[1] === "band" && parts.length >= 5) {
+      const num = parseInt(parts[2]!, 10);
+      const label = parts[4]!; // using the letter/short label
+      if (!isNaN(num)) {
+        bands.push({ value: num, label: label });
+      }
+    }
+  }
+  return bands;
+}
 
 function parseCSV(text: string): VtxData[] {
   const rows: string[][] = [];
@@ -203,35 +216,99 @@ function parseCSV(text: string): VtxData[] {
   return dataRows
     .map((row) => {
       if (row.length < 10) return null;
+
+      let port = UART.UART1;
+      const portMatch = row[4]?.match(/UART\s*(\d+)/i);
+      if (portMatch) {
+        const portNum = parseInt(portMatch[1]!, 10);
+        if (portNum >= 1 && portNum <= 6) {
+          port = (portNum - 1) as UART;
+        }
+      }
+
+      const protocolStr = row[3];
+      const protocolEnum = protocolStr?.toLowerCase().includes("smartaudio")
+        ? PROTOCOL.SMART_AUDIO
+        : PROTOCOL.TRAMP;
+
+      const tableData = row[9] || "";
+      const bands = getBandsFromTable(tableData);
+      const powerLevels = getPowerLevelsFromTable(tableData);
+
+      // Default to R (5) if available, otherwise first available band, or 1 as fallback
+      const defaultBand = bands.find((b) => b.value === 5)
+        ? 5
+        : bands.length > 0
+          ? bands[0]!.value
+          : 1;
+
       return {
         id: row[0],
         name: row[1],
         manufacturer: row[2],
-        protocol: row[3],
-        default_port: row[4],
-        default_power_1: parseInt(row[5], 10),
-        default_power_2: parseInt(row[6], 10),
-        default_power_3: parseInt(row[7], 10),
-        warning: parseInt(row[8], 10),
-        table: row[9],
+        protocol: protocolEnum,
+        port: port,
+        power_1: parseInt(row[5]!, 10),
+        power_2: parseInt(row[6]!, 10),
+        power_3: parseInt(row[7]!, 10),
+        warning: parseInt(row[8]!, 10),
+        table: tableData,
+        switch_type: SWITCH_TYPE.POS3,
+        vtx_power_aux: AUX.AUX2,
+        default_band: defaultBand,
+        default_channel: CHANNEL.CHANNEL_1,
+        power_levels: powerLevels,
       };
     })
     .filter((x): x is VtxData => x !== null);
 }
 
+function generateConfig(vtxData: VtxData): string {
+  let switch_settings = "";
+  if (vtxData.switch_type === SWITCH_TYPE.POS3) {
+    switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_1} 900 1100
+vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_2} 1400 1600
+vtx 2 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_3} 1900 2100`
+  } else {
+    switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_1} 900 1400
+vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_3} 1600 2100`
+  }
+
+  return `serial ${vtxData.port} ${vtxData.protocol} 115200 57600 0 115200
+
+# Tabela VTX
+${vtxData.table}
+
+# Ustawienia przełącznika
+${switch_settings}
+
+# Domyślne pasmo/kanał
+set vtx_band = ${vtxData.default_band}
+set vtx_channel = ${vtxData.default_channel}
+
+save
+`;
+}
+
 export function GeneratorUstawienVTX() {
-  const [vtx, setVtx] = React.useState<string>("");
   const [vtxDataMap, setVtxDataMap] = React.useState<Record<string, VtxData>>({});
   const [vtxOptions, setVtxOptions] = React.useState<{ value: string; label: string }[]>([]);
-  const [vtxUart, setVtxUart] = React.useState<Number>(UART.UART1);
-  const [vtxProtocol, setVtxProtocol] = React.useState<Number>(PROTOCOL.SMART_AUDIO);
-  const [vtxPowerAuxChannel, setVtxPowerAuxChannel] = React.useState<string>(AUX.AUX2);
-  const [vtxPowerSwitchType, setVtxPowerSwitchType] = React.useState<Number>(SWITCH_TYPE.POS3);
-  const [vtxDefaultBand, setVtxDefaultBand] = React.useState<Number>(BAND.R);
-  const [vtxDefaultChannel, setVtxDefaultChannel] = React.useState<Number>(CHANNEL.CHANNEL_1);
+  const [currentVtx, setCurrentVtx] = React.useState<VtxData | null>(null);
+  const [configText, setConfigText] = React.useState<string>("");
+  const [isErrorOpen, setIsErrorOpen] = React.useState(false);
 
-  const [includeVtxTable, setIncludeVtxTable] = React.useState<boolean>(true);
-  const [configText, setConfigText] = React.useState<string>(VTX_CONFIG_TEMPLATE);
+  const vtxBandOptions = React.useMemo(() => {
+    if (!currentVtx) return [];
+    return getBandsFromTable(currentVtx.table);
+  }, [currentVtx]);
+
+  const vtxPowerOptions = React.useMemo(() => {
+    if (!currentVtx) return [];
+    return currentVtx.power_levels.map((level) => ({
+      value: level.index,
+      label: level.label,
+    }));
+  }, [currentVtx]);
 
   React.useEffect(() => {
     fetch(
@@ -248,36 +325,40 @@ export function GeneratorUstawienVTX() {
         }
         setVtxDataMap(map);
         setVtxOptions(options);
+
+        // Select first VTX by default
+        if (data.length > 0) {
+          const first = data[0]!;
+          setCurrentVtx(first);
+          setConfigText(generateConfig(first));
+        }
       })
       .catch((err) => console.error("Error fetching VTX data:", err));
   }, []);
 
+  // Update config whenever currentVtx changes
+  React.useEffect(() => {
+    if (currentVtx) {
+      setConfigText(generateConfig(currentVtx));
+    }
+  }, [currentVtx]);
+
   const handleVtxChange = (val: string) => {
-    setVtx(val);
     const selected = vtxDataMap[val];
     if (selected) {
-      // Protocol
-      if (selected.protocol.toLowerCase().includes("smartaudio")) {
-        setVtxProtocol(PROTOCOL.SMART_AUDIO);
-      } else if (selected.protocol.toLowerCase().includes("tramp")) {
-        setVtxProtocol(PROTOCOL.TRAMP);
-      } else {
-        // Default or unknown?
-        // setVtxProtocol(99);
+      const bands = getBandsFromTable(selected.table);
+      if (bands.length === 0) {
+        setIsErrorOpen(true);
+        return;
       }
+      // When switching VTX, we reset to the defaults from that VTX
+      setCurrentVtx(selected);
+    }
+  };
 
-      // UART
-      const portMatch = selected.default_port.match(/UART\s*(\d+)/i);
-      if (portMatch) {
-        const portNum = parseInt(portMatch[1], 10);
-        // Enum is 0-based for UART1..6
-        if (portNum >= 1 && portNum <= 6) {
-          setVtxUart(portNum - 1);
-        }
-      }
-
-      // Table
-      setConfigText(selected.table);
+  const updateCurrentVtx = (updates: Partial<VtxData>) => {
+    if (currentVtx) {
+      setCurrentVtx({ ...currentVtx, ...updates });
     }
   };
 
@@ -287,6 +368,14 @@ export function GeneratorUstawienVTX() {
 
   const toolInfo = getToolByUrl("#generator-ustawien-vtx");
 
+  if (!currentVtx) {
+    return (
+      <PageContainer title={toolInfo?.title || "Generator ustawień VTX"}>
+        <div className="flex justify-center p-8">Ładowanie danych...</div>
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer title={toolInfo?.title || "Generator ustawień VTX"}>
       <div className="grid gap-6 md:grid-cols-2 mb-6">
@@ -295,25 +384,42 @@ export function GeneratorUstawienVTX() {
             <DropdownSelect
               label="VTX"
               items={vtxOptions}
-              value={vtx}
+              value={currentVtx.id}
               onValueChange={handleVtxChange}
               placeholder="Wybierz VTX"
               searchable
             />
             <div className="grid grid-cols-2 gap-4">
               <DropdownSelect
-                label="UART VTX"
+                label="UART"
                 items={VTX_UART_DROPDOWN_MAP}
-                value={vtxUart}
-                onValueChange={setVtxUart}
+                value={currentVtx.port}
+                onValueChange={(val) => updateCurrentVtx({ port: val as UART })}
                 placeholder="Wybierz UART VTX"
               />
               <DropdownSelect
-                label="Protokół VTX"
+                label="Protokół"
                 items={VTX_PROTOCOL_DROPDOWN_MAP}
-                value={vtxProtocol}
-                onValueChange={setVtxProtocol}
+                value={currentVtx.protocol}
+                onValueChange={(val) => updateCurrentVtx({ protocol: val as PROTOCOL })}
                 placeholder="Wybierz Protokół VTX"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <DropdownSelect
+                label="Domyślne pasmo"
+                items={vtxBandOptions}
+                value={currentVtx.default_band}
+                onValueChange={(val) => updateCurrentVtx({ default_band: Number(val) })}
+                placeholder="Wybierz domyślne pasmo"
+              />
+              <DropdownSelect
+                label="Domyślny kanał"
+                items={VTX_CHANNEL_DROPDOWN_MAP}
+                value={currentVtx.default_channel}
+                onValueChange={(val) => updateCurrentVtx({ default_channel: val as CHANNEL })}
+                placeholder="Wybierz domyślny kanal"
               />
             </div>
 
@@ -321,51 +427,66 @@ export function GeneratorUstawienVTX() {
               <DropdownSelect
                 label="AUX do kontroli mocy VTX"
                 items={AUX_DROPDOWN_MAP}
-                value={vtxPowerAuxChannel}
-                onValueChange={setVtxPowerAuxChannel}
+                value={currentVtx.vtx_power_aux}
+                onValueChange={(val) => updateCurrentVtx({ vtx_power_aux: val as AUX })}
                 placeholder="Wybierz AUX"
               />
               <DropdownSelect
                 label="Typ przełącznika"
                 items={SWITCH_DROPDOWN_MAP}
-                value={vtxPowerSwitchType}
-                onValueChange={setVtxPowerSwitchType}
+                value={currentVtx.switch_type}
+                onValueChange={(val) => updateCurrentVtx({ switch_type: val as SWITCH_TYPE })}
                 placeholder="Wybierz typ przelacznika"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <DropdownSelect
-                label="Domyślne pasmo"
-                items={VTX_BAND_DROPDOWN_MAP}
-                value={vtxDefaultBand}
-                onValueChange={setVtxDefaultBand}
-                placeholder="Wybierz domyślne pasmo"
-              />
-              <DropdownSelect
-                label="Domyślny kanał"
-                items={VTX_CHANNEL_DROPDOWN_MAP}
-                value={vtxDefaultChannel}
-                onValueChange={setVtxDefaultChannel}
-                placeholder="Wybierz domyślny kanal"
-              />
-            </div>
+            {currentVtx.switch_type === SWITCH_TYPE.POS2 ? (
+              <div className="grid grid-cols-2 gap-4">
+                <DropdownSelect
+                  label="Moc 1"
+                  items={vtxPowerOptions}
+                  value={currentVtx.power_1}
+                  onValueChange={(val) => updateCurrentVtx({ power_1: Number(val) })}
+                  placeholder="Wybierz moc"
+                />
+                <DropdownSelect
+                  label="Moc 2"
+                  items={vtxPowerOptions}
+                  value={currentVtx.power_3}
+                  onValueChange={(val) => updateCurrentVtx({ power_3: Number(val) })}
+                  placeholder="Wybierz moc"
+                />
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-4">
+                <DropdownSelect
+                  label="Moc 1"
+                  items={vtxPowerOptions}
+                  value={currentVtx.power_1}
+                  onValueChange={(val) => updateCurrentVtx({ power_1: Number(val) })}
+                  placeholder="Wybierz moc"
+                />
+                <DropdownSelect
+                  label="Moc 2"
+                  items={vtxPowerOptions}
+                  value={currentVtx.power_2}
+                  onValueChange={(val) => updateCurrentVtx({ power_2: Number(val) })}
+                  placeholder="Wybierz moc"
+                />
+                <DropdownSelect
+                  label="Moc 3"
+                  items={vtxPowerOptions}
+                  value={currentVtx.power_3}
+                  onValueChange={(val) => updateCurrentVtx({ power_3: Number(val) })}
+                  placeholder="Wybierz moc"
+                />
+              </div>
+            )}
           </CardContent>
         </Card>
 
         <Card className="bg-muted/50">
-          <CardContent className="space-y-4 pt-6">
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="include-vtx-table"
-                checked={includeVtxTable}
-                onChange={(e) => setIncludeVtxTable(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <Label htmlFor="include-vtx-table">Uwzględnij tabelę VTX</Label>
-            </div>
-
+          <CardContent className="space-y-4">
             <Textarea
               value={configText}
               onChange={(e) => setConfigText(e.target.value)}
@@ -379,6 +500,35 @@ export function GeneratorUstawienVTX() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog
+        open={isErrorOpen}
+        onOpenChange={(open) => {
+          setIsErrorOpen(open);
+          if (!open) {
+            if (vtxOptions.length > 0) {
+              const firstId = vtxOptions[0]!.value;
+              const firstVtx = vtxDataMap[firstId];
+              if (firstVtx) setCurrentVtx(firstVtx);
+            }
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Błąd</DialogTitle>
+            <DialogDescription>
+              Błąd parsowania tabeli VTX. Wybierz inny VTX. Prosimy zgłoś nam błąd, najlepiej przez
+              wiadomość na Instagramie!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button>OK</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageContainer>
   );
 }
