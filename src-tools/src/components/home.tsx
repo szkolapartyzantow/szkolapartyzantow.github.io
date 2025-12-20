@@ -10,7 +10,7 @@ export function Home() {
     <PageContainer title="Szkoła Partyzantów - Narzędzia">
       <div className="space-y-6">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent>
             <p>Zbiór różnych opracowanych przez nas narzędzi wspomagających pracę z dronami.</p>
             <br />
             <p>
@@ -22,9 +22,28 @@ export function Home() {
                 <img src={patroniteLogo} alt="Patronite" className="h-20 w-auto" />
               </a>
             </div>
+            <p>
+              Znajdziesz tam dodatkowo między innymi{" "}
+              <a
+                href="https://patronite.pl/szkola_partyzantow/posts/24484,kody"
+                className="text-primary"
+              >
+                kody zniżkowe od naszych partnerów
+              </a>{" "}
+              oraz materiały szkoleniowe, takie jak np. wykład{" "}
+              <a
+                href="https://patronite.pl/post/65283/jak-zaczac-przygode-z-fpv-nagranie-warsztatow"
+                className="text-primary"
+              >
+                "Jak zacząć przygodę z FPV?"
+              </a>
+              .
+            </p>
           </CardContent>
         </Card>
 
+        <h1 className="text-2xl font-bold">Drony</h1>
+        <p>Narzędzia wspomagające pracę zespołów dronowych.</p>
         <div className="grid gap-4 md:grid-cols-2">
           {TOOLS.map((tool) => (
             <a key={tool.url} href={tool.url} className="block group">
