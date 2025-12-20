@@ -112,14 +112,14 @@ const VTX_UART_DROPDOWN_MAP = [
 ];
 
 const VTX_CHANNEL_DROPDOWN_MAP = [
-  { value: CHANNEL.CHANNEL_1, label: "Channel 1" },
-  { value: CHANNEL.CHANNEL_2, label: "Channel 2" },
-  { value: CHANNEL.CHANNEL_3, label: "Channel 3" },
-  { value: CHANNEL.CHANNEL_4, label: "Channel 4" },
-  { value: CHANNEL.CHANNEL_5, label: "Channel 5" },
-  { value: CHANNEL.CHANNEL_6, label: "Channel 6" },
-  { value: CHANNEL.CHANNEL_7, label: "Channel 7" },
-  { value: CHANNEL.CHANNEL_8, label: "Channel 8" },
+  { value: CHANNEL.CHANNEL_1, label: CHANNEL.CHANNEL_1 },
+  { value: CHANNEL.CHANNEL_2, label: CHANNEL.CHANNEL_2 },
+  { value: CHANNEL.CHANNEL_3, label: CHANNEL.CHANNEL_3 },
+  { value: CHANNEL.CHANNEL_4, label: CHANNEL.CHANNEL_4 },
+  { value: CHANNEL.CHANNEL_5, label: CHANNEL.CHANNEL_5 },
+  { value: CHANNEL.CHANNEL_6, label: CHANNEL.CHANNEL_6 },
+  { value: CHANNEL.CHANNEL_7, label: CHANNEL.CHANNEL_7 },
+  { value: CHANNEL.CHANNEL_8, label: CHANNEL.CHANNEL_8 },
 ];
 
 function getPowerLevelsFromTable(table: string): PowerLevel[] {
