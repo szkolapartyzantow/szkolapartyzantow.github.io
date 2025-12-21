@@ -300,6 +300,8 @@ export function GeneratorUstawienVTX() {
   const [currentVtx, setCurrentVtx] = React.useState<VtxData | null>(null);
   const [configText, setConfigText] = React.useState<string>("");
   const [isErrorOpen, setIsErrorOpen] = React.useState(false);
+  const [isProtocolWarningOpen, setIsProtocolWarningOpen] = React.useState(false);
+  const [pendingProtocol, setPendingProtocol] = React.useState<PROTOCOL | null>(null);
 
   const vtxBandOptions = React.useMemo(() => {
     if (!currentVtx) return [];
@@ -417,6 +419,43 @@ export function GeneratorUstawienVTX() {
     if (currentVtx) {
       setCurrentVtx({ ...currentVtx, ...updates });
     }
+  };
+
+  const handleProtocolWarningOpenChange = (open: boolean) => {
+    setIsProtocolWarningOpen(open);
+    if (!open) {
+      setPendingProtocol(null);
+    }
+  };
+
+  const handleProtocolChange = (val: PROTOCOL) => {
+    if (!currentVtx) return;
+
+    // Case 1: No change, do nothing.
+    if (val === currentVtx.protocol) {
+      return;
+    }
+
+    // Case 2: Custom VTX table, always allow change.
+    if (currentVtx.id === CUSTOM_VTX_ID) {
+      updateCurrentVtx({ protocol: val });
+      return;
+    }
+
+    // Case 3: It's a preset. Check against original protocol.
+    const originalVtxData = vtxDataMap[currentVtx.id];
+    if (originalVtxData) {
+      // If going back to original, allow it without warning.
+      if (val === originalVtxData.protocol) {
+        updateCurrentVtx({ protocol: val });
+        return;
+      }
+    }
+
+    // If we reach here, it means it's a preset and the user is selecting
+    // a protocol that is NOT the original one. Show warning.
+    setPendingProtocol(val);
+    setIsProtocolWarningOpen(true);
   };
 
   const handleCustomTableChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -553,7 +592,7 @@ vtxtable powervalues 14 20 23 26 28`}
                 label="Protokół"
                 items={VTX_PROTOCOL_DROPDOWN_MAP}
                 value={currentVtx.protocol}
-                onValueChange={(val) => updateCurrentVtx({ protocol: val as PROTOCOL })}
+                onValueChange={(val) => handleProtocolChange(val as PROTOCOL)}
                 placeholder="Wybierz Protokół VTX"
               />
             </div>
@@ -653,6 +692,37 @@ vtxtable powervalues 14 20 23 26 28`}
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={isProtocolWarningOpen} onOpenChange={handleProtocolWarningOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>UWAGA</DialogTitle>
+            <DialogDescription>
+              Zmieniasz protokół VTX. Na 99% procent nie powinieneś tego robić! Zrób to tylko wtedy
+              jeśli sądzisz, że w naszym gotowym schemacie jest błąd i VTX używa innego protokołu
+              niż sądziliśmy.
+              <br />
+              <br />
+              Czy na pewno chcesz kontynuować?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Anuluj</Button>
+            </DialogClose>
+            <Button
+              onClick={() => {
+                if (pendingProtocol) {
+                  updateCurrentVtx({ protocol: pendingProtocol });
+                }
+                handleProtocolWarningOpenChange(false);
+              }}
+            >
+              Tak
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog
         open={isErrorOpen}
