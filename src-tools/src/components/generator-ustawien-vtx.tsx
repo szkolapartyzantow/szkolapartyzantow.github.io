@@ -32,6 +32,7 @@ enum AUX {
 enum SWITCH_TYPE {
   POS2,
   POS3,
+  POS6,
 }
 
 enum UART {
@@ -71,9 +72,7 @@ interface VtxData {
   manufacturer: string;
   protocol: PROTOCOL;
   port: UART;
-  power_1: number;
-  power_2: number;
-  power_3: number;
+  powers: number[];
   warning: number;
   table: string;
   switch_type: SWITCH_TYPE;
@@ -97,6 +96,7 @@ const AUX_DROPDOWN_MAP = [
 const SWITCH_DROPDOWN_MAP = [
   { value: SWITCH_TYPE.POS2, label: "2POS" },
   { value: SWITCH_TYPE.POS3, label: "3POS" },
+  { value: SWITCH_TYPE.POS6, label: "6POS" },
 ];
 
 const VTX_PROTOCOL_DROPDOWN_MAP = [
@@ -252,10 +252,15 @@ function parseCSV(text: string): VtxData[] {
         manufacturer: row[2],
         protocol: protocolEnum,
         port: port,
-        power_1: parseInt(row[5]!, 10),
-        power_2: parseInt(row[6]!, 10),
-        power_3: parseInt(row[7]!, 10),
-        warning: parseInt(row[8]!, 10),
+        powers: [
+          parseInt(row[5]!, 10) || 0,
+          parseInt(row[6]!, 10) || 0,
+          parseInt(row[7]!, 10) || 0,
+          0,
+          0,
+          0,
+        ],
+        warning: parseInt(row[8]!, 10) || 0,
         table: tableData,
         switch_type: SWITCH_TYPE.POS3,
         vtx_power_aux: AUX.AUX2,
@@ -269,13 +274,24 @@ function parseCSV(text: string): VtxData[] {
 
 function generateConfig(vtxData: VtxData): string {
   let switch_settings = "";
-  if (vtxData.switch_type === SWITCH_TYPE.POS3) {
-    switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_1} 900 1100
-vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_2} 1400 1600
-vtx 2 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_3} 1900 2100`;
-  } else {
-    switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_1} 900 1400
-vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.power_3} 1600 2100`;
+  switch (vtxData.switch_type) {
+    case SWITCH_TYPE.POS2:
+      switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[0]} 900 1400
+vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[2]} 1600 2100`;
+      break;
+    case SWITCH_TYPE.POS3:
+      switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[0]} 900 1100
+vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[1]} 1400 1600
+vtx 2 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[2]} 1900 2100`;
+      break;
+    case SWITCH_TYPE.POS6:
+      switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[0]} 900 1050
+vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[1]} 1225 1325
+vtx 2 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[2]} 1375 1475
+vtx 3 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[3]} 1525 1625
+vtx 4 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[4]} 1675 1775
+vtx 5 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[5]} 1950 2100`;
+      break;
   }
 
   return `serial ${vtxData.port} ${vtxData.protocol} 115200 57600 0 115200
@@ -389,9 +405,7 @@ export function GeneratorUstawienVTX() {
         manufacturer: "Custom",
         protocol: PROTOCOL.SMART_AUDIO,
         port: UART.UART1,
-        power_1: 0,
-        power_2: 0,
-        power_3: 0,
+        powers: [0, 0, 0, 0, 0, 0],
         warning: 0,
         table: "",
         switch_type: SWITCH_TYPE.POS3,
@@ -419,6 +433,36 @@ export function GeneratorUstawienVTX() {
     if (currentVtx) {
       setCurrentVtx({ ...currentVtx, ...updates });
     }
+  };
+
+  const updatePower = (index: number, val: string) => {
+    if (!currentVtx) return;
+    const newPowers = [...currentVtx.powers];
+    newPowers[index] = Number(val);
+    updateCurrentVtx({ powers: newPowers });
+  };
+
+  const handleSwitchTypeChange = (newType: SWITCH_TYPE) => {
+    if (!currentVtx) return;
+
+    const updates: Partial<VtxData> = { switch_type: newType };
+
+    if (newType === SWITCH_TYPE.POS6) {
+      const powerLevels = currentVtx.power_levels;
+      const numLevels = powerLevels.length;
+      const powerIndices = powerLevels.map((p) => p.index);
+      const lastPower = powerIndices[numLevels - 1]!;
+      const newPowers = [...currentVtx.powers];
+      newPowers[0] = powerIndices[0] ?? lastPower;
+      newPowers[1] = powerIndices[1] ?? lastPower;
+      newPowers[2] = powerIndices[2] ?? lastPower;
+      newPowers[3] = powerIndices[3] ?? lastPower;
+      newPowers[4] = powerIndices[4] ?? lastPower;
+      newPowers[5] = powerIndices[5] ?? lastPower;
+      updates.powers = newPowers;
+    }
+
+    updateCurrentVtx(updates);
   };
 
   const handleProtocolWarningOpenChange = (open: boolean) => {
@@ -471,10 +515,11 @@ export function GeneratorUstawienVTX() {
     };
 
     if (powerLevels.length > 0) {
-      updates.power_1 = powerLevels[0]?.index ?? 0;
-      updates.power_2 = powerLevels[1]?.index ?? powerLevels[0]?.index ?? 0;
-      updates.power_3 =
-        powerLevels[2]?.index ?? powerLevels[1]?.index ?? powerLevels[0]?.index ?? 0;
+      const newPowers = [...currentVtx.powers];
+      newPowers[0] = powerLevels[0]?.index ?? 0;
+      newPowers[1] = powerLevels[1]?.index ?? powerLevels[0]?.index ?? 0;
+      newPowers[2] = powerLevels[2]?.index ?? powerLevels[1]?.index ?? powerLevels[0]?.index ?? 0;
+      updates.powers = newPowers;
     }
 
     if (bands.length > 0) {
@@ -626,7 +671,7 @@ vtxtable powervalues 14 20 23 26 28`}
                 label="Typ przełącznika"
                 items={SWITCH_DROPDOWN_MAP}
                 value={currentVtx.switch_type}
-                onValueChange={(val) => updateCurrentVtx({ switch_type: val as SWITCH_TYPE })}
+                onValueChange={(val) => handleSwitchTypeChange(val as SWITCH_TYPE)}
                 placeholder="Wybierz typ przelacznika"
               />
             </div>
@@ -636,15 +681,60 @@ vtxtable powervalues 14 20 23 26 28`}
                 <DropdownSelect
                   label="Moc 1"
                   items={vtxPowerOptions}
-                  value={currentVtx.power_1}
-                  onValueChange={(val) => updateCurrentVtx({ power_1: Number(val) })}
+                  value={currentVtx.powers[0]}
+                  onValueChange={(val) => updatePower(0, val)}
                   placeholder="Wybierz moc"
                 />
                 <DropdownSelect
                   label="Moc 2"
                   items={vtxPowerOptions}
-                  value={currentVtx.power_3}
-                  onValueChange={(val) => updateCurrentVtx({ power_3: Number(val) })}
+                  value={currentVtx.powers[2]}
+                  onValueChange={(val) => updatePower(2, val)}
+                  placeholder="Wybierz moc"
+                />
+              </div>
+            ) : currentVtx.switch_type === SWITCH_TYPE.POS6 ? (
+              <div className="grid grid-cols-3 gap-4">
+                <DropdownSelect
+                  label="Moc 1"
+                  items={vtxPowerOptions}
+                  value={currentVtx.powers[0]}
+                  onValueChange={(val) => updatePower(0, val)}
+                  placeholder="Wybierz moc"
+                />
+                <DropdownSelect
+                  label="Moc 2"
+                  items={vtxPowerOptions}
+                  value={currentVtx.powers[1]}
+                  onValueChange={(val) => updatePower(1, val)}
+                  placeholder="Wybierz moc"
+                />
+                <DropdownSelect
+                  label="Moc 3"
+                  items={vtxPowerOptions}
+                  value={currentVtx.powers[2]}
+                  onValueChange={(val) => updatePower(2, val)}
+                  placeholder="Wybierz moc"
+                />
+                <DropdownSelect
+                  label="Moc 4"
+                  items={vtxPowerOptions}
+                  value={currentVtx.powers[3]}
+                  onValueChange={(val) => updatePower(3, val)}
+                  placeholder="Wybierz moc"
+                />
+                <DropdownSelect
+                  label="Moc 5"
+                  items={vtxPowerOptions}
+                  value={currentVtx.powers[4]}
+                  onValueChange={(val) => updatePower(4, val)}
+                  placeholder="Wybierz moc"
+                />
+                <DropdownSelect
+                  label="Moc 6"
+                  items={vtxPowerOptions}
+                  value={currentVtx.powers[5]}
+                  onValueChange={(val) => updatePower(5, val)}
                   placeholder="Wybierz moc"
                 />
               </div>
@@ -653,22 +743,22 @@ vtxtable powervalues 14 20 23 26 28`}
                 <DropdownSelect
                   label="Moc 1"
                   items={vtxPowerOptions}
-                  value={currentVtx.power_1}
-                  onValueChange={(val) => updateCurrentVtx({ power_1: Number(val) })}
+                  value={currentVtx.powers[0]}
+                  onValueChange={(val) => updatePower(0, val)}
                   placeholder="Wybierz moc"
                 />
                 <DropdownSelect
                   label="Moc 2"
                   items={vtxPowerOptions}
-                  value={currentVtx.power_2}
-                  onValueChange={(val) => updateCurrentVtx({ power_2: Number(val) })}
+                  value={currentVtx.powers[1]}
+                  onValueChange={(val) => updatePower(1, val)}
                   placeholder="Wybierz moc"
                 />
                 <DropdownSelect
                   label="Moc 3"
                   items={vtxPowerOptions}
-                  value={currentVtx.power_3}
-                  onValueChange={(val) => updateCurrentVtx({ power_3: Number(val) })}
+                  value={currentVtx.powers[2]}
+                  onValueChange={(val) => updatePower(2, val)}
                   placeholder="Wybierz moc"
                 />
               </div>
