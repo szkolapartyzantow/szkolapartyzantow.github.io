@@ -19,8 +19,8 @@ import { getToolByUrl } from "@/lib/tools";
 import { ToolHelp } from "./tool-help";
 
 enum AUX {
-  AUX1,
-  AUX2,
+  // AUX1,
+  AUX2 = 1,
   AUX3,
   AUX4,
   AUX5,
@@ -83,7 +83,7 @@ interface VtxData {
 }
 
 const AUX_DROPDOWN_MAP = [
-  { value: AUX.AUX1, label: "AUX1" },
+  // { value: AUX.AUX1, label: "AUX1" },
   { value: AUX.AUX2, label: "AUX2" },
   { value: AUX.AUX3, label: "AUX3" },
   { value: AUX.AUX4, label: "AUX4" },
@@ -126,6 +126,9 @@ const VTX_CHANNEL_DROPDOWN_MAP = [
 
 const CUSTOM_VTX_ID = "custom";
 
+const VTX_DATA_URL =
+  "https://docs.google.com/spreadsheets/d/1pSce3OR-ZkvILul03hWvtaR-mHh861qv2u8pIxIHbWQ/export?format=csv";
+
 function getPowerLevelsFromTable(table: string): PowerLevel[] {
   const levels: PowerLevel[] = [];
   const lines = table.split("\n");
@@ -161,10 +164,13 @@ function getBandsFromTable(table: string): { value: number; label: string }[] {
   for (const line of lines) {
     const parts = line.trim().split(/\s+/);
     if (parts[0] === "vtxtable" && parts[1] === "band" && parts.length >= 5) {
-      const num = parseInt(parts[2]!, 10);
-      const label = parts[4]!; // using the letter/short label
-      if (!isNaN(num)) {
-        bands.push({ value: num, label: label });
+      const numStr = parts[2];
+      const label = parts[4]; // using the letter/short label
+      if (numStr && label) {
+        const num = parseInt(numStr, 10);
+        if (!isNaN(num)) {
+          bands.push({ value: num, label: label });
+        }
       }
     }
   }
@@ -219,48 +225,58 @@ function parseCSV(text: string): VtxData[] {
 
   return dataRows
     .map((row) => {
+      // Basic validation: ensure we have enough columns
       if (row.length < 10) return null;
 
+      // Extract raw values safely
+      const id = row[0] ?? "";
+      const name = row[1] ?? "";
+      const manufacturer = row[2] ?? "";
+      const protocolStr = row[3] ?? "";
+      const portStr = row[4] ?? "";
+      const power1Str = row[5] ?? "0";
+      const power2Str = row[6] ?? "0";
+      const power3Str = row[7] ?? "0";
+      const warningStr = row[8] ?? "0";
+      const tableData = row[9] ?? "";
+
       let port = UART.UART1;
-      const portMatch = row[4]?.match(/UART\s*(\d+)/i);
-      if (portMatch) {
-        const portNum = parseInt(portMatch[1]!, 10);
-        if (portNum >= 1 && portNum <= 6) {
+      const portMatch = portStr.match(/UART\s*(\d+)/i);
+      if (portMatch && portMatch[1]) {
+        const portNum = parseInt(portMatch[1], 10);
+        if (!isNaN(portNum) && portNum >= 1 && portNum <= 6) {
           port = (portNum - 1) as UART;
         }
       }
 
-      const protocolStr = row[3];
-      const protocolEnum = protocolStr?.toLowerCase().includes("smartaudio")
+      const protocolEnum = protocolStr.toLowerCase().includes("smartaudio")
         ? PROTOCOL.SMART_AUDIO
         : PROTOCOL.TRAMP;
 
-      const tableData = row[9] || "";
       const bands = getBandsFromTable(tableData);
       const powerLevels = getPowerLevelsFromTable(tableData);
 
       // Default to R (5) if available, otherwise first available band, or 1 as fallback
       const defaultBand = bands.find((b) => b.value === 5)
         ? 5
-        : bands.length > 0
-          ? bands[0]!.value
+        : bands.length > 0 && bands[0]
+          ? bands[0].value
           : 1;
 
+      // Safely parse power values
+      const p1 = parseInt(power1Str, 10);
+      const p2 = parseInt(power2Str, 10);
+      const p3 = parseInt(power3Str, 10);
+      const warn = parseInt(warningStr, 10);
+
       return {
-        id: row[0],
-        name: row[1],
-        manufacturer: row[2],
+        id,
+        name,
+        manufacturer,
         protocol: protocolEnum,
         port: port,
-        powers: [
-          parseInt(row[5]!, 10) || 0,
-          parseInt(row[6]!, 10) || 0,
-          parseInt(row[7]!, 10) || 0,
-          0,
-          0,
-          0,
-        ],
-        warning: parseInt(row[8]!, 10) || 0,
+        powers: [isNaN(p1) ? 0 : p1, isNaN(p2) ? 0 : p2, isNaN(p3) ? 0 : p3, 0, 0, 0],
+        warning: isNaN(warn) ? 0 : warn,
         table: tableData,
         switch_type: SWITCH_TYPE.POS3,
         vtx_power_aux: AUX.AUX2,
@@ -333,9 +349,7 @@ export function GeneratorUstawienVTX() {
   }, [currentVtx]);
 
   React.useEffect(() => {
-    fetch(
-      "https://docs.google.com/spreadsheets/d/1pSce3OR-ZkvILul03hWvtaR-mHh861qv2u8pIxIHbWQ/export?format=csv"
-    )
+    fetch(VTX_DATA_URL)
       .then((res) => res.text())
       .then((text) => {
         const data = parseCSV(text);
@@ -409,7 +423,7 @@ export function GeneratorUstawienVTX() {
         warning: 0,
         table: "",
         switch_type: SWITCH_TYPE.POS3,
-        vtx_power_aux: AUX.AUX1,
+        vtx_power_aux: AUX.AUX2,
         default_band: 1,
         default_channel: CHANNEL.CHANNEL_1,
         power_levels: [],
@@ -579,11 +593,12 @@ export function GeneratorUstawienVTX() {
             mocy VTX. Do sprawdzenia w zakładce Receiver (Odbiornik) w Betaflight.
           </li>
           <li>
-            <b>Typ przełącznika</b> - wybierz czy Twój przełącznik jest 3 czy 2 pozycyjny.
+            <b>Typ przełącznika</b> - wybierz czy Twój przełącznik jest 2, 3 czy 6 pozycyjny.
+            Ustawienie 6POS może być też użyte do slidera.
           </li>
           <li>
-            <b>Moc 1/2/3</b> - ustawienia mocy. Moc 1 z zasady powinna być najniższa i odpowiada
-            górnemu położeniu przełącznika.
+            <b>Moc 1/2/3/4/5/6</b> - ustawienia mocy. Moc 1 z zasady powinna być najniższa i
+            odpowiada górnemu położeniu przełącznika.
           </li>
         </ul>
       </ToolHelp>
@@ -676,93 +691,25 @@ vtxtable powervalues 14 20 23 26 28`}
               />
             </div>
 
-            {currentVtx.switch_type === SWITCH_TYPE.POS2 ? (
-              <div className="grid grid-cols-2 gap-4">
+            <div
+              className={`grid gap-4 ${currentVtx.switch_type !== SWITCH_TYPE.POS2 ? "grid-cols-3" : "grid-cols-2"}`}
+            >
+              {(currentVtx.switch_type === SWITCH_TYPE.POS2
+                ? [0, 2]
+                : currentVtx.switch_type === SWITCH_TYPE.POS3
+                  ? [0, 1, 2]
+                  : [0, 1, 2, 3, 4, 5]
+              ).map((powerIndex, i) => (
                 <DropdownSelect
-                  label="Moc 1"
+                  key={powerIndex}
+                  label={`Moc ${i + 1}`}
                   items={vtxPowerOptions}
-                  value={currentVtx.powers[0]}
-                  onValueChange={(val) => updatePower(0, val)}
+                  value={currentVtx.powers[powerIndex]}
+                  onValueChange={(val) => updatePower(powerIndex, val)}
                   placeholder="Wybierz moc"
                 />
-                <DropdownSelect
-                  label="Moc 2"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[2]}
-                  onValueChange={(val) => updatePower(2, val)}
-                  placeholder="Wybierz moc"
-                />
-              </div>
-            ) : currentVtx.switch_type === SWITCH_TYPE.POS6 ? (
-              <div className="grid grid-cols-3 gap-4">
-                <DropdownSelect
-                  label="Moc 1"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[0]}
-                  onValueChange={(val) => updatePower(0, val)}
-                  placeholder="Wybierz moc"
-                />
-                <DropdownSelect
-                  label="Moc 2"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[1]}
-                  onValueChange={(val) => updatePower(1, val)}
-                  placeholder="Wybierz moc"
-                />
-                <DropdownSelect
-                  label="Moc 3"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[2]}
-                  onValueChange={(val) => updatePower(2, val)}
-                  placeholder="Wybierz moc"
-                />
-                <DropdownSelect
-                  label="Moc 4"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[3]}
-                  onValueChange={(val) => updatePower(3, val)}
-                  placeholder="Wybierz moc"
-                />
-                <DropdownSelect
-                  label="Moc 5"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[4]}
-                  onValueChange={(val) => updatePower(4, val)}
-                  placeholder="Wybierz moc"
-                />
-                <DropdownSelect
-                  label="Moc 6"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[5]}
-                  onValueChange={(val) => updatePower(5, val)}
-                  placeholder="Wybierz moc"
-                />
-              </div>
-            ) : (
-              <div className="grid grid-cols-3 gap-4">
-                <DropdownSelect
-                  label="Moc 1"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[0]}
-                  onValueChange={(val) => updatePower(0, val)}
-                  placeholder="Wybierz moc"
-                />
-                <DropdownSelect
-                  label="Moc 2"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[1]}
-                  onValueChange={(val) => updatePower(1, val)}
-                  placeholder="Wybierz moc"
-                />
-                <DropdownSelect
-                  label="Moc 3"
-                  items={vtxPowerOptions}
-                  value={currentVtx.powers[2]}
-                  onValueChange={(val) => updatePower(2, val)}
-                  placeholder="Wybierz moc"
-                />
-              </div>
-            )}
+              ))}
+            </div>
           </CardContent>
         </Card>
 
