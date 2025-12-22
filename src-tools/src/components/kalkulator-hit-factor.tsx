@@ -9,7 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import { DropdownSelect } from "./dropdown-select";
 import { PageContainer } from "./page-container";
 import { getToolByUrl } from "@/lib/tools";
-import { ToolHelp } from "./tool-help";
 
 enum POWER_FACTOR {
   MINOR = "Minor",

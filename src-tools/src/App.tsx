@@ -7,11 +7,13 @@ import { KalkulatorHitFactor } from "./components/kalkulator-hit-factor";
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
 import { useHash } from "@/hooks/use-hash";
 import "./index.css";
+import { Kontakt } from "./components/kontakt";
 
 const components: Record<string, ComponentType> = {
   "kalkulator-los": KalkulatorLOS,
   "generator-ustawien-vtx": GeneratorUstawienVTX,
   "kalkulator-hit-factor": KalkulatorHitFactor,
+  "kontakt": Kontakt,
 };
 
 export function App() {

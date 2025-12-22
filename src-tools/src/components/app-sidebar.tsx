@@ -87,6 +87,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarFooter>
+        <a href="#kontakt" onClick={handleMenuClick}>
+          <span>Kontakt</span>
+        </a>
         <a href="https://patronite.pl/szkola_partyzantow">
           <Card>
             <CardContent>
