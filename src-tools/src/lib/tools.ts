@@ -1,4 +1,4 @@
-export const TOOLS = [
+export const DRONE_TOOLS = [
   {
     title: "Kalkulator LOS anteny",
     description: 'Oblicz na jakiej wysokości musisz lecieć, aby Twoja antena "widziała" drona.',
@@ -11,5 +11,15 @@ export const TOOLS = [
     url: "#generator-ustawien-vtx",
   },
 ] as const;
+
+export const SHOOTING_TOOLS = [
+  {
+    title: "Kalkulator Hit Factor",
+    description: "Kalkulator wspomagający obliczanie Hit Factor w IPSC/USPSA",
+    url: "#kalkulator-hit-factor",
+  },
+] as const;
+
+export const TOOLS = [...DRONE_TOOLS, ...SHOOTING_TOOLS] as const;
 
 export const getToolByUrl = (url: string) => TOOLS.find((t) => t.url === url);

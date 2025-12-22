@@ -17,13 +17,17 @@ import {
 } from "@/components/ui/sidebar";
 import { Card, CardContent } from "./ui/card";
 import patroniteLogo from "../assets/patronite-logo-SVG-02.svg";
-import { TOOLS } from "@/lib/tools";
+import { DRONE_TOOLS, SHOOTING_TOOLS } from "@/lib/tools";
 
 const data = {
   navMain: [
     {
       title: "Drony",
-      items: TOOLS,
+      items: DRONE_TOOLS,
+    },
+    {
+      title: "Strzelectwo",
+      items: SHOOTING_TOOLS,
     },
   ],
 };

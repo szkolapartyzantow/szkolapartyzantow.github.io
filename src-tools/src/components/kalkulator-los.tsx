@@ -219,6 +219,7 @@ export function KalkulatorLOS() {
                   step="0.1"
                   value={antennaHeight}
                   onChange={(e) => setAntennaHeight(e.target.value)}
+                  className="no-spin-button"
                 />
               </div>
               <div className="space-y-2">
@@ -228,6 +229,7 @@ export function KalkulatorLOS() {
                   type="number"
                   value={targetDistance}
                   onChange={(e) => setTargetDistance(e.target.value)}
+                  className="no-spin-button"
                 />
               </div>
             </div>
@@ -250,6 +252,7 @@ export function KalkulatorLOS() {
                         step="0.1"
                         value={obstacle.height}
                         onChange={(e) => updateObstacle(obstacle.id, "height", e.target.value)}
+                        className="no-spin-button"
                       />
                     </div>
                     <div className="space-y-2">
@@ -260,6 +263,7 @@ export function KalkulatorLOS() {
                           type="number"
                           value={obstacle.distance}
                           onChange={(e) => updateObstacle(obstacle.id, "distance", e.target.value)}
+                          className="no-spin-button"
                         />
                         {obstacles.length > 1 && (
                           <Button

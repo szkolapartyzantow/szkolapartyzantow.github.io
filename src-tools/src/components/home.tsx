@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import patroniteLogo from "../assets/patronite-logo-SVG-02.svg";
 import { PageContainer } from "./page-container";
 
-import { TOOLS } from "../lib/tools";
+import { DRONE_TOOLS, SHOOTING_TOOLS } from "../lib/tools";
 
 export function Home() {
   return (
@@ -44,7 +44,23 @@ export function Home() {
         <h1 className="text-2xl font-bold">Drony</h1>
         <p>Narzędzia wspomagające pracę zespołów dronowych.</p>
         <div className="grid gap-4 md:grid-cols-2">
-          {TOOLS.map((tool) => (
+          {DRONE_TOOLS.map((tool) => (
+            <a key={tool.url} href={tool.url} className="block group">
+              <Card className="h-full transition-colors hover:bg-muted/50">
+                <CardHeader>
+                  <CardTitle className="group-hover:text-primary transition-colors">
+                    {tool.title}
+                  </CardTitle>
+                  <CardDescription>{tool.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          ))}
+        </div>
+        <h1 className="text-2xl font-bold">Strzelectwo</h1>
+        <p>Narzędzia przydatne w strzelectwie.</p>
+        <div className="grid gap-4 md:grid-cols-2">
+          {SHOOTING_TOOLS.map((tool) => (
             <a key={tool.url} href={tool.url} className="block group">
               <Card className="h-full transition-colors hover:bg-muted/50">
                 <CardHeader>

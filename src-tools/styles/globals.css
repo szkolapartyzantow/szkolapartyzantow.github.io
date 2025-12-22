@@ -193,3 +193,17 @@
     letter-spacing: var(--tracking-normal);
   }
 }
+
+@layer utilities {
+  /* Chrome, Safari, Edge, Opera */
+  .no-spin-button::-webkit-outer-spin-button,
+  .no-spin-button::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  .no-spin-button {
+    -moz-appearance: textfield;
+  }
+}
