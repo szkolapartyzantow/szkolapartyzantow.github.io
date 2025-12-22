@@ -129,6 +129,56 @@ const CUSTOM_VTX_ID = "custom";
 const VTX_DATA_URL =
   "https://docs.google.com/spreadsheets/d/1pSce3OR-ZkvILul03hWvtaR-mHh861qv2u8pIxIHbWQ/export?format=csv";
 
+const DB_NAME = "VTX_SETTINGS_DB";
+const STORE_NAME = "vtx_store";
+const DB_VERSION = 1;
+const CACHE_KEY = "vtx_csv_data";
+
+function openDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+  });
+}
+
+async function getCachedData(): Promise<string | null> {
+  try {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, "readonly");
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.get(CACHE_KEY);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve((request.result as string) || null);
+    });
+  } catch (err) {
+    console.warn("Failed to read from cache", err);
+    return null;
+  }
+}
+
+async function setCachedData(data: string): Promise<void> {
+  try {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.put(data, CACHE_KEY);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve();
+    });
+  } catch (err) {
+    console.warn("Failed to write to cache", err);
+  }
+}
+
 function getPowerLevelsFromTable(table: string): PowerLevel[] {
   const levels: PowerLevel[] = [];
   const lines = table.split("\n");
@@ -335,6 +385,9 @@ export function GeneratorUstawienVTX() {
   const [isProtocolWarningOpen, setIsProtocolWarningOpen] = React.useState(false);
   const [pendingProtocol, setPendingProtocol] = React.useState<PROTOCOL | null>(null);
 
+  const lastDataRef = React.useRef<string | null>(null);
+  const initializedRef = React.useRef(false);
+
   const vtxBandOptions = React.useMemo(() => {
     if (!currentVtx) return [];
     return getBandsFromTable(currentVtx.table);
@@ -349,41 +402,44 @@ export function GeneratorUstawienVTX() {
   }, [currentVtx]);
 
   React.useEffect(() => {
-    fetch(VTX_DATA_URL)
-      .then((res) => res.text())
-      .then((text) => {
-        const data = parseCSV(text);
-        const map: Record<string, VtxData> = {};
-        for (const item of data) {
-          map[item.id] = item;
+    const processData = (text: string) => {
+      if (text === lastDataRef.current) return;
+      lastDataRef.current = text;
+
+      const data = parseCSV(text);
+      const map: Record<string, VtxData> = {};
+      for (const item of data) {
+        map[item.id] = item;
+      }
+
+      const grouped: { [key: string]: VtxData[] } = {};
+      for (const item of data) {
+        const m = item.manufacturer || "Inne";
+        if (!grouped[m]) {
+          grouped[m] = [];
         }
+        grouped[m]!.push(item);
+      }
 
-        const grouped: { [key: string]: VtxData[] } = {};
-        for (const item of data) {
-          const m = item.manufacturer || "Inne";
-          if (!grouped[m]) {
-            grouped[m] = [];
-          }
-          grouped[m]!.push(item);
-        }
+      const options: (SelectItemData | SelectItemGroup)[] = [
+        { value: CUSTOM_VTX_ID, label: "Własna tabela VTX" },
+      ];
 
-        const options: (SelectItemData | SelectItemGroup)[] = [
-          { value: CUSTOM_VTX_ID, label: "Własna tabela VTX" },
-        ];
+      for (const manufacturer in grouped) {
+        options.push({
+          label: manufacturer,
+          items: grouped[manufacturer]!.map((item) => ({
+            value: item.id,
+            label: item.name,
+          })),
+        });
+      }
 
-        for (const manufacturer in grouped) {
-          options.push({
-            label: manufacturer,
-            items: grouped[manufacturer]!.map((item) => ({
-              value: item.id,
-              label: item.name,
-            })),
-          });
-        }
+      setVtxDataMap(map);
+      setVtxOptions(options);
 
-        setVtxDataMap(map);
-        setVtxOptions(options);
-
+      // Initialize selection only once
+      if (!initializedRef.current) {
         if (data.length > 0) {
           const first = data[0]!;
           setCurrentVtx(first);
@@ -392,6 +448,23 @@ export function GeneratorUstawienVTX() {
           // Fallback to custom
           handleVtxChange(CUSTOM_VTX_ID);
         }
+        initializedRef.current = true;
+      }
+    };
+
+    // 1. Try cache
+    getCachedData().then((cached) => {
+      if (cached) {
+        processData(cached);
+      }
+    });
+
+    // 2. Fetch network
+    fetch(VTX_DATA_URL)
+      .then((res) => res.text())
+      .then((text) => {
+        setCachedData(text);
+        processData(text);
       })
       .catch((err) => console.error("Error fetching VTX data:", err));
   }, []);
