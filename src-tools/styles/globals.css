@@ -192,6 +192,9 @@
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+  a.text-primary:hover {
+    @apply underline;
+  }
 }
 
 @layer utilities {

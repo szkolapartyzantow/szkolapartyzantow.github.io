@@ -18,7 +18,7 @@ export function Home() {
             </p>
             <div className="flex items-center justify-center gap-2 mt-4">
               <a href="https://patronite.pl/szkola_partyzantow">
-                <img src={patroniteLogo} alt="Patronite" className="h-20 w-auto" />
+                <img src={patroniteLogo} alt="Patronite" className="h-30 w-auto p-5 hover:bg-muted" />
               </a>
             </div>
             <p>

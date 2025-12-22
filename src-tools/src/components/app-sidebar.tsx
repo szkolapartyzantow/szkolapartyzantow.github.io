@@ -87,11 +87,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <a href="#kontakt" onClick={handleMenuClick}>
+        <a href="#kontakt" className="hover:underline hover:text-primary" onClick={handleMenuClick}>
           <span>Kontakt</span>
         </a>
         <a href="https://patronite.pl/szkola_partyzantow">
-          <Card>
+          <Card className="hover:bg-muted/50">
             <CardContent>
               <div className="flex flex-col items-center justify-center">
                 <span className="mb-2 font-bold text-muted-foreground">Wspieraj nas na:</span>
@@ -99,9 +99,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </div>
             </CardContent>
           </Card>
-        </a>
-      </SidebarFooter>
+        </a >
+      </SidebarFooter >
       <SidebarRail />
-    </Sidebar>
+    </Sidebar >
   );
 }
