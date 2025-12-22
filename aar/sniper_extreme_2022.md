@@ -2,7 +2,7 @@
 layout: post
 title: Sniper Extreme 2022
 image-type: image-small
-image-src: "/img/aar/sniper_extreme_1.jpg"
+image-src: "/img/aar/sniper_extreme/sniper_extreme_1.jpg"
 ---
 
 Sniper Extreme to zawody przyciągające wielu doskonałych strzelców chcących sprawdzić się w rywalizacji par snajperskich.
@@ -19,7 +19,7 @@ telewizor LCD i kanapy w świetlicy, w której można było oglądać obecne zma
 
 ## 23.11.2022
 
-<img class="image-inline-big" src="/img/aar/sniper_extreme_2.jpg">
+<img class="image-inline-big" src="/img/aar/sniper_extreme/sniper_extreme_2.jpg">
 
 Następny dzień zaczął się od śniadania w stołówce przywiezionego w pudełkach z pobliskiego hotelu (jajecznica), a potem
 na sali omówienia agendy i przedstawienia osób funkcyjnych wśród organizatorów. Następnie prof. dr hab. inż. Jerzy
@@ -40,7 +40,7 @@ Pierwsza połowa tego dnia została poświęcona przystrzeliwaniu broni na plaż
 wskoczyliśmy do wody na szybką sesję zdjęciową z morsowania. Okazało się to głupotą z naszej strony, bo z różnych
 względów wojskowych kąpiele chłodzące na poligonie są niezalecane. Ale fotki mamy ;)
 
-<img class="image-inline-big" src="/img/aar/sniper_extreme_3.jpeg">
+<img class="image-inline-big" src="/img/aar/sniper_extreme/sniper_extreme_3.jpeg">
 
 Druga połowa dnia to przygotowania do przyjęcia pozostałych uczestników, którzy nie uczestniczyli w warsztatach,
 rejestracja, omówienie agendy, odprawa, wydanie pakietów startowych i tak dalej. Dużo krzątaniny po pokojach,
@@ -49,7 +49,7 @@ do późnych godzin nocnych.
 
 ## 25.11.2022
 
-<img class="image-inline-vertical" src="/img/aar/sniper_extreme_4.jpg">
+<img class="image-inline-vertical" src="/img/aar/sniper_extreme/sniper_extreme_4.jpg">
 
 Pobudka o 5 rano, start o 6 i wyjazd czterema Jelczami w teren. Jest nas jeszcze 33 dwuosobowe teamy, ale z biegiem
 imprezy to się zmieni ;) Tego dnia głównymi atrakcjami były: podchodzenie i skryta obserwacja wskazanego obiektu oraz
@@ -58,7 +58,7 @@ następnego dnia. Świadomie nie wchodzę w szczegóły, by przyszłym uczestnik
 
 ## 26.11.2022
 
-<img class="image-inline-big" src="/img/aar/sniper_extreme_5.jpg">
+<img class="image-inline-big" src="/img/aar/sniper_extreme/sniper_extreme_5.jpg">
 
 Po podebraniu nas z lasu - zmęczonych, zmarzniętych, niewyspanych - Jelcze ruszyły w stronę nadmorskiego pasa, gdzie
 znajdowało się kilka strzelnic. Tam, do godzin popołudniowych strzelaliśmy, tarzaliśmy się w piasku, zażywaliśmy kąpieli
@@ -79,7 +79,7 @@ pokojach, bo znamy się wszyscy z internetu, służby czy innych imprez strzelec
 
 Zawody zakoczyliśmy na 1. miejscu w kategorii Military i na 8. w klasyfikacji ogólnej.
 
-<img class="image-inline-big" src="/img/aar/sniper_extreme_6.jpg">
+<img class="image-inline-big" src="/img/aar/sniper_extreme/sniper_extreme_6.jpg">
 
 *A teraz tzw. tl;dr*
 
@@ -90,7 +90,7 @@ Zawody zakoczyliśmy na 1. miejscu w kategorii Military i na 8. w klasyfikacji o
 - błoto, woda, mróz, fizyczne dojebanie
 - śmietanka polskiego strzelectwa
 
-<img class="image-inline-big" src="/img/aar/sniper_extreme_7.jpg">
+<img class="image-inline-big" src="/img/aar/sniper_extreme/sniper_extreme_7.jpg">
 
 z rzeczy, które można by podciągnąć:
 
@@ -109,6 +109,6 @@ Podsumowując - ogromna impreza i wysiłek organizatorski, któremu ekipa zdecyd
 przeszłość i dobre wspomnienie. Dla mnie Sniper Extreme wpisuje się w kalendarz przepierdolek zaplanowanych na 2023 rok
 i każdemu ambitnemu strzelcowi to również polecam.
 
-<img class="image-inline-big" src="/img/aar/sniper_extreme_8.jpg">
+<img class="image-inline-big" src="/img/aar/sniper_extreme/sniper_extreme_8.jpg">
 
 Uirapuru

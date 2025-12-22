@@ -1,0 +1,127 @@
+{% assign gallery_path = include.folder %}
+
+{% comment %} Ensure gallery_path is valid {% endcomment %}
+{% if gallery_path %}
+
+  {% comment %} Ensure gallery_path starts with / {% endcomment %}
+  {% assign first_char = gallery_path | slice: 0 %}
+  {% if first_char != '/' %}
+    {% assign gallery_path = '/' | append: gallery_path %}
+  {% endif %}
+
+  {% comment %} Ensure gallery_path ends with / to match folder exactly {% endcomment %}
+  {% assign last_char = gallery_path | slice: -1 %}
+  {% if last_char != '/' %}
+    {% assign gallery_path = gallery_path | append: '/' %}
+  {% endif %}
+
+  <div class="gallery-grid">
+    {% assign gallery_images = "" | split: "" %}
+    {% for file in site.static_files %}
+      {% if file.path contains gallery_path %}
+          {% comment %} Double check it starts with the path to avoid partial matches {% endcomment %}
+          {% assign file_path_start = file.path | slice: 0, gallery_path.size %}
+          {% if file_path_start == gallery_path %}
+              {% assign ext = file.extname | downcase %}
+              {% if ext == '.jpg' or ext == '.jpeg' or ext == '.png' or ext == '.gif' or ext == '.webp' %}
+                  {% assign gallery_images = gallery_images | push: file.path %}
+                  <div class="gallery-item" onclick="openLightbox('{{ file.path }}')">
+                      <img src="{{ file.path }}" alt="{{ file.name }}" loading="lazy">
+                  </div>
+              {% endif %}
+          {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <script>
+    if (typeof currentImageIndex === 'undefined') {
+        var currentImageIndex = 0;
+        var galleryImages = [
+            {% for image in gallery_images %}
+                "{{ image }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+        ];
+
+        function openLightbox(imageSrc) {
+            var lightbox = document.getElementById('galleryLightbox');
+            
+            // Update current index based on clicked image
+            currentImageIndex = galleryImages.indexOf(imageSrc);
+
+            if (!lightbox) {
+                lightbox = document.createElement('div');
+                lightbox.id = 'galleryLightbox';
+                lightbox.className = 'gallery-lightbox';
+                lightbox.innerHTML = `
+                    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+                    <a class="lightbox-prev" onclick="changeImage(-1)">&#10094;</a>
+                    <a class="lightbox-next" onclick="changeImage(1)">&#10095;</a>
+                    <img class="lightbox-content" id="lightboxImg">
+                `;
+                document.body.appendChild(lightbox);
+                
+                lightbox.addEventListener('click', function(e) {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                });
+                
+                document.addEventListener('keydown', function(e) {
+                    if (document.getElementById('galleryLightbox').classList.contains('active')) {
+                        if (e.key === "Escape") {
+                            closeLightbox();
+                        } else if (e.key === "ArrowLeft") {
+                            changeImage(-1);
+                        } else if (e.key === "ArrowRight") {
+                            changeImage(1);
+                        }
+                    }
+                });
+            }
+            
+            var img = document.getElementById('lightboxImg');
+            img.src = imageSrc;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            var lightbox = document.getElementById('galleryLightbox');
+            if (lightbox) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function changeImage(n) {
+            currentImageIndex += n;
+            if (currentImageIndex >= galleryImages.length) {
+                currentImageIndex = 0;
+            } else if (currentImageIndex < 0) {
+                currentImageIndex = galleryImages.length - 1;
+            }
+            var img = document.getElementById('lightboxImg');
+            img.src = galleryImages[currentImageIndex];
+        }
+    } else {
+        // If script is already loaded (multiple galleries), merge the images
+        var newImages = [
+            {% for image in gallery_images %}
+                "{{ image }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+        ];
+        // Note: merging logic is complex with multiple independent galleries on one page 
+        // if they are meant to be separate. 
+        // For simple usage, we assume one main gallery or acceptable global navigation.
+        // A better approach for multiple galleries is to scope the images, but 
+        // keeping it simple as requested: just appending if needed or ignoring if duplicates not an issue.
+        // But the simplest fix for "widget" style is assuming the variable might be overwritten or we append.
+        // Let's just concat to allow all images on page to be browsable if multiple widgets used.
+        galleryImages = galleryImages.concat(newImages);
+    }
+  </script>
+
+{% else %}
+  <p style="color: red;">Error: Gallery folder path missing.</p>
+{% endif %}
