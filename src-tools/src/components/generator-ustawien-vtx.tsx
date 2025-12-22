@@ -701,6 +701,12 @@ export function GeneratorUstawienVTX() {
               searchable
             />
 
+            {currentVtx.warning === 1 && (
+              <Label className="text-yellow-600 block">
+                UWAGA: Nie jesteśmy pewni, czy tabela VTX jest poprawna
+              </Label>
+            )}
+
             {currentVtx.id === CUSTOM_VTX_ID && (
               <div className="space-y-2">
                 <Label>Wklej tabelę VTX poniżej:</Label>
