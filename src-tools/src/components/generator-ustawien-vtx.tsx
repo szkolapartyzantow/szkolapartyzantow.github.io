@@ -132,7 +132,12 @@ const VTX_DATA_URL =
 const DB_NAME = "VTX_SETTINGS_DB";
 const STORE_NAME = "vtx_store";
 const DB_VERSION = 1;
-const CACHE_KEY = "vtx_csv_data";
+const CACHE_KEY = "vtx_data_cache_v2";
+
+interface CachedData {
+  csv: string;
+  data: VtxData[];
+}
 
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -148,7 +153,7 @@ function openDB(): Promise<IDBDatabase> {
   });
 }
 
-async function getCachedData(): Promise<string | null> {
+async function getCachedData(): Promise<CachedData | null> {
   try {
     const db = await openDB();
     return new Promise((resolve, reject) => {
@@ -156,7 +161,7 @@ async function getCachedData(): Promise<string | null> {
       const store = transaction.objectStore(STORE_NAME);
       const request = store.get(CACHE_KEY);
       request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve((request.result as string) || null);
+      request.onsuccess = () => resolve((request.result as CachedData) || null);
     });
   } catch (err) {
     console.warn("Failed to read from cache", err);
@@ -164,7 +169,7 @@ async function getCachedData(): Promise<string | null> {
   }
 }
 
-async function setCachedData(data: string): Promise<void> {
+async function setCachedData(data: CachedData): Promise<void> {
   try {
     const db = await openDB();
     return new Promise((resolve, reject) => {
@@ -402,11 +407,7 @@ export function GeneratorUstawienVTX() {
   }, [currentVtx]);
 
   React.useEffect(() => {
-    const processData = (text: string) => {
-      if (text === lastDataRef.current) return;
-      lastDataRef.current = text;
-
-      const data = parseCSV(text);
+    const updateState = (data: VtxData[]) => {
       const map: Record<string, VtxData> = {};
       for (const item of data) {
         map[item.id] = item;
@@ -452,10 +453,20 @@ export function GeneratorUstawienVTX() {
       }
     };
 
+    const processCsv = (text: string) => {
+      if (text === lastDataRef.current) return;
+      lastDataRef.current = text;
+
+      const data = parseCSV(text);
+      setCachedData({ csv: text, data });
+      updateState(data);
+    };
+
     // 1. Try cache
     getCachedData().then((cached) => {
-      if (cached) {
-        processData(cached);
+      if (cached && cached.data) {
+        lastDataRef.current = cached.csv;
+        updateState(cached.data);
       }
     });
 
@@ -463,8 +474,7 @@ export function GeneratorUstawienVTX() {
     fetch(VTX_DATA_URL)
       .then((res) => res.text())
       .then((text) => {
-        setCachedData(text);
-        processData(text);
+        processCsv(text);
       })
       .catch((err) => console.error("Error fetching VTX data:", err));
   }, []);
@@ -641,7 +651,11 @@ export function GeneratorUstawienVTX() {
         <br />
         <p>
           Jeśli Twojego VTX nie ma na liście, możesz wybrać opcję "Własna tabela VTX" i wkleić
-          ręcznie tabelę dla Twojego nadajnika. Jeśli się z nami skontaktujesz (<a href="#kontakt" className="text-primary">Kontakt</a>), dodamy ten VTX do naszej bazy.
+          ręcznie tabelę dla Twojego nadajnika. Jeśli się z nami skontaktujesz (
+          <a href="#kontakt" className="text-primary">
+            Kontakt
+          </a>
+          ), dodamy ten VTX do naszej bazy.
         </p>
         <br />
         <p>
@@ -812,7 +826,11 @@ vtxtable powervalues 14 20 23 26 28`}
               niż sądziliśmy.
               <br />
               <br />
-              Jeśli rzeczywiście mamy bład - daj nam znać (<a href="#kontakt" className="text-primary">Kontakt</a>)
+              Jeśli rzeczywiście mamy bład - daj nam znać (
+              <a href="#kontakt" className="text-primary">
+                Kontakt
+              </a>
+              )
               <br />
               <br />
               Czy na pewno chcesz kontynuować?
