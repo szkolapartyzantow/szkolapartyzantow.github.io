@@ -15,7 +15,7 @@ export const DRONE_TOOLS = [
 export const SHOOTING_TOOLS = [
   {
     title: "Kalkulator Hit Factor",
-    description: "Kalkulator wspomagający obliczanie Hit Factor w IPSC/USPSA",
+    description: "Kalkulator do liczenia Hit Factor w IPSC/USPSA",
     url: "#kalkulator-hit-factor",
   },
 ] as const;

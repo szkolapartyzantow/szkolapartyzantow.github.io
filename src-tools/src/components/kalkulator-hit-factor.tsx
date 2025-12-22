@@ -98,9 +98,6 @@ export function KalkulatorHitFactor() {
 
   return (
     <PageContainer title={toolInfo?.title || "Kalkulator Hit Factor"}>
-      <ToolHelp>
-        <p>Hit Factor to stosunek zdobytych punktów do czasu przebiegu.</p>
-      </ToolHelp>
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card>
           <CardContent className="space-y-6">
