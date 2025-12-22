@@ -641,8 +641,7 @@ export function GeneratorUstawienVTX() {
         <br />
         <p>
           Jeśli Twojego VTX nie ma na liście, możesz wybrać opcję "Własna tabela VTX" i wkleić
-          ręcznie tabelę dla Twojego nadajnika. Jeśli się z nami skontaktujesz (najlepiej przez
-          Instagram), dodamy ten VTX do naszej bazy.
+          ręcznie tabelę dla Twojego nadajnika. Jeśli się z nami skontaktujesz (<a href="#kontakt" className="text-primary">Kontakt</a>), dodamy ten VTX do naszej bazy.
         </p>
         <br />
         <p>
@@ -811,6 +810,9 @@ vtxtable powervalues 14 20 23 26 28`}
               Zmieniasz protokół VTX. Na 99% procent nie powinieneś tego robić! Zrób to tylko wtedy
               jeśli sądzisz, że w naszym gotowym schemacie jest błąd i VTX używa innego protokołu
               niż sądziliśmy.
+              <br />
+              <br />
+              Jeśli rzeczywiście mamy bład - daj nam znać (<a href="#kontakt" className="text-primary">Kontakt</a>)
               <br />
               <br />
               Czy na pewno chcesz kontynuować?
