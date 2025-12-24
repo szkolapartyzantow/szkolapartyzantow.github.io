@@ -68,9 +68,16 @@ aside {
 }
 
 // Navigation
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+  background-color: black;
+  @media (min-width: 768px) {
+      background-color: transparent;
+  }
+}
 
 .navbar-default {
-    background-color: transparent;
+    background-color: black;
     border: none;
     @include sans-serif-font;
     @include transition-all;
@@ -120,15 +127,25 @@ aside {
     @media (min-width: 768px) {
         background-color: transparent;
         border: none;
+        &:hover,
+        &:focus {
+            background-color: transparent;
+        }
+        .navbar-toggle {
+            background-color: transparent;
+        }
         .navbar-header .navbar-brand {
+            background-color: transparent;
             color: rgba(white, .7);
             &:hover,
             &:focus {
+                background-color: transparent;
                 color: white;
             }
         }
         .nav > li > a,
         .nav > li > a:focus {
+            background-color: transparent;
             color: rgba(white, .7);
             &:hover {
                 color: white;
@@ -147,6 +164,7 @@ aside {
             }
             .nav > li > a,
             .nav > li > a:focus {
+                background-color: transparent;
                 color: $theme-primary;
                 &:hover {
                     color: $theme-dark;
