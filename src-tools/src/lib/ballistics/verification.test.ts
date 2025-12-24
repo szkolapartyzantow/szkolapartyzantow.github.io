@@ -110,3 +110,67 @@ describe("Ballistics Verification", () => {
     });
   });
 });
+
+describe("Ballistics Verification - 90 degree cant", () => {
+  it("should match JBM Ballistics reference output", () => {
+    const calculator = new TrajectoryCalculator();
+
+    const bc = new BallisticCoefficient(
+      0.242,
+      BallisticCoefficientType.Coefficient,
+      DragTableId.G1
+    );
+
+    const ammunition = new Ammunition(Mass.grains(55.0), bc, Velocity.mps(900.0));
+    const sight = new Sight(Length.centimeters(7.0));
+    const zeroParams = new ZeroingParameters(Length.meters(50.0));
+    const rifling = new Rifling(Length.inches(7.0), TwistDirection.Right);
+    const rifle = new Rifle(sight, zeroParams, rifling);
+    const atmosphere = Atmosphere.standard();
+    const sightAngle = calculator.calculateSightAngle(ammunition, rifle, atmosphere);
+
+    const shotParams = ShotParameters.new(
+      sightAngle,
+      Length.meters(10.0), // Step
+      Length.meters(500.0), // Max Distance
+      Angle.degrees(90.0) // Cant angle
+    );
+
+    const results = calculator.calculateTrajectory(ammunition, rifle, atmosphere, shotParams);
+
+    const csvPath = path.join(process.cwd(), "src/lib/ballistics/90_cant_reference_result.csv");
+    const csvContent = fs.readFileSync(csvPath, "utf-8");
+    const lines = csvContent.trim().split("\n");
+    const header = lines[1].split(";");
+    const dataRows = lines.slice(3);
+
+    const colMap = {
+      distance: header.indexOf("Distance"),
+      velocity: header.indexOf("Velocity"),
+      drop: header.indexOf("Drop"),
+      windage: header.indexOf("Windage"),
+      energy: header.indexOf("Energy"),
+    };
+
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBe(dataRows.length);
+
+    dataRows.forEach((row, index) => {
+      const cols = row.split(";").map(parseFloat);
+      const resultPoint = results[index];
+
+      const expectedDistance = cols[colMap.distance];
+      const expectedVelocity = cols[colMap.velocity];
+      const expectedDrop = cols[colMap.drop];
+      const expectedWindage = cols[colMap.windage];
+      const expectedEnergy = cols[colMap.energy];
+
+      expect(resultPoint.distance.inMeters).toBeCloseTo(expectedDistance, 1);
+      expect(resultPoint.velocity.inMps).toBeCloseTo(expectedVelocity, -1);
+      expect(resultPoint.drop.inCentimeters).toBeCloseTo(expectedDrop, -1);
+      expect(resultPoint.windage.inCentimeters).toBeCloseTo(expectedWindage, -1);
+      // expect(resultPoint.dropAdjustment.inMrad).toBeCloseTo(expectedAdjustment, 0.1);
+      expect(resultPoint.energy.inJoules).toBeCloseTo(expectedEnergy, -1);
+    });
+  });
+});

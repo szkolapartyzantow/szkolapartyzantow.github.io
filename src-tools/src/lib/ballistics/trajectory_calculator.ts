@@ -121,7 +121,6 @@ export class TrajectoryCalculator {
     }
 
     const barrelAzimuth = shotParameters.barrelAzimuth;
-    const barrelElevation = shotParameters.sightAngle.add(shotParameters.shotAngle);
 
     let velocity = ammunition.muzzleVelocity;
     let time = Time.ZERO;
@@ -141,13 +140,66 @@ export class TrajectoryCalculator {
     // x - distance towards target
     // y - drop
     // z - windage
-    let rangeVector = new Vector3(0, -rifle.sight.height.inMeters, 0);
 
-    let velocityVector = new Vector3(
-      velocity.inMps * barrelElevation.cos() * barrelAzimuth.cos(),
-      velocity.inMps * barrelElevation.sin(),
-      velocity.inMps * barrelElevation.cos() * barrelAzimuth.sin()
-    );
+    // Initial Velocity Vector Calculation with Cant and Shot Angle
+    // 1. Rifle Frame (No Cant, No Shot Angle)
+    //    We align X with Line of Sight (LOS).
+    //    Barrel is elevated by sightAngle relative to LOS.
+    //    Barrel Azimuth is yaw relative to LOS.
+    const sightAngle = shotParameters.sightAngle.inRadians;
+    const barrelAzimuthAngle = barrelAzimuth.inRadians;
+    const cantAngle = shotParameters.cantAngle.inRadians;
+    const shotAngle = shotParameters.shotAngle.inRadians;
+    const v = velocity.inMps;
+
+    // Position in Rifle Frame
+    // Scope is at (0,0,0)
+    // Barrel is at (0, -sightHeight, 0)
+    const p_x_rifle = 0;
+    const p_y_rifle = -rifle.sight.height.inMeters;
+    const p_z_rifle = 0;
+
+    // Velocity in Rifle Frame (aligned with LOS, before cant)
+    // x = forward, y = up, z = right
+    const v_x_rifle = v * Math.cos(sightAngle) * Math.cos(barrelAzimuthAngle);
+    const v_y_rifle = v * Math.sin(sightAngle);
+    const v_z_rifle = v * Math.cos(sightAngle) * Math.sin(barrelAzimuthAngle);
+
+    // 2. Apply Cant (Rotation around X axis)
+    //    If I cant Right, top goes Right. RHR around X: Y -> Z.
+    //    y' = y cos - z sin
+    //    z' = y sin + z cos
+    const cosCant = Math.cos(cantAngle);
+    const sinCant = Math.sin(cantAngle);
+
+    const v_x_canted = v_x_rifle;
+    const v_y_canted = v_y_rifle * cosCant - v_z_rifle * sinCant;
+    const v_z_canted = v_y_rifle * sinCant + v_z_rifle * cosCant;
+
+    const p_x_canted = p_x_rifle;
+    const p_y_canted = p_y_rifle * cosCant - p_z_rifle * sinCant;
+    const p_z_canted = p_y_rifle * sinCant + p_z_rifle * cosCant;
+
+    // 3. Apply Shot Angle (Rotation around Z axis - Pitch)
+    //    Shot Angle is elevation of LOS.
+    //    We rotate the whole system UP by shotAngle.
+    //    Rotation around Z axis (if Z is right).
+    //    x'' = x' cos(s) - y' sin(s)
+    //    y'' = x' sin(s) + y' cos(s)
+    //    z'' = z'
+    const cosShotAngle = Math.cos(shotAngle);
+    const sinShotAngle = Math.sin(shotAngle);
+
+    const v_x_global = v_x_canted * cosShotAngle - v_y_canted * sinShotAngle;
+    const v_y_global = v_x_canted * sinShotAngle + v_y_canted * cosShotAngle;
+    const v_z_global = v_z_canted;
+
+    const p_x_global = p_x_canted * cosShotAngle - p_y_canted * sinShotAngle;
+    const p_y_global = p_x_canted * sinShotAngle + p_y_canted * cosShotAngle;
+    const p_z_global = p_z_canted;
+
+    let velocityVector = new Vector3(v_x_global, v_y_global, v_z_global);
+    let rangeVector = new Vector3(p_x_global, p_y_global, p_z_global);
 
     let currentItem = 0;
     const maxItem = Math.floor(rangeTo.inMeters / step.inMeters) + 1;
@@ -162,7 +214,23 @@ export class TrajectoryCalculator {
 
     const trajectoryPoints: TrajectoryPoint[] = [];
 
-    while (rangeVector.x <= maximumRange.inMeters) {
+    // Precompute cos/sin for performance in loop for LOS transformation
+    const cosShot = Math.cos(shotAngle);
+    const sinShot = Math.sin(shotAngle);
+
+    while (true) {
+      // Calculate LOS position
+      // Inverse rotation of Shot Angle (Pitch down by shotAngle)
+      // x_los = x_g * cos(s) + y_g * sin(s)
+      // y_los = -x_g * sin(s) + y_g * cos(s)
+      const losX = rangeVector.x * cosShot + rangeVector.y * sinShot;
+      const losY = -rangeVector.x * sinShot + rangeVector.y * cosShot;
+      const losZ = rangeVector.z;
+
+      if (losX > maximumRange.inMeters) {
+        break;
+      }
+
       // Update density and Mach velocity
       if (Math.abs(lastAtAltitude.inMeters - alt.inMeters) > altDelta.inMeters) {
         const result = atmosphere.getDensityFactorAndMachAtAltitude(alt);
@@ -176,7 +244,7 @@ export class TrajectoryCalculator {
       }
 
       // Wind updates
-      if (rangeVector.x >= nextWindRange.inMeters) {
+      if (losX >= nextWindRange.inMeters) {
         currentWindIndex += 1;
         if (wind && currentWindIndex < wind.length) {
           windVector = TrajectoryCalculator.getWindVector(shotParameters, wind[currentWindIndex]);
@@ -194,16 +262,11 @@ export class TrajectoryCalculator {
       }
 
       // Record point
-      if (rangeVector.x >= nextRangeDistance.inMeters) {
-        let windageVal = rangeVector.z;
+      if (losX >= nextRangeDistance.inMeters) {
+        let windageVal = losZ;
         if (calculateDrift && rifle.rifling) {
           const twistDirectionVal = rifle.rifling.twistDirection === TwistDirection.Right ? -1 : 1;
           // Formula from Rust: 1.25 * (Sg + 1.2) * t^1.83 * twist_dir
-          // Result in inches, converted to meters by windage update logic?
-          // Rust code:
-          // windage += Length::new::<inch>(1.25 * (stability_coefficient + 1.2) * time.get::<second>().powf(1.83) * (twist_direction as i32) as f64);
-          // Wait, Rust TwistDirection: Right = -1, Left = 1.
-          // My TS TwistDirection: Right = -1, Left = 1.
 
           const driftInches =
             1.25 *
@@ -217,11 +280,11 @@ export class TrajectoryCalculator {
         trajectoryPoints.push(
           TrajectoryPoint.new(
             time,
-            Length.meters(rangeVector.x),
+            Length.meters(losX),
             velocity,
             ammunition.weight,
             velocity.inMps / mach.inMps,
-            Length.meters(rangeVector.y),
+            Length.meters(losY),
             Length.meters(windageVal)
           )
         );
@@ -469,22 +532,21 @@ export class TrajectoryCalculator {
   }
 
   static getWindVector(shotParameters: ShotParameters, wind: Wind): Vector3 {
-    const sightCos = shotParameters.sightAngle.cos();
-    const sightSin = shotParameters.sightAngle.sin();
-    const cantCos = shotParameters.cantAngle.cos();
-    const cantSin = shotParameters.cantAngle.sin();
+    // Wind is defined on the horizontal plane (Global Frame).
+    // X is downrange (horizontal), Y is up (vertical), Z is right.
+    // wind.direction is angle relative to X axis?
+    // Usually 0 degrees = From North? Or 0 = Tailwind?
+    // In this codebase context (based on usage `rangeVelocity = windVelocity * Math.cos(windDirection)`),
+    // it implies direction is angle from the Line of Fire (X axis).
+    // So 0 deg = Tailwind (blowing towards target along X).
 
     const windDirection = wind.direction.inRadians;
     const windVelocity = wind.velocity.inMps;
 
-    const rangeVelocity = windVelocity * Math.cos(windDirection);
-    const rangeFactor = -rangeVelocity * sightSin;
-    const crossComponent = windVelocity * Math.sin(windDirection);
-
     return new Vector3(
-      rangeVelocity * sightCos,
-      rangeFactor * cantCos + crossComponent * cantSin,
-      crossComponent * cantCos - rangeFactor * cantSin
+      windVelocity * Math.cos(windDirection),
+      0,
+      windVelocity * Math.sin(windDirection)
     );
   }
 

@@ -4,6 +4,7 @@ import { Home } from "./components/home";
 import { GeneratorUstawienVTX } from "./components/generator-ustawien-vtx";
 import { KalkulatorLOS } from "./components/kalkulator-los";
 import { KalkulatorHitFactor } from "./components/kalkulator-hit-factor";
+import { KalkulatorBalistyczny } from "./components/kalkulator-balistyczny";
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
 import { useHash } from "@/hooks/use-hash";
 import { useGoogleAnalytics } from "@/hooks/use-google-analytics";
@@ -14,6 +15,7 @@ const components: Record<string, ComponentType> = {
   "kalkulator-los": KalkulatorLOS,
   "generator-ustawien-vtx": GeneratorUstawienVTX,
   "kalkulator-hit-factor": KalkulatorHitFactor,
+  "kalkulator-balistyczny": KalkulatorBalistyczny,
   kontakt: Kontakt,
 };
 

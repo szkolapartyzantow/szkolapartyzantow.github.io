@@ -99,9 +99,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </div>
             </CardContent>
           </Card>
-        </a >
-      </SidebarFooter >
+        </a>
+      </SidebarFooter>
       <SidebarRail />
-    </Sidebar >
+    </Sidebar>
   );
 }

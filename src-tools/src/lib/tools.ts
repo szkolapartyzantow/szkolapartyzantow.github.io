@@ -18,6 +18,11 @@ export const SHOOTING_TOOLS = [
     description: "Kalkulator do liczenia Hit Factor w IPSC/USPSA",
     url: "#kalkulator-hit-factor",
   },
+  {
+    title: "Kalkulator Balistyczny",
+    description: "Oblicz trajektorię lotu pocisku, opad i poprawki na wiatr.",
+    url: "#kalkulator-balistyczny",
+  },
 ] as const;
 
 export const TOOLS = [...DRONE_TOOLS, ...SHOOTING_TOOLS] as const;

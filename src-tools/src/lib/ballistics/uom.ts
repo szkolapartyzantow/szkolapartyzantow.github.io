@@ -70,6 +70,9 @@ export class Velocity {
   static mps(value: number): Velocity {
     return new Velocity(value);
   }
+  static kmh(value: number): Velocity {
+    return new Velocity(value * 0.27778);
+  }
   static fps(value: number): Velocity {
     return new Velocity(value * 0.3048);
   }
@@ -79,6 +82,9 @@ export class Velocity {
 
   get inMps(): number {
     return this.rawValue;
+  }
+  get inKmh(): number {
+    return this.rawValue / 0.27778;
   }
   get inFps(): number {
     return this.rawValue / 0.3048;
