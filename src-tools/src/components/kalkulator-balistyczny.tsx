@@ -244,7 +244,7 @@ export function KalkulatorBalistyczny() {
           defaultPressure,
           false,
           defaultTemperature,
-          defaultHumidityPercent / 100,
+          defaultHumidityPercent / 100
         );
         wind = new Wind(defaultWindDirection, defaultWindSpeed);
       }
@@ -491,7 +491,7 @@ export function KalkulatorBalistyczny() {
 
         <Card className="h-full">
           <CardContent className="pt-6 space-y-4">
-            <h3 className="font-semibold">Warunki środowiskowe</h3>
+            <h3 className="font-semibold">Warunki atmosferyczne</h3>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="edit-atmosphere"
@@ -502,7 +502,7 @@ export function KalkulatorBalistyczny() {
                 htmlFor="edit-atmosphere"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Edytuj domyślne warunki środowiskowe
+                Edytuj domyślne warunki atmosferyczne
               </label>
             </div>
             <div className="grid md:grid-cols-2 gap-4">

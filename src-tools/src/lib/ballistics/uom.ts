@@ -6,7 +6,7 @@
  */
 
 export class Length {
-  private constructor(public readonly rawValue: number) { } // meters
+  private constructor(public readonly rawValue: number) {} // meters
 
   static readonly ZERO = new Length(0);
 
@@ -63,7 +63,7 @@ export class Length {
 }
 
 export class Velocity {
-  private constructor(public readonly rawValue: number) { } // m/s
+  private constructor(public readonly rawValue: number) {} // m/s
 
   static readonly ZERO = new Velocity(0);
 
@@ -108,7 +108,7 @@ export class Velocity {
 }
 
 export class Mass {
-  private constructor(public readonly rawValue: number) { } // kg
+  private constructor(public readonly rawValue: number) {} // kg
 
   static readonly ZERO = new Mass(0);
 
@@ -153,7 +153,7 @@ export class Mass {
 }
 
 export class MassDensity {
-  private constructor(public readonly rawValue: number) { } // kg/m^3
+  private constructor(public readonly rawValue: number) {} // kg/m^3
 
   static readonly ZERO = new MassDensity(0);
 
@@ -186,7 +186,7 @@ export class MassDensity {
 }
 
 export class Energy {
-  private constructor(public readonly rawValue: number) { } // Joules
+  private constructor(public readonly rawValue: number) {} // Joules
 
   static readonly ZERO = new Energy(0);
 
@@ -219,7 +219,7 @@ export class Energy {
 }
 
 export class Pressure {
-  private constructor(public readonly rawValue: number) { } // Pascals
+  private constructor(public readonly rawValue: number) {} // Pascals
 
   static readonly ZERO = new Pressure(0);
 
@@ -264,7 +264,7 @@ export class Pressure {
 }
 
 export class Temperature {
-  private constructor(public readonly rawValue: number) { } // Kelvin
+  private constructor(public readonly rawValue: number) {} // Kelvin
 
   static readonly ZERO = new Temperature(0);
 
@@ -290,7 +290,7 @@ export class Temperature {
 }
 
 export class Angle {
-  private constructor(public readonly rawValue: number) { } // Radians
+  private constructor(public readonly rawValue: number) {} // Radians
 
   static readonly ZERO = new Angle(0);
 
@@ -346,7 +346,7 @@ export class Angle {
 }
 
 export class Time {
-  private constructor(public readonly rawValue: number) { } // Seconds
+  private constructor(public readonly rawValue: number) {} // Seconds
 
   static readonly ZERO = new Time(0);
 
