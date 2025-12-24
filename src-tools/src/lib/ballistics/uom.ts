@@ -6,7 +6,7 @@
  */
 
 export class Length {
-  private constructor(public readonly rawValue: number) {} // meters
+  private constructor(public readonly rawValue: number) { } // meters
 
   static readonly ZERO = new Length(0);
 
@@ -63,7 +63,7 @@ export class Length {
 }
 
 export class Velocity {
-  private constructor(public readonly rawValue: number) {} // m/s
+  private constructor(public readonly rawValue: number) { } // m/s
 
   static readonly ZERO = new Velocity(0);
 
@@ -108,12 +108,15 @@ export class Velocity {
 }
 
 export class Mass {
-  private constructor(public readonly rawValue: number) {} // kg
+  private constructor(public readonly rawValue: number) { } // kg
 
   static readonly ZERO = new Mass(0);
 
   static kilograms(value: number): Mass {
     return new Mass(value);
+  }
+  static grams(value: number): Mass {
+    return new Mass(value * 1000);
   }
   static pounds(value: number): Mass {
     return new Mass(value * 0.45359237);
@@ -124,6 +127,9 @@ export class Mass {
 
   get inKilograms(): number {
     return this.rawValue;
+  }
+  get inGrams(): number {
+    return this.rawValue * 1000;
   }
   get inPounds(): number {
     return this.rawValue / 0.45359237;
@@ -147,7 +153,7 @@ export class Mass {
 }
 
 export class MassDensity {
-  private constructor(public readonly rawValue: number) {} // kg/m^3
+  private constructor(public readonly rawValue: number) { } // kg/m^3
 
   static readonly ZERO = new MassDensity(0);
 
@@ -180,7 +186,7 @@ export class MassDensity {
 }
 
 export class Energy {
-  private constructor(public readonly rawValue: number) {} // Joules
+  private constructor(public readonly rawValue: number) { } // Joules
 
   static readonly ZERO = new Energy(0);
 
@@ -213,12 +219,15 @@ export class Energy {
 }
 
 export class Pressure {
-  private constructor(public readonly rawValue: number) {} // Pascals
+  private constructor(public readonly rawValue: number) { } // Pascals
 
   static readonly ZERO = new Pressure(0);
 
   static pascals(value: number): Pressure {
     return new Pressure(value);
+  }
+  static hectoPascals(value: number): Pressure {
+    return new Pressure(value / 100);
   }
   static inHg(value: number): Pressure {
     return new Pressure(value * 3386.389);
@@ -229,6 +238,9 @@ export class Pressure {
 
   get inPascals(): number {
     return this.rawValue;
+  }
+  get inHectoPascals(): number {
+    return this.rawValue / 100;
   }
   get inInHg(): number {
     return this.rawValue / 3386.389;
@@ -252,7 +264,7 @@ export class Pressure {
 }
 
 export class Temperature {
-  private constructor(public readonly rawValue: number) {} // Kelvin
+  private constructor(public readonly rawValue: number) { } // Kelvin
 
   static readonly ZERO = new Temperature(0);
 
@@ -275,13 +287,10 @@ export class Temperature {
   get inFahrenheit(): number {
     return ((this.rawValue - 273.15) * 9) / 5 + 32;
   }
-
-  // Note: Arithmetic on Temperature is ambiguous (absolute vs difference).
-  // Implement carefully if needed.
 }
 
 export class Angle {
-  private constructor(public readonly rawValue: number) {} // Radians
+  private constructor(public readonly rawValue: number) { } // Radians
 
   static readonly ZERO = new Angle(0);
 
@@ -337,7 +346,7 @@ export class Angle {
 }
 
 export class Time {
-  private constructor(public readonly rawValue: number) {} // Seconds
+  private constructor(public readonly rawValue: number) { } // Seconds
 
   static readonly ZERO = new Time(0);
 
