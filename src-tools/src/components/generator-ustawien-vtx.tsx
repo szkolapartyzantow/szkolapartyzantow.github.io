@@ -801,6 +801,7 @@ export function GeneratorUstawienVTX() {
           je do CLI w Betaflight, aby je zastosować.
         </p>
         <br />
+        <h1 className="font-semibold text-lg">Podstawowe ustawienia</h1>
         <ul className="list-disc">
           <li>
             <b>UART</b> - UART do którego VTX jest podłączony.
@@ -814,7 +815,7 @@ export function GeneratorUstawienVTX() {
           </li>
           <li>
             <b>AUX do kontroli mocy VTX</b> - numer AUX przełącznika, którego chcesz użyć do zmiany
-            mocy VTX. Do sprawdzenia w zakładce Receiver (Odbiornik) w Betaflight.
+            mocy VTX. Numer AUX sprawdzenia w zakładce Receiver (Odbiornik) w Betaflight.
           </li>
           <li>
             <b>Typ przełącznika</b> - wybierz czy Twój przełącznik jest 2, 3 czy 6 pozycyjny.
@@ -823,6 +824,24 @@ export function GeneratorUstawienVTX() {
           <li>
             <b>Moc 1/2/3/4/5/6</b> - ustawienia mocy. Moc 1 z zasady powinna być najniższa i
             odpowiada górnemu położeniu przełącznika.
+          </li>
+        </ul>
+        <br />
+        <h1 className="font-semibold text-lg">Zmiana pasma/kanału</h1>
+        <p>Te ustawienia pozwalają przypisać do przełącznika funkcję zmiany pasma/kanału</p>
+        <p>
+          <b>UWAGA:</b> Użycie tej opcji w locie jest niemożliwe w standardowej wersji Betaflight!
+        </p>
+        <ul className="list-disc">
+          <li>
+            <li>
+              <b>Typ przełącznika</b> - wybierz czy Twój przełącznik jest 2, 3 czy 6 pozycyjny.
+              Ustawienie 6POS może być też użyte do slidera. Wybór BRAK wyłącza generowanie komend
+              to zmiany pasma/kanału.
+            </li>
+            <b>AUX</b> - numer AUX przełącznika, którego chcesz użyć do zmiany pasma/kanału VTX. Nie
+            może być taki sam jak AUX do kontroli mocy. Numer AUX do sprawdzenia w zakładce Receiver
+            (Odbiornik) w Betaflight.
           </li>
         </ul>
       </ToolHelp>
@@ -949,7 +968,7 @@ vtxtable powervalues 14 20 23 26 28`}
               <CollapsibleContent className="space-y-4 pt-2">
                 <div className="grid grid-cols-2 gap-4">
                   <DropdownSelect
-                    label="Przełącznik"
+                    label="Typ przełącznika"
                     items={BAND_CHANNEL_SWITCH_DROPDOWN_MAP}
                     value={currentVtx.band_channel_mode}
                     onValueChange={(val) => updateCurrentVtx({ band_channel_mode: Number(val) })}
