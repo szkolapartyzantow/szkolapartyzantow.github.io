@@ -5,8 +5,43 @@
  * All values are stored internally in SI base units.
  */
 
+export enum LengthUnit {
+  Meter = "m",
+  Centimeter = "cm",
+  Millimeter = "mm",
+  Inch = "in",
+  Feet = "ft",
+  Yard = "yd",
+}
+
 export class Length {
-  private constructor(public readonly rawValue: number) {} // meters
+  rawValue: any;
+
+  constructor(
+    public readonly value: number,
+    public readonly unit = LengthUnit.Meter
+  ) {
+    switch (unit) {
+      case LengthUnit.Meter:
+        this.rawValue = value;
+        break;
+      case LengthUnit.Centimeter:
+        this.rawValue = Length.centimeters(value).in(unit);
+        break;
+      case LengthUnit.Millimeter:
+        this.rawValue = rawValue;
+        break;
+      case LengthUnit.Inch:
+        this.rawValue = rawValue;
+        break;
+      case LengthUnit.Feet:
+        this.rawValue = rawValue;
+        break;
+      case LengthUnit.Yard:
+        this.rawValue = rawValue;
+        break;
+    }
+  }
 
   static readonly ZERO = new Length(0);
 
@@ -46,6 +81,23 @@ export class Length {
   }
   get inYards(): number {
     return this.rawValue / 0.9144;
+  }
+
+  in(unit: LengthUnit): number {
+    switch (unit) {
+      case LengthUnit.Meter:
+        return this.inMeters;
+      case LengthUnit.Centimeter:
+        return this.inCentimeters;
+      case LengthUnit.Millimeter:
+        return this.inMillimeters;
+      case LengthUnit.Inch:
+        return this.inInches;
+      case LengthUnit.Feet:
+        return this.inFeet;
+      case LengthUnit.Yard:
+        return this.inYards;
+    }
   }
 
   add(other: Length): Length {

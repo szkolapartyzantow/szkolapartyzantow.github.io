@@ -388,7 +388,8 @@ vtx 5 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[5]} 1950 2100`;
   }
 
   let band_channel_config = "";
-  if (vtxData.band_channel_mode && vtxData.band_channel_mode !== -1) {
+  if (vtxData.band_channel_mode !== -1) {
+    band_channel_config += "# Ustawienia zmiany pasma/kanału\n";
     const count =
       vtxData.band_channel_mode === SWITCH_TYPE.POS2
         ? 2
@@ -448,7 +449,6 @@ set vtx_channel = ${vtxData.default_channel}
 # Ustawienia zmiany mocy
 ${switch_settings}
 
-# Ustawienia zmiany pasma/kanału
 ${band_channel_config}
 save
 `;

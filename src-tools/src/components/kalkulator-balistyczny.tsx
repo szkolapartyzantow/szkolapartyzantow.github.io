@@ -400,7 +400,7 @@ export function KalkulatorBalistyczny() {
             <h3 className="font-semibold">Broń</h3>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Wysokość celownika</Label>
+                <Label>Wysokość linii celowania</Label>
                 <div className="flex gap-2">
                   <Input
                     type="number"
@@ -468,7 +468,7 @@ export function KalkulatorBalistyczny() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Przechył (stopnie)</Label>
+                <Label>Kanting [przechył] (stopnie)</Label>
                 <Input
                   type="number"
                   value={cant}
@@ -477,7 +477,7 @@ export function KalkulatorBalistyczny() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Kąt strzału (stopnie)</Label>
+                <Label>Kąt strzału [w górę/w dół] (stopnie)</Label>
                 <Input
                   type="number"
                   value={shotAngle}
