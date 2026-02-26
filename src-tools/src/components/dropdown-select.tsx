@@ -46,6 +46,7 @@ interface DropdownSelectProps {
   className?: string;
   searchable?: boolean;
   fullWidth?: boolean;
+  compactOnMobile?: boolean;
 }
 
 export function DropdownSelect({
@@ -57,6 +58,7 @@ export function DropdownSelect({
   className,
   searchable = false,
   fullWidth = true,
+  compactOnMobile = false,
 }: DropdownSelectProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -75,16 +77,22 @@ export function DropdownSelect({
   if (searchable) {
     return (
       <div className={`space-y-2 ${className || ""}`}>
-        <Label>{label}</Label>
+        <Label className={cn(compactOnMobile && "text-xs sm:text-sm")}>{label}</Label>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className={cn("justify-between font-normal", fullWidth ? "w-full" : "w-fit")}
+              className={cn(
+                "min-w-0 justify-between font-normal",
+                fullWidth ? "w-full" : "w-fit",
+                compactOnMobile && "h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
+              )}
             >
-              {selectedItem ? selectedItem.label : placeholder}
+              <span className="min-w-0 flex-1 truncate text-left">
+                {selectedItem ? selectedItem.label : placeholder}
+              </span>
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
@@ -148,9 +156,14 @@ export function DropdownSelect({
 
   return (
     <div className={`space-y-2 ${className || ""}`}>
-      <Label>{label}</Label>
+      <Label className={cn(compactOnMobile && "text-xs sm:text-sm")}>{label}</Label>
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className={fullWidth ? "w-full" : "w-fit"}>
+        <SelectTrigger
+          className={cn(
+            fullWidth ? "w-full" : "w-fit",
+            compactOnMobile && "h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
+          )}
+        >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

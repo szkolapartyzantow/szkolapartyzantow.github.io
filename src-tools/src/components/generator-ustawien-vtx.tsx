@@ -847,8 +847,8 @@ export function GeneratorUstawienVTX() {
       </ToolHelp>
 
       <div className="grid gap-6 md:grid-cols-2 mb-6">
-        <Card>
-          <CardContent className="space-y-4">
+        <Card className="min-w-0 py-4 sm:py-6">
+          <CardContent className="space-y-3 px-3 sm:space-y-4 sm:px-6">
             <DropdownSelect
               label="VTX"
               items={vtxOptions}
@@ -856,6 +856,7 @@ export function GeneratorUstawienVTX() {
               onValueChange={handleVtxChange}
               placeholder="Wybierz VTX"
               searchable
+              compactOnMobile
             />
 
             {currentVtx.warning === 1 && (
@@ -889,13 +890,14 @@ vtxtable powervalues 14 20 23 26 28`}
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4">
               <DropdownSelect
                 label="UART"
                 items={VTX_UART_DROPDOWN_MAP}
                 value={currentVtx.port}
                 onValueChange={(val) => updateCurrentVtx({ port: val as UART })}
                 placeholder="Wybierz UART VTX"
+                compactOnMobile
               />
               <DropdownSelect
                 label="Protokół"
@@ -903,16 +905,18 @@ vtxtable powervalues 14 20 23 26 28`}
                 value={currentVtx.protocol}
                 onValueChange={(val) => handleProtocolChange(val as PROTOCOL)}
                 placeholder="Wybierz Protokół VTX"
+                compactOnMobile
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4">
               <DropdownSelect
                 label="Domyślne pasmo"
                 items={vtxBandOptions}
                 value={currentVtx.default_band}
                 onValueChange={(val) => updateCurrentVtx({ default_band: Number(val) })}
                 placeholder="Wybierz domyślne pasmo"
+                compactOnMobile
               />
               <DropdownSelect
                 label="Domyślny kanał"
@@ -920,16 +924,18 @@ vtxtable powervalues 14 20 23 26 28`}
                 value={currentVtx.default_channel}
                 onValueChange={(val) => updateCurrentVtx({ default_channel: val as CHANNEL })}
                 placeholder="Wybierz domyślny kanal"
+                compactOnMobile
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4">
               <DropdownSelect
                 label="AUX do kontroli mocy VTX"
                 items={AUX_DROPDOWN_MAP}
                 value={currentVtx.vtx_power_aux}
                 onValueChange={(val) => updateCurrentVtx({ vtx_power_aux: val as AUX })}
                 placeholder="Wybierz AUX"
+                compactOnMobile
               />
               <DropdownSelect
                 label="Typ przełącznika"
@@ -937,11 +943,14 @@ vtxtable powervalues 14 20 23 26 28`}
                 value={currentVtx.switch_type}
                 onValueChange={(val) => handleSwitchTypeChange(val as SWITCH_TYPE)}
                 placeholder="Wybierz typ przelacznika"
+                compactOnMobile
               />
             </div>
 
             <div
-              className={`grid gap-4 ${currentVtx.switch_type !== SWITCH_TYPE.POS2 ? "grid-cols-3" : "grid-cols-2"}`}
+              className={`grid grid-cols-2 gap-2 sm:gap-4 ${
+                currentVtx.switch_type !== SWITCH_TYPE.POS2 ? "sm:grid-cols-3" : ""
+              }`}
             >
               {(currentVtx.switch_type === SWITCH_TYPE.POS2
                 ? [0, 2]
@@ -956,6 +965,7 @@ vtxtable powervalues 14 20 23 26 28`}
                   value={currentVtx.powers[powerIndex]}
                   onValueChange={(val) => updatePower(powerIndex, val)}
                   placeholder="Wybierz moc"
+                  compactOnMobile
                 />
               ))}
             </div>
@@ -966,13 +976,14 @@ vtxtable powervalues 14 20 23 26 28`}
                 <ChevronDown className="h-4 w-4" />
               </CollapsibleTrigger>
               <CollapsibleContent className="space-y-4 pt-2">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4">
                   <DropdownSelect
                     label="Typ przełącznika"
                     items={BAND_CHANNEL_SWITCH_DROPDOWN_MAP}
                     value={currentVtx.band_channel_mode}
                     onValueChange={(val) => updateCurrentVtx({ band_channel_mode: Number(val) })}
                     placeholder="Wybierz typ"
+                    compactOnMobile
                   />
                   <DropdownSelect
                     label="AUX"
@@ -981,17 +992,18 @@ vtxtable powervalues 14 20 23 26 28`}
                     onValueChange={(val) => updateCurrentVtx({ band_channel_aux: Number(val) })}
                     placeholder="Wybierz AUX"
                     disabled={currentVtx.band_channel_mode === -1}
+                    compactOnMobile
                   />
                 </div>
 
                 {currentVtx.band_channel_mode !== -1 && (
                   <div
-                    className={`grid gap-4 ${
+                    className={`grid grid-cols-2 gap-2 sm:gap-4 ${
                       currentVtx.band_channel_mode === SWITCH_TYPE.POS6
-                        ? "grid-cols-3"
+                        ? "sm:grid-cols-3"
                         : currentVtx.band_channel_mode === SWITCH_TYPE.POS3
-                          ? "grid-cols-3"
-                          : "grid-cols-2"
+                          ? "sm:grid-cols-3"
+                          : ""
                     }`}
                   >
                     {(currentVtx.band_channel_mode === SWITCH_TYPE.POS2
@@ -1000,7 +1012,7 @@ vtxtable powervalues 14 20 23 26 28`}
                         ? [0, 1, 2]
                         : [0, 1, 2, 3, 4, 5]
                     ).map((index) => (
-                      <div key={index} className="space-y-2 border p-2 rounded-md">
+                      <div key={index} className="space-y-2 rounded-md border p-2">
                         <Label className="text-xs font-semibold">Pasmo/kanał {index + 1}</Label>
                         <DropdownSelect
                           items={bandChannelBandOptions}
@@ -1009,6 +1021,7 @@ vtxtable powervalues 14 20 23 26 28`}
                             updateBandChannelSetting(index, "band", Number(val))
                           }
                           placeholder="Pasmo"
+                          compactOnMobile
                         />
                         <DropdownSelect
                           items={bandChannelChannelOptions}
@@ -1017,6 +1030,7 @@ vtxtable powervalues 14 20 23 26 28`}
                             updateBandChannelSetting(index, "channel", Number(val))
                           }
                           placeholder="Kanał"
+                          compactOnMobile
                         />
                       </div>
                     ))}
@@ -1027,12 +1041,12 @@ vtxtable powervalues 14 20 23 26 28`}
           </CardContent>
         </Card>
 
-        <Card className="bg-muted/50">
-          <CardContent className="space-y-4">
+        <Card className="bg-muted/50 min-w-0 py-4 sm:py-6">
+          <CardContent className="space-y-3 px-3 sm:space-y-4 sm:px-6">
             <Textarea
               value={configText}
               onChange={(e) => setConfigText(e.target.value)}
-              className="font-mono text-xs whitespace-pre overflow-x-auto"
+              className="font-mono text-[11px] whitespace-pre overflow-x-auto sm:text-xs"
               rows={configText.split("\n").length + 1}
               readOnly
             />
