@@ -686,8 +686,6 @@ export function KalkulatorBalistyczny() {
                     <th className="py-2 px-2">Dystans ({maxDistanceUnit})</th>
                     <th className="py-2 px-2">Poprawka pionowa (cm)</th>
                     <th className="py-2 px-2">Poprawka pozioma (cm)</th>
-                    <th className="py-2 px-2">Prędkość (m/s)</th>
-                    <th className="py-2 px-2">Energia (J)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -704,8 +702,6 @@ export function KalkulatorBalistyczny() {
                       </td>
                       <td className="py-2 px-2">{point.drop.inCentimeters.toFixed(1)}</td>
                       <td className="py-2 px-2">{point.windage.inCentimeters.toFixed(1)}</td>
-                      <td className="py-2 px-2">{point.velocity.inMps.toFixed(0)}</td>
-                      <td className="py-2 px-2">{point.energy.inJoules.toFixed(0)}</td>
                     </tr>
                   ))}
                 </tbody>
