@@ -146,6 +146,8 @@ const CUSTOM_VTX_ID = "custom";
 const VTX_DATA_URL =
   "https://docs.google.com/spreadsheets/d/1pSce3OR-ZkvILul03hWvtaR-mHh861qv2u8pIxIHbWQ/export?format=csv";
 
+const BUNDLED_VTX_DATA_URL = "./vtx-data.csv";
+const RUNTIME_DATA_CACHE_NAME = "szkolapartyzantow-tools-data-v1";
 const DB_NAME = "VTX_SETTINGS_DB";
 const STORE_NAME = "vtx_store";
 const DB_VERSION = 2;
@@ -198,6 +200,42 @@ async function setCachedData(data: CachedData): Promise<void> {
     });
   } catch (err) {
     console.warn("Failed to write to cache", err);
+  }
+}
+
+async function fetchVtxCsv(): Promise<string> {
+  const request = new Request(VTX_DATA_URL);
+
+  try {
+    const response = await fetch(request);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    if ("caches" in window) {
+      const cache = await caches.open(RUNTIME_DATA_CACHE_NAME);
+      await cache.put(request, response.clone());
+    }
+
+    return response.text();
+  } catch (err) {
+    if ("caches" in window) {
+      const cachedResponse = await caches.match(request, { cacheName: RUNTIME_DATA_CACHE_NAME });
+      if (cachedResponse) {
+        return cachedResponse.text();
+      }
+    }
+
+    try {
+      const bundledResponse = await fetch(BUNDLED_VTX_DATA_URL);
+      if (!bundledResponse.ok) {
+        throw new Error(`Bundled VTX data HTTP ${bundledResponse.status}`);
+      }
+
+      return bundledResponse.text();
+    } catch {
+      throw err;
+    }
   }
 }
 
@@ -564,8 +602,7 @@ export function GeneratorUstawienVTX() {
     });
 
     // 2. Fetch network
-    fetch(VTX_DATA_URL)
-      .then((res) => res.text())
+    fetchVtxCsv()
       .then((text) => {
         processCsv(text);
       })

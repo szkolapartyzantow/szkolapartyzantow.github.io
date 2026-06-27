@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
@@ -12,12 +13,14 @@ function offlinePwa(): Plugin {
     name: "offline-pwa",
     apply: "build",
     generateBundle(_, bundle) {
+      const bundledVtxDataPath = path.resolve(__dirname, "src/public/vtx-data.csv");
       const precacheFiles = [
         "./",
         "./index.html",
         "./manifest.webmanifest",
         "./icons/SZKP_logo_sigint.svg",
         "./icons/favicon.png",
+        ...(fs.existsSync(bundledVtxDataPath) ? ["./vtx-data.csv"] : []),
         ...Object.values(bundle)
           .map((asset) => `./${asset.fileName}`)
           .filter((fileName) => !fileName.endsWith(".map")),
@@ -28,6 +31,7 @@ function offlinePwa(): Plugin {
         fileName: "service-worker.js",
         source: `
 const CACHE_NAME = "szkolapartyzantow-tools-v${Date.now()}";
+const DATA_CACHE_NAME = "szkolapartyzantow-tools-data-v1";
 const PRECACHE_URLS = ${JSON.stringify(precacheFiles, null, 2)};
 const GOOGLE_DOCS_DATA_URLS = ${JSON.stringify(googleDocsDataUrls, null, 2)};
 
@@ -47,7 +51,7 @@ self.addEventListener("activate", (event) => {
       .then((cacheNames) =>
         Promise.all(
           cacheNames
-            .filter((cacheName) => cacheName !== CACHE_NAME)
+            .filter((cacheName) => cacheName !== CACHE_NAME && cacheName !== DATA_CACHE_NAME)
             .map((cacheName) => caches.delete(cacheName)),
         ),
       )
@@ -70,11 +74,11 @@ self.addEventListener("fetch", (event) => {
         .then((networkResponse) => {
           if (networkResponse.ok) {
             const response = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, response));
+            caches.open(DATA_CACHE_NAME).then((cache) => cache.put(request, response));
           }
           return networkResponse;
         })
-        .catch(() => caches.match(request)),
+        .catch(() => caches.match(request, { cacheName: DATA_CACHE_NAME })),
     );
     return;
   }

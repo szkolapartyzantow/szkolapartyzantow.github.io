@@ -68,7 +68,7 @@ export function OfflineInstallPrompt() {
           <div className="min-w-0 flex-1 space-y-1">
             <p className="font-bold">Tryb Offline</p>
             <p className="text-sm text-muted-foreground">
-              Możesz używać Narzędzi bez połączenia z internetem.
+              Możesz teraz używać Narzędzi bez połączenia z internetem.
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               {installPrompt ? (
