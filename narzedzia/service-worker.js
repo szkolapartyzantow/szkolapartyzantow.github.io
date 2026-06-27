@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "szkolapartyzantow-tools-v1782560190208";
+const CACHE_NAME = "szkolapartyzantow-tools-v1782560489688";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
