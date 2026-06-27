@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" viewBox="0 0 1600 1600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
     <rect width="1600" height="1600" style="fill:rgb(0,0,0);"/>
-    <g transform="matrix(1.33333,0,0,1.33333,0,0)">
+    <g transform="matrix(1.06666,0,0,1.06666,160,160)">
         <g id="SIGINT">
             <g id="Delta" transform="matrix(1,0,0,1,-14,14)">
                 <path d="M634,120L1033.37,799.962C1033.37,799.962 1051.39,833.16 1049,841C1046.61,848.84 1019.02,847 1019.02,847L244.229,847C244.229,847 220.912,848.333 218,844C210.97,833.541 228.372,810.613 228.372,810.613L634,120ZM598,335L860,783L336,783L598,335Z" style="fill:rgb(51,51,51);"/>

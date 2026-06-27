@@ -63,6 +63,18 @@ export function DropdownSelect({
   disabled = false,
 }: DropdownSelectProps) {
   const [open, setOpen] = React.useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const [popoverWidth, setPopoverWidth] = React.useState<number | null>(null);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen && popoverWidth === null) {
+      const width = triggerRef.current?.getBoundingClientRect().width;
+      if (width) {
+        setPopoverWidth(width);
+      }
+    }
+    setOpen(nextOpen);
+  };
 
   const selectedItem = React.useMemo(() => {
     for (const itemOrGroup of items) {
@@ -80,9 +92,10 @@ export function DropdownSelect({
     return (
       <div className={`space-y-2 ${className || ""}`}>
         {label && <Label className={cn(compactOnMobile && "text-xs sm:text-sm")}>{label}</Label>}
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover open={open} onOpenChange={handleOpenChange}>
           <PopoverTrigger asChild>
             <Button
+              ref={triggerRef}
               variant="outline"
               role="combobox"
               aria-expanded={open}
@@ -99,10 +112,16 @@ export function DropdownSelect({
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+          <PopoverContent
+            className="p-0"
+            style={{
+              width: popoverWidth ? `${popoverWidth}px` : "var(--radix-popover-trigger-width)",
+              maxWidth: popoverWidth ? `${popoverWidth}px` : "var(--radix-popover-trigger-width)",
+            }}
+          >
             <Command>
-              <CommandInput placeholder={`Search ${(label ?? "option").toLowerCase()}...`} />
-              <CommandList>
+              <CommandInput placeholder={`Szukaj ${(label ?? "option").toLowerCase()}...`} />
+              <CommandList className="w-full">
                 <CommandEmpty>No item found.</CommandEmpty>
                 {items.map((itemOrGroup) => {
                   if (isGroup(itemOrGroup)) {
@@ -116,6 +135,7 @@ export function DropdownSelect({
                               onValueChange(item.value);
                               setOpen(false);
                             }}
+                            className="min-w-0"
                           >
                             <Check
                               className={cn(
@@ -123,7 +143,7 @@ export function DropdownSelect({
                                 value === item.value ? "opacity-100" : "opacity-0"
                               )}
                             />
-                            {item.label}
+                            <span className="min-w-0 flex-1 truncate">{item.label}</span>
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -138,6 +158,7 @@ export function DropdownSelect({
                         onValueChange(item.value);
                         setOpen(false);
                       }}
+                      className="min-w-0"
                     >
                       <Check
                         className={cn(
@@ -145,7 +166,7 @@ export function DropdownSelect({
                           value === item.value ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {item.label}
+                      <span className="min-w-0 flex-1 truncate">{item.label}</span>
                     </CommandItem>
                   );
                 })}
