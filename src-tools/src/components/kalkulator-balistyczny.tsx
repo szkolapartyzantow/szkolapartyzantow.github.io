@@ -100,6 +100,20 @@ const WIND_SPEED_UNITS = [
   { value: "ft/s", label: "ft/s" },
 ];
 
+const CORRECTION_UNITS = [
+  { value: "cm", label: "cm" },
+  { value: "moa", label: "MOA" },
+  { value: "mrad", label: "MIL (MRAD)" },
+];
+
+const RESULT_VELOCITY_UNITS = [
+  { value: "m/s", label: "m/s" },
+  { value: "ft/s", label: "ft/s" },
+];
+
+type CorrectionUnit = (typeof CORRECTION_UNITS)[number]["value"];
+type ResultVelocityUnit = (typeof RESULT_VELOCITY_UNITS)[number]["value"];
+
 export function KalkulatorBalistyczny() {
   // Ammunition
   const [bulletWeight, setBulletWeight] = React.useState("55"); // grains or grams
@@ -144,10 +158,49 @@ export function KalkulatorBalistyczny() {
   const [maxDistance, setMaxDistance] = React.useState("500"); // m
   const [maxDistanceUnit, setMaxDistanceUnit] = React.useState("m");
   const [stepSize, setStepSize] = React.useState("10"); // m
+  const [correctionUnit, setCorrectionUnit] = React.useState<CorrectionUnit>("cm");
+  const [resultVelocityUnit, setResultVelocityUnit] = React.useState<ResultVelocityUnit>("m/s");
 
   const [editAtmosphere, setEditAtmosphere] = React.useState(false);
 
   const [results, setResults] = React.useState<TrajectoryPoint[] | null>(null);
+
+  const correctionUnitLabel =
+    CORRECTION_UNITS.find((unit) => unit.value === correctionUnit)?.label ?? "cm";
+
+  const resultVelocityUnitLabel =
+    RESULT_VELOCITY_UNITS.find((unit) => unit.value === resultVelocityUnit)?.label ?? "m/s";
+
+  const formatVerticalCorrection = (point: TrajectoryPoint) => {
+    switch (correctionUnit) {
+      case "moa":
+        return (-point.dropAdjustment.inMoa).toFixed(2);
+      case "mrad":
+        return (-point.dropAdjustment.inMrad).toFixed(2);
+      default:
+        return (-point.drop.inCentimeters).toFixed(1);
+    }
+  };
+
+  const formatHorizontalCorrection = (point: TrajectoryPoint) => {
+    switch (correctionUnit) {
+      case "moa":
+        return (-point.windageAdjustment.inMoa).toFixed(2);
+      case "mrad":
+        return (-point.windageAdjustment.inMrad).toFixed(2);
+      default:
+        return (-point.windage.inCentimeters).toFixed(1);
+    }
+  };
+
+  const formatResultVelocity = (point: TrajectoryPoint) => {
+    switch (resultVelocityUnit) {
+      case "ft/s":
+        return point.velocity.inFps.toFixed(0);
+      default:
+        return point.velocity.inMps.toFixed(0);
+    }
+  };
 
   const calculate = () => {
     try {
@@ -666,6 +719,46 @@ export function KalkulatorBalistyczny() {
               </div>
             </div>
           </div>
+          <Separator className="my-6" />
+          <h3 className="font-semibold">Jednostki</h3>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Poprawka pionowa/pozioma</Label>
+              <Select
+                value={correctionUnit}
+                onValueChange={(value) => setCorrectionUnit(value as CorrectionUnit)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CORRECTION_UNITS.map((unit) => (
+                    <SelectItem key={unit.value} value={unit.value}>
+                      {unit.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Prędkość pocisku</Label>
+              <Select
+                value={resultVelocityUnit}
+                onValueChange={(value) => setResultVelocityUnit(value as ResultVelocityUnit)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {RESULT_VELOCITY_UNITS.map((unit) => (
+                    <SelectItem key={unit.value} value={unit.value}>
+                      {unit.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           <Button onClick={calculate} className="w-full mt-4">
             Oblicz
           </Button>
@@ -684,8 +777,9 @@ export function KalkulatorBalistyczny() {
                 <thead className="text-muted-foreground border-b">
                   <tr>
                     <th className="py-2 px-2">Dystans ({maxDistanceUnit})</th>
-                    <th className="py-2 px-2">Poprawka pionowa (cm)</th>
-                    <th className="py-2 px-2">Poprawka pozioma (cm)</th>
+                    <th className="py-2 px-2">Poprawka pionowa ({correctionUnitLabel})</th>
+                    <th className="py-2 px-2">Poprawka pozioma ({correctionUnitLabel})</th>
+                    <th className="py-2 px-2">Prędkość pocisku ({resultVelocityUnitLabel})</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -700,8 +794,9 @@ export function KalkulatorBalistyczny() {
                           : point.distance.inYards
                         ).toFixed(0)}
                       </td>
-                      <td className="py-2 px-2">{point.drop.inCentimeters.toFixed(1)}</td>
-                      <td className="py-2 px-2">{point.windage.inCentimeters.toFixed(1)}</td>
+                      <td className="py-2 px-2">{formatVerticalCorrection(point)}</td>
+                      <td className="py-2 px-2">{formatHorizontalCorrection(point)}</td>
+                      <td className="py-2 px-2">{formatResultVelocity(point)}</td>
                     </tr>
                   ))}
                 </tbody>
