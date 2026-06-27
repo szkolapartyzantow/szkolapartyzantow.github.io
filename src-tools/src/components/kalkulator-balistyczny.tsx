@@ -111,8 +111,21 @@ const RESULT_VELOCITY_UNITS = [
   { value: "ft/s", label: "ft/s" },
 ];
 
+const RESULT_ENERGY_UNITS = [
+  { value: "J", label: "J" },
+  { value: "ft*lbs", label: "ft*lbs" },
+];
+
+const CORRECTION_DISPLAY_OPTIONS = [
+  { value: "signed", label: "+/-" },
+  { value: "directional", label: "U/D/L/R" },
+  { value: "polishDirectional", label: "G/D/L/P" },
+];
+
 type CorrectionUnit = (typeof CORRECTION_UNITS)[number]["value"];
+type CorrectionDisplay = (typeof CORRECTION_DISPLAY_OPTIONS)[number]["value"];
 type ResultVelocityUnit = (typeof RESULT_VELOCITY_UNITS)[number]["value"];
+type ResultEnergyUnit = (typeof RESULT_ENERGY_UNITS)[number]["value"];
 
 export function KalkulatorBalistyczny() {
   // Ammunition
@@ -159,7 +172,9 @@ export function KalkulatorBalistyczny() {
   const [maxDistanceUnit, setMaxDistanceUnit] = React.useState("m");
   const [stepSize, setStepSize] = React.useState("10"); // m
   const [correctionUnit, setCorrectionUnit] = React.useState<CorrectionUnit>("cm");
+  const [correctionDisplay, setCorrectionDisplay] = React.useState<CorrectionDisplay>("signed");
   const [resultVelocityUnit, setResultVelocityUnit] = React.useState<ResultVelocityUnit>("m/s");
+  const [resultEnergyUnit, setResultEnergyUnit] = React.useState<ResultEnergyUnit>("J");
 
   const [editAtmosphere, setEditAtmosphere] = React.useState(false);
 
@@ -171,26 +186,83 @@ export function KalkulatorBalistyczny() {
   const resultVelocityUnitLabel =
     RESULT_VELOCITY_UNITS.find((unit) => unit.value === resultVelocityUnit)?.label ?? "m/s";
 
-  const formatVerticalCorrection = (point: TrajectoryPoint) => {
+  const resultEnergyUnitLabel =
+    RESULT_ENERGY_UNITS.find((unit) => unit.value === resultEnergyUnit)?.label ?? "J";
+
+  const formatSignedCorrection = (value: number, fractionDigits: number) => {
+    const formatted = value.toFixed(fractionDigits);
+    return value > 0 ? `+${formatted}` : formatted;
+  };
+
+  const formatDirectionalCorrection = (
+    value: number,
+    fractionDigits: number,
+    positiveDirection: string,
+    negativeDirection: string
+  ) => {
+    const direction = value > 0 ? positiveDirection : value < 0 ? negativeDirection : "";
+    return `${Math.abs(value).toFixed(fractionDigits)}${direction}`;
+  };
+
+  const formatCorrection = (
+    value: number,
+    fractionDigits: number,
+    positiveDirection: string,
+    negativeDirection: string,
+    polishPositiveDirection: string,
+    polishNegativeDirection: string
+  ) => {
+    if (correctionDisplay === "directional") {
+      return formatDirectionalCorrection(
+        value,
+        fractionDigits,
+        positiveDirection,
+        negativeDirection
+      );
+    }
+
+    if (correctionDisplay === "polishDirectional") {
+      return formatDirectionalCorrection(
+        value,
+        fractionDigits,
+        polishPositiveDirection,
+        polishNegativeDirection
+      );
+    }
+
+    return formatSignedCorrection(value, fractionDigits);
+  };
+
+  const getVerticalCorrectionValue = (point: TrajectoryPoint) => {
     switch (correctionUnit) {
       case "moa":
-        return (-point.dropAdjustment.inMoa).toFixed(2);
+        return { value: -point.dropAdjustment.inMoa, fractionDigits: 2 };
       case "mrad":
-        return (-point.dropAdjustment.inMrad).toFixed(2);
+        return { value: -point.dropAdjustment.inMrad, fractionDigits: 2 };
       default:
-        return (-point.drop.inCentimeters).toFixed(1);
+        return { value: -point.drop.inCentimeters, fractionDigits: 1 };
     }
   };
 
-  const formatHorizontalCorrection = (point: TrajectoryPoint) => {
+  const getHorizontalCorrectionValue = (point: TrajectoryPoint) => {
     switch (correctionUnit) {
       case "moa":
-        return (-point.windageAdjustment.inMoa).toFixed(2);
+        return { value: -point.windageAdjustment.inMoa, fractionDigits: 2 };
       case "mrad":
-        return (-point.windageAdjustment.inMrad).toFixed(2);
+        return { value: -point.windageAdjustment.inMrad, fractionDigits: 2 };
       default:
-        return (-point.windage.inCentimeters).toFixed(1);
+        return { value: -point.windage.inCentimeters, fractionDigits: 1 };
     }
+  };
+
+  const formatVerticalCorrection = (point: TrajectoryPoint) => {
+    const correction = getVerticalCorrectionValue(point);
+    return formatCorrection(correction.value, correction.fractionDigits, "U", "D", "G", "D");
+  };
+
+  const formatHorizontalCorrection = (point: TrajectoryPoint) => {
+    const correction = getHorizontalCorrectionValue(point);
+    return formatCorrection(correction.value, correction.fractionDigits, "R", "L", "P", "L");
   };
 
   const formatResultVelocity = (point: TrajectoryPoint) => {
@@ -199,6 +271,15 @@ export function KalkulatorBalistyczny() {
         return point.velocity.inFps.toFixed(0);
       default:
         return point.velocity.inMps.toFixed(0);
+    }
+  };
+
+  const formatResultEnergy = (point: TrajectoryPoint) => {
+    switch (resultEnergyUnit) {
+      case "ft*lbs":
+        return point.energy.inFootPounds.toFixed(0);
+      default:
+        return point.energy.inJoules.toFixed(0);
     }
   };
 
@@ -722,41 +803,81 @@ export function KalkulatorBalistyczny() {
           <Separator className="my-6" />
           <h3 className="font-semibold">Jednostki</h3>
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Poprawka pionowa/pozioma</Label>
-              <Select
-                value={correctionUnit}
-                onValueChange={(value) => setCorrectionUnit(value as CorrectionUnit)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CORRECTION_UNITS.map((unit) => (
-                    <SelectItem key={unit.value} value={unit.value}>
-                      {unit.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Poprawka pionowa/pozioma</Label>
+                <Select
+                  value={correctionUnit}
+                  onValueChange={(value) => setCorrectionUnit(value as CorrectionUnit)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CORRECTION_UNITS.map((unit) => (
+                      <SelectItem key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Zapis poprawki</Label>
+                <Select
+                  value={correctionDisplay}
+                  onValueChange={(value) => setCorrectionDisplay(value as CorrectionDisplay)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CORRECTION_DISPLAY_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label>Prędkość pocisku</Label>
-              <Select
-                value={resultVelocityUnit}
-                onValueChange={(value) => setResultVelocityUnit(value as ResultVelocityUnit)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {RESULT_VELOCITY_UNITS.map((unit) => (
-                    <SelectItem key={unit.value} value={unit.value}>
-                      {unit.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Prędkość pocisku</Label>
+                <Select
+                  value={resultVelocityUnit}
+                  onValueChange={(value) => setResultVelocityUnit(value as ResultVelocityUnit)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {RESULT_VELOCITY_UNITS.map((unit) => (
+                      <SelectItem key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Energia pocisku</Label>
+                <Select
+                  value={resultEnergyUnit}
+                  onValueChange={(value) => setResultEnergyUnit(value as ResultEnergyUnit)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {RESULT_ENERGY_UNITS.map((unit) => (
+                      <SelectItem key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
           <Button onClick={calculate} className="w-full mt-4">
@@ -780,6 +901,7 @@ export function KalkulatorBalistyczny() {
                     <th className="py-2 px-2">Poprawka pionowa ({correctionUnitLabel})</th>
                     <th className="py-2 px-2">Poprawka pozioma ({correctionUnitLabel})</th>
                     <th className="py-2 px-2">Prędkość pocisku ({resultVelocityUnitLabel})</th>
+                    <th className="py-2 px-2">Energia pocisku ({resultEnergyUnitLabel})</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -797,6 +919,7 @@ export function KalkulatorBalistyczny() {
                       <td className="py-2 px-2">{formatVerticalCorrection(point)}</td>
                       <td className="py-2 px-2">{formatHorizontalCorrection(point)}</td>
                       <td className="py-2 px-2">{formatResultVelocity(point)}</td>
+                      <td className="py-2 px-2">{formatResultEnergy(point)}</td>
                     </tr>
                   ))}
                 </tbody>
