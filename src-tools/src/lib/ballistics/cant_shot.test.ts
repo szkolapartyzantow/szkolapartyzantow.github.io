@@ -17,7 +17,7 @@ describe("TrajectoryCalculator - Cant and Shot Angle", () => {
   const calc = new TrajectoryCalculator();
   const sightAngle = calc.calculateSightAngle(ammo, rifle);
 
-  it("should have different drop/windage when canted 90 degrees", () => {
+  it("rotates trajectory behavior for 90 degree cant without wind", () => {
     // Case 1: Standard shot
     const params1 = ShotParameters.new(
       sightAngle,
@@ -42,17 +42,12 @@ describe("TrajectoryCalculator - Cant and Shot Angle", () => {
     const traj2 = calc.calculateTrajectory(ammo, rifle, Atmosphere.standard(), params2);
     const point2 = traj2[traj2.length - 1]!;
 
-    // Expect Windage to be non-zero (drift to right due to initial velocity vector rotation)
     expect(point2.windage.inMeters).toBeGreaterThan(0.5);
-
-    // Expect Drop to be different (likely more drop because we lost sight elevation relative to gravity)
-    // point1.drop is around -12.85m
-    // point2.drop is around -14.15m
     expect(Math.abs(point1.drop.inMeters - point2.drop.inMeters)).toBeGreaterThan(0.5);
     expect(point2.drop.inMeters).toBeLessThan(point1.drop.inMeters);
   });
 
-  it("should output drop relative to LOS for angled shots", () => {
+  it("outputs drop relative to LOS for angled shots", () => {
     // Case 3: 45 deg Shot Angle (Uphill)
     const params3 = ShotParameters.new(
       sightAngle,
@@ -65,10 +60,7 @@ describe("TrajectoryCalculator - Cant and Shot Angle", () => {
     const traj3 = calc.calculateTrajectory(ammo, rifle, Atmosphere.standard(), params3);
     const point3 = traj3[traj3.length - 1]!;
 
-    // If bug existed, drop would be huge positive (Altitude ~700m).
-    // Correct drop should be small negative (relative to LOS).
-    // Expected drop is around -8.8m
-    expect(point3.drop.inMeters).toBeLessThan(0); // Should be negative (drop)
-    expect(Math.abs(point3.drop.inMeters)).toBeLessThan(50.0); // Should be reasonable
+    expect(point3.drop.inMeters).toBeLessThan(0);
+    expect(Math.abs(point3.drop.inMeters)).toBeLessThan(50.0);
   });
 });

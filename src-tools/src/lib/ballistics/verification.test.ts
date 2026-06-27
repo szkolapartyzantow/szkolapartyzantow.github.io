@@ -112,7 +112,7 @@ describe("Ballistics Verification", () => {
 });
 
 describe("Ballistics Verification - 90 degree cant", () => {
-  it("should match JBM Ballistics reference output", () => {
+  it("matches JBM-style 90 degree cant output", () => {
     const calculator = new TrajectoryCalculator();
 
     const bc = new BallisticCoefficient(

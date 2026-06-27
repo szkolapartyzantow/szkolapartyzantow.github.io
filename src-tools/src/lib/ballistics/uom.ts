@@ -178,7 +178,7 @@ export class Mass {
     return new Mass(value);
   }
   static grams(value: number): Mass {
-    return new Mass(value * 1000);
+    return new Mass(value / 1000);
   }
   static pounds(value: number): Mass {
     return new Mass(value * 0.45359237);
@@ -301,7 +301,7 @@ export class Pressure {
     return new Pressure(value);
   }
   static hectoPascals(value: number): Pressure {
-    return new Pressure(value / 100);
+    return new Pressure(value * 100);
   }
   static inHg(value: number): Pressure {
     return new Pressure(value * 3386.389);

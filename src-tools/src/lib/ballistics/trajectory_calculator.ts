@@ -177,65 +177,35 @@ export class TrajectoryCalculator {
     // y - drop
     // z - windage
 
-    // Initial Velocity Vector Calculation with Cant and Shot Angle
-    // 1. Rifle Frame (No Cant, No Shot Angle)
-    //    We align X with Line of Sight (LOS).
-    //    Barrel is elevated by sightAngle relative to LOS.
-    //    Barrel Azimuth is yaw relative to LOS.
     const sightAngle = shotParameters.sightAngle.inRadians;
     const barrelAzimuthAngle = barrelAzimuth.inRadians;
     const cantAngle = shotParameters.cantAngle.inRadians;
     const shotAngle = shotParameters.shotAngle.inRadians;
     const v = velocity.inMps;
 
-    // Position in Rifle Frame
-    // Scope is at (0,0,0)
-    // Barrel is at (0, -sightHeight, 0)
-    const p_x_rifle = 0;
-    const p_y_rifle = -rifle.sight.height.inMeters;
-    const p_z_rifle = 0;
+    const vXRifle = v * Math.cos(sightAngle) * Math.cos(barrelAzimuthAngle);
+    const vYRifle = v * Math.sin(sightAngle);
+    const vZRifle = v * Math.cos(sightAngle) * Math.sin(barrelAzimuthAngle);
 
-    // Velocity in Rifle Frame (aligned with LOS, before cant)
-    // x = forward, y = up, z = right
-    const v_x_rifle = v * Math.cos(sightAngle) * Math.cos(barrelAzimuthAngle);
-    const v_y_rifle = v * Math.sin(sightAngle);
-    const v_z_rifle = v * Math.cos(sightAngle) * Math.sin(barrelAzimuthAngle);
-
-    // 2. Apply Cant (Rotation around X axis)
-    //    If I cant Right, top goes Right. RHR around X: Y -> Z.
-    //    y' = y cos - z sin
-    //    z' = y sin + z cos
     const cosCant = Math.cos(cantAngle);
     const sinCant = Math.sin(cantAngle);
 
-    const v_x_canted = v_x_rifle;
-    const v_y_canted = v_y_rifle * cosCant - v_z_rifle * sinCant;
-    const v_z_canted = v_y_rifle * sinCant + v_z_rifle * cosCant;
+    const vXCanted = vXRifle;
+    const vYCanted = vYRifle * cosCant - vZRifle * sinCant;
+    const vZCanted = vYRifle * sinCant + vZRifle * cosCant;
 
-    const p_x_canted = p_x_rifle;
-    const p_y_canted = p_y_rifle * cosCant - p_z_rifle * sinCant;
-    const p_z_canted = p_y_rifle * sinCant + p_z_rifle * cosCant;
+    const pYCanted = -rifle.sight.height.inMeters * cosCant;
+    const pZCanted = -rifle.sight.height.inMeters * sinCant;
 
-    // 3. Apply Shot Angle (Rotation around Z axis - Pitch)
-    //    Shot Angle is elevation of LOS.
-    //    We rotate the whole system UP by shotAngle.
-    //    Rotation around Z axis (if Z is right).
-    //    x'' = x' cos(s) - y' sin(s)
-    //    y'' = x' sin(s) + y' cos(s)
-    //    z'' = z'
     const cosShotAngle = Math.cos(shotAngle);
     const sinShotAngle = Math.sin(shotAngle);
 
-    const v_x_global = v_x_canted * cosShotAngle - v_y_canted * sinShotAngle;
-    const v_y_global = v_x_canted * sinShotAngle + v_y_canted * cosShotAngle;
-    const v_z_global = v_z_canted;
-
-    const p_x_global = p_x_canted * cosShotAngle - p_y_canted * sinShotAngle;
-    const p_y_global = p_x_canted * sinShotAngle + p_y_canted * cosShotAngle;
-    const p_z_global = p_z_canted;
-
-    let velocityVector = new Vector3(v_x_global, v_y_global, v_z_global);
-    let rangeVector = new Vector3(p_x_global, p_y_global, p_z_global);
+    let velocityVector = new Vector3(
+      vXCanted * cosShotAngle - vYCanted * sinShotAngle,
+      vXCanted * sinShotAngle + vYCanted * cosShotAngle,
+      vZCanted
+    );
+    let rangeVector = new Vector3(-pYCanted * sinShotAngle, pYCanted * cosShotAngle, pZCanted);
 
     let currentItem = 0;
     const maxItem = Math.floor(rangeTo.inMeters / step.inMeters) + 1;
@@ -250,15 +220,10 @@ export class TrajectoryCalculator {
 
     const trajectoryPoints: TrajectoryPoint[] = [];
 
-    // Precompute cos/sin for performance in loop for LOS transformation
     const cosShot = Math.cos(shotAngle);
     const sinShot = Math.sin(shotAngle);
 
     while (true) {
-      // Calculate LOS position
-      // Inverse rotation of Shot Angle (Pitch down by shotAngle)
-      // x_los = x_g * cos(s) + y_g * sin(s)
-      // y_los = -x_g * sin(s) + y_g * cos(s)
       const losX = rangeVector.x * cosShot + rangeVector.y * sinShot;
       const losY = -rangeVector.x * sinShot + rangeVector.y * cosShot;
       const losZ = rangeVector.z;
@@ -348,39 +313,7 @@ export class TrajectoryCalculator {
       velocity = Velocity.mps(velocityAdjusted.magnitude());
 
       const currentMach = velocity.inMps / mach.inMps;
-      const { node: dragTableNode } = dragTable.find_node(currentMach);
-
-      // Rust has a while loop to ensure node mach > current mach ?
-
-      // Rust:
-      /*
-        let (mut drag_table_node, mut node_index) = drag_table.find_node(current_mach);
-        while drag_table_node.mach > current_mach {
-            node_index -= 1;
-            drag_table_node = drag_table.get_node(node_index)
-        }
-      */
-      // My `findNode` implementation in `drag_table.ts` already returns the correct interval (lower bound usually, or closest).
-      // Let's assume `findNode` is correct. The Rust logic seems to be a safeguard or specific behavior of their binary search.
-      // In `drag_table.ts` I wrote `find_node` returning `{node, index}`.
-      // It returns the closest node?
-      /*
-        if (this.nodes[high].mach - mach > mach - this.nodes[low].mach) {
-            return { node: this.nodes[low], index: low };
-        } else {
-            return { node: this.nodes[high], index: high };
-        }
-      */
-      // This returns the *closest* node.
-      // The Rust code seems to want the node *below* current_mach? Or just ensuring correct interpolation range?
-      // `calculate_drag` uses `a, b, c` coefficients which are pre-calculated.
-      // `c + mach * (b + a * mach)`
-      // This looks like it expects `mach` to be relative to something or absolute?
-      // Looking at `DragTable` constructor in TS (which I ported):
-      // It fits a curve. The coefficients are likely for the segment starting at `node.mach`?
-      // No, `DragTableNode` stores `mach`.
-      // The formula is polynomial.
-      // Let's stick to using the node returned by `findNode` for now.
+      const { node: dragTableNode } = dragTable.find_lower_node(currentMach);
 
       const drag =
         accumulatedFactor *
@@ -496,7 +429,7 @@ export class TrajectoryCalculator {
         );
         const currentMach = velocity.inMps / mach.inMps;
 
-        const { node: dragTableNode } = dragTable.find_node(currentMach);
+        const { node: dragTableNode } = dragTable.find_lower_node(currentMach);
         const drag =
           accumulatedFactor *
           densityFactor *
@@ -569,21 +502,18 @@ export class TrajectoryCalculator {
   }
 
   static getWindVector(shotParameters: ShotParameters, wind: Wind): Vector3 {
-    // Wind is defined on the horizontal plane (Global Frame).
-    // X is downrange (horizontal), Y is up (vertical), Z is right.
-    // wind.direction is angle relative to X axis?
-    // Usually 0 degrees = From North? Or 0 = Tailwind?
-    // In this codebase context (based on usage `rangeVelocity = windVelocity * Math.cos(windDirection)`),
-    // it implies direction is angle from the Line of Fire (X axis).
-    // So 0 deg = Tailwind (blowing towards target along X).
-
-    const windDirection = wind.direction.inRadians;
-    const windVelocity = wind.velocity.inMps;
+    const sightCos = shotParameters.sightAngle.cos();
+    const sightSin = shotParameters.sightAngle.sin();
+    const cantCos = shotParameters.cantAngle.cos();
+    const cantSin = shotParameters.cantAngle.sin();
+    const rangeVelocity = wind.velocity.inMps * wind.direction.cos();
+    const rangeFactor = -rangeVelocity * sightSin;
+    const crossComponent = wind.velocity.inMps * wind.direction.sin();
 
     return new Vector3(
-      windVelocity * Math.cos(windDirection),
-      0,
-      windVelocity * Math.sin(windDirection)
+      rangeVelocity * sightCos,
+      rangeFactor * cantCos + crossComponent * cantSin,
+      crossComponent * cantCos - rangeFactor * cantSin
     );
   }
 

@@ -117,6 +117,17 @@ export class DragTable {
       return { node: this.nodes[high]!, index: high };
     }
   }
+
+  find_lower_node(mach: number): { node: DragTableNode; index: number } {
+    let { node, index } = this.find_node(mach);
+
+    while (node.mach > mach && index > 0) {
+      index -= 1;
+      node = this.get_node(index);
+    }
+
+    return { node, index };
+  }
 }
 
 export class DragTableStorage {

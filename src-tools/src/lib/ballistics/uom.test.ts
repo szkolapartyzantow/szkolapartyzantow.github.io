@@ -69,8 +69,13 @@ describe("Mass", () => {
   test("factory methods and conversions", () => {
     const kg = Mass.kilograms(1);
     expect(kg.inKilograms).toBe(1);
+    expect(kg.inGrams).toBe(1000);
     expect(kg.inPounds).toBeCloseTo(2.20462);
     expect(kg.inGrains).toBeCloseTo(15432.36);
+
+    const grams = Mass.grams(4);
+    expect(grams.inGrams).toBe(4);
+    expect(grams.inKilograms).toBeCloseTo(0.004);
 
     const lbs = Mass.pounds(1);
     expect(lbs.inPounds).toBe(1);
@@ -107,6 +112,10 @@ describe("Pressure", () => {
 
     const bar = Pressure.bar(1);
     expect(bar.inPascals).toBe(100000);
+
+    const hectoPascals = Pressure.hectoPascals(1013.25);
+    expect(hectoPascals.inPascals).toBe(101325);
+    expect(hectoPascals.inHectoPascals).toBe(1013.25);
   });
 
   test("arithmetic", () => {
