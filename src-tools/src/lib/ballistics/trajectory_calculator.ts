@@ -6,18 +6,40 @@ import { Atmosphere } from "./atmosphere";
 import { Rifle, TwistDirection, Wind } from "./rifle";
 
 export class TrajectoryPoint {
+  readonly time: Time;
+  readonly distance: Length;
+  readonly velocity: Velocity;
+  readonly mach: number;
+  readonly drop: Length;
+  readonly windage: Length;
+  readonly energy: Energy;
+  readonly dropAdjustment: Angle;
+  readonly windageAdjustment: Angle;
+  readonly optimalGameWeight: Mass;
+
   constructor(
-    public readonly time: Time,
-    public readonly distance: Length,
-    public readonly velocity: Velocity,
-    public readonly mach: number,
-    public readonly drop: Length,
-    public readonly windage: Length,
-    public readonly energy: Energy,
-    public readonly dropAdjustment: Angle,
-    public readonly windageAdjustment: Angle,
-    public readonly optimalGameWeight: Mass
-  ) {}
+    time: Time,
+    distance: Length,
+    velocity: Velocity,
+    mach: number,
+    drop: Length,
+    windage: Length,
+    energy: Energy,
+    dropAdjustment: Angle,
+    windageAdjustment: Angle,
+    optimalGameWeight: Mass
+  ) {
+    this.time = time;
+    this.distance = distance;
+    this.velocity = velocity;
+    this.mach = mach;
+    this.drop = drop;
+    this.windage = windage;
+    this.energy = energy;
+    this.dropAdjustment = dropAdjustment;
+    this.windageAdjustment = windageAdjustment;
+    this.optimalGameWeight = optimalGameWeight;
+  }
 
   static new(
     time: Time,
@@ -57,14 +79,28 @@ export class TrajectoryPoint {
 }
 
 export class ShotParameters {
+  readonly sightAngle: Angle;
+  readonly step: Length;
+  readonly maxDistance: Length;
+  readonly cantAngle: Angle;
+  readonly shotAngle: Angle;
+  readonly barrelAzimuth: Angle;
+
   constructor(
-    public readonly sightAngle: Angle,
-    public readonly step: Length,
-    public readonly maxDistance: Length,
-    public readonly cantAngle: Angle,
-    public readonly shotAngle: Angle,
-    public readonly barrelAzimuth: Angle
-  ) {}
+    sightAngle: Angle,
+    step: Length,
+    maxDistance: Length,
+    cantAngle: Angle,
+    shotAngle: Angle,
+    barrelAzimuth: Angle
+  ) {
+    this.sightAngle = sightAngle;
+    this.step = step;
+    this.maxDistance = maxDistance;
+    this.cantAngle = cantAngle;
+    this.shotAngle = shotAngle;
+    this.barrelAzimuth = barrelAzimuth;
+  }
 
   static new(
     sightAngle: Angle,
@@ -128,13 +164,13 @@ export class TrajectoryCalculator {
     let currentWindIndex = 0;
     const defaultNextWindRange = Length.meters(1e7);
     let nextWindRange = defaultNextWindRange;
-    if (wind && wind.length > 0 && wind[0].maxRange) {
-      nextWindRange = wind[0].maxRange;
+    if (wind && wind.length > 0 && wind[0]!.maxRange) {
+      nextWindRange = wind[0]!.maxRange;
     }
 
     let windVector = Vector3.ZERO;
     if (wind && wind.length > 0) {
-      windVector = TrajectoryCalculator.getWindVector(shotParameters, wind[0]);
+      windVector = TrajectoryCalculator.getWindVector(shotParameters, wind[0]!);
     }
 
     // x - distance towards target
@@ -247,11 +283,12 @@ export class TrajectoryCalculator {
       if (losX >= nextWindRange.inMeters) {
         currentWindIndex += 1;
         if (wind && currentWindIndex < wind.length) {
-          windVector = TrajectoryCalculator.getWindVector(shotParameters, wind[currentWindIndex]);
-          if (wind[currentWindIndex].maxRange) {
+          const currentWind = wind[currentWindIndex]!;
+          windVector = TrajectoryCalculator.getWindVector(shotParameters, currentWind);
+          if (currentWind.maxRange) {
             // If it's not the last wind segment
             if (currentWindIndex !== wind.length - 1) {
-              nextWindRange = wind[currentWindIndex].maxRange!;
+              nextWindRange = currentWind.maxRange;
             } else {
               nextWindRange = Length.meters(1e7);
             }

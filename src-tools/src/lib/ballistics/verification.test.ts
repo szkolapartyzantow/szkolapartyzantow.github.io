@@ -1,4 +1,4 @@
-import { describe, it, expect } from "bun:test";
+import { describe, it, expect } from "vitest";
 import * as fs from "fs";
 import * as path from "path";
 import { TrajectoryCalculator, ShotParameters } from "./trajectory_calculator";
@@ -57,7 +57,7 @@ describe("Ballistics Verification", () => {
     const csvPath = path.join(process.cwd(), "src/lib/ballistics/reference_result.csv");
     const csvContent = fs.readFileSync(csvPath, "utf-8");
     const lines = csvContent.trim().split("\n");
-    const header = lines[0].split(",");
+    const header = lines[0]!.split(",");
     const dataRows = lines.slice(1);
 
     // Map column names to indices
@@ -72,15 +72,15 @@ describe("Ballistics Verification", () => {
     expect(results.length).toBeGreaterThan(0);
     expect(results.length).toBe(dataRows.length);
 
-    dataRows.forEach((row, index) => {
+    dataRows.forEach((row: string, index: number) => {
       const cols = row.split(",").map(parseFloat);
-      const resultPoint = results[index];
+      const resultPoint = results[index]!;
 
-      const expectedDistance = cols[colMap.distance];
-      const expectedVelocity = cols[colMap.velocity];
-      const expectedDrop = cols[colMap.drop];
-      const expectedAdjustment = cols[colMap.adjustment];
-      const expectedEnergy = cols[colMap.energy];
+      const expectedDistance = cols[colMap.distance]!;
+      const expectedVelocity = cols[colMap.velocity]!;
+      const expectedDrop = cols[colMap.drop]!;
+      const expectedAdjustment = cols[colMap.adjustment]!;
+      const expectedEnergy = cols[colMap.energy]!;
 
       // Debug output for first failure
       const context = `Row ${index} (Dist: ${expectedDistance})`;
@@ -141,7 +141,7 @@ describe("Ballistics Verification - 90 degree cant", () => {
     const csvPath = path.join(process.cwd(), "src/lib/ballistics/90_cant_reference_result.csv");
     const csvContent = fs.readFileSync(csvPath, "utf-8");
     const lines = csvContent.trim().split("\n");
-    const header = lines[1].split(";");
+    const header = lines[1]!.split(";");
     const dataRows = lines.slice(3);
 
     const colMap = {
@@ -155,15 +155,15 @@ describe("Ballistics Verification - 90 degree cant", () => {
     expect(results.length).toBeGreaterThan(0);
     expect(results.length).toBe(dataRows.length);
 
-    dataRows.forEach((row, index) => {
+    dataRows.forEach((row: string, index: number) => {
       const cols = row.split(";").map(parseFloat);
-      const resultPoint = results[index];
+      const resultPoint = results[index]!;
 
-      const expectedDistance = cols[colMap.distance];
-      const expectedVelocity = cols[colMap.velocity];
-      const expectedDrop = cols[colMap.drop];
-      const expectedWindage = cols[colMap.windage];
-      const expectedEnergy = cols[colMap.energy];
+      const expectedDistance = cols[colMap.distance]!;
+      const expectedVelocity = cols[colMap.velocity]!;
+      const expectedDrop = cols[colMap.drop]!;
+      const expectedWindage = cols[colMap.windage]!;
+      const expectedEnergy = cols[colMap.energy]!;
 
       expect(resultPoint.distance.inMeters).toBeCloseTo(expectedDistance, 1);
       expect(resultPoint.velocity.inMps).toBeCloseTo(expectedVelocity, -1);

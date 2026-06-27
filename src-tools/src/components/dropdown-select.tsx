@@ -38,7 +38,7 @@ function isGroup(item: SelectItemData | SelectItemGroup): item is SelectItemGrou
 }
 
 interface DropdownSelectProps {
-  label: string;
+  label?: string;
   items: (SelectItemData | SelectItemGroup)[];
   value: any;
   onValueChange: (value: any) => void;
@@ -47,6 +47,7 @@ interface DropdownSelectProps {
   searchable?: boolean;
   fullWidth?: boolean;
   compactOnMobile?: boolean;
+  disabled?: boolean;
 }
 
 export function DropdownSelect({
@@ -59,6 +60,7 @@ export function DropdownSelect({
   searchable = false,
   fullWidth = true,
   compactOnMobile = false,
+  disabled = false,
 }: DropdownSelectProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -77,13 +79,14 @@ export function DropdownSelect({
   if (searchable) {
     return (
       <div className={`space-y-2 ${className || ""}`}>
-        <Label className={cn(compactOnMobile && "text-xs sm:text-sm")}>{label}</Label>
+        {label && <Label className={cn(compactOnMobile && "text-xs sm:text-sm")}>{label}</Label>}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               role="combobox"
               aria-expanded={open}
+              disabled={disabled}
               className={cn(
                 "min-w-0 justify-between font-normal",
                 fullWidth ? "w-full" : "w-fit",
@@ -98,7 +101,7 @@ export function DropdownSelect({
           </PopoverTrigger>
           <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
             <Command>
-              <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
+              <CommandInput placeholder={`Search ${(label ?? "option").toLowerCase()}...`} />
               <CommandList>
                 <CommandEmpty>No item found.</CommandEmpty>
                 {items.map((itemOrGroup) => {
@@ -156,8 +159,8 @@ export function DropdownSelect({
 
   return (
     <div className={`space-y-2 ${className || ""}`}>
-      <Label className={cn(compactOnMobile && "text-xs sm:text-sm")}>{label}</Label>
-      <Select value={value} onValueChange={onValueChange}>
+      {label && <Label className={cn(compactOnMobile && "text-xs sm:text-sm")}>{label}</Label>}
+      <Select value={value} onValueChange={onValueChange} disabled={disabled}>
         <SelectTrigger
           className={cn(
             fullWidth ? "w-full" : "w-fit",

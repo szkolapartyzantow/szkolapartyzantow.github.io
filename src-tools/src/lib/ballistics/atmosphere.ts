@@ -7,15 +7,31 @@ export class Atmosphere {
   static readonly STANDARD_RELATIVE_HUMIDITY = 0.78;
   static readonly TEMPERATURE_LAPSE = -0.0065; // K/m
 
+  readonly altitude: Length;
+  readonly pressure: Pressure;
+  readonly temperature: Temperature;
+  readonly humidity: number;
+  readonly soundVelocity: Velocity;
+  readonly density: MassDensity;
+  readonly standardDensity: MassDensity;
+
   constructor(
-    public readonly altitude: Length,
-    public readonly pressure: Pressure,
-    public readonly temperature: Temperature,
-    public readonly humidity: number,
-    public readonly soundVelocity: Velocity,
-    public readonly density: MassDensity,
-    public readonly standardDensity: MassDensity
-  ) {}
+    altitude: Length,
+    pressure: Pressure,
+    temperature: Temperature,
+    humidity: number,
+    soundVelocity: Velocity,
+    density: MassDensity,
+    standardDensity: MassDensity
+  ) {
+    this.altitude = altitude;
+    this.pressure = pressure;
+    this.temperature = temperature;
+    this.humidity = humidity;
+    this.soundVelocity = soundVelocity;
+    this.density = density;
+    this.standardDensity = standardDensity;
+  }
 
   /**
    * Creates an Atmosphere instance.

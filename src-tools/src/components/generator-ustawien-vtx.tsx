@@ -20,47 +20,52 @@ import { ChevronDown } from "lucide-react";
 import { getToolByUrl } from "@/lib/tools";
 import { ToolHelp } from "./tool-help";
 
-enum AUX {
+const AUX = {
   // AUX1,
-  AUX2 = 1,
-  AUX3,
-  AUX4,
-  AUX5,
-  AUX6,
-  AUX7,
-  AUX8,
-}
+  AUX2: 1,
+  AUX3: 2,
+  AUX4: 3,
+  AUX5: 4,
+  AUX6: 5,
+  AUX7: 6,
+  AUX8: 7,
+} as const;
+type AUX = (typeof AUX)[keyof typeof AUX];
 
-enum SWITCH_TYPE {
-  POS2,
-  POS3,
-  POS6,
-}
+const SWITCH_TYPE = {
+  POS2: 0,
+  POS3: 1,
+  POS6: 2,
+} as const;
+type SWITCH_TYPE = (typeof SWITCH_TYPE)[keyof typeof SWITCH_TYPE];
 
-enum UART {
-  UART1,
-  UART2,
-  UART3,
-  UART4,
-  UART5,
-  UART6,
-}
+const UART = {
+  UART1: 0,
+  UART2: 1,
+  UART3: 2,
+  UART4: 3,
+  UART5: 4,
+  UART6: 5,
+} as const;
+type UART = (typeof UART)[keyof typeof UART];
 
-enum PROTOCOL {
-  SMART_AUDIO = "2048",
-  TRAMP = "8192",
-}
+const PROTOCOL = {
+  SMART_AUDIO: "2048",
+  TRAMP: "8192",
+} as const;
+type PROTOCOL = (typeof PROTOCOL)[keyof typeof PROTOCOL];
 
-enum CHANNEL {
-  CHANNEL_1 = 1,
-  CHANNEL_2,
-  CHANNEL_3,
-  CHANNEL_4,
-  CHANNEL_5,
-  CHANNEL_6,
-  CHANNEL_7,
-  CHANNEL_8,
-}
+const CHANNEL = {
+  CHANNEL_1: 1,
+  CHANNEL_2: 2,
+  CHANNEL_3: 3,
+  CHANNEL_4: 4,
+  CHANNEL_5: 5,
+  CHANNEL_6: 6,
+  CHANNEL_7: 7,
+  CHANNEL_8: 8,
+} as const;
+type CHANNEL = (typeof CHANNEL)[keyof typeof CHANNEL];
 
 interface PowerLevel {
   index: number;
@@ -126,14 +131,14 @@ const VTX_UART_DROPDOWN_MAP = [
 ];
 
 const VTX_CHANNEL_DROPDOWN_MAP = [
-  { value: CHANNEL.CHANNEL_1, label: CHANNEL.CHANNEL_1 },
-  { value: CHANNEL.CHANNEL_2, label: CHANNEL.CHANNEL_2 },
-  { value: CHANNEL.CHANNEL_3, label: CHANNEL.CHANNEL_3 },
-  { value: CHANNEL.CHANNEL_4, label: CHANNEL.CHANNEL_4 },
-  { value: CHANNEL.CHANNEL_5, label: CHANNEL.CHANNEL_5 },
-  { value: CHANNEL.CHANNEL_6, label: CHANNEL.CHANNEL_6 },
-  { value: CHANNEL.CHANNEL_7, label: CHANNEL.CHANNEL_7 },
-  { value: CHANNEL.CHANNEL_8, label: CHANNEL.CHANNEL_8 },
+  { value: CHANNEL.CHANNEL_1, label: String(CHANNEL.CHANNEL_1) },
+  { value: CHANNEL.CHANNEL_2, label: String(CHANNEL.CHANNEL_2) },
+  { value: CHANNEL.CHANNEL_3, label: String(CHANNEL.CHANNEL_3) },
+  { value: CHANNEL.CHANNEL_4, label: String(CHANNEL.CHANNEL_4) },
+  { value: CHANNEL.CHANNEL_5, label: String(CHANNEL.CHANNEL_5) },
+  { value: CHANNEL.CHANNEL_6, label: String(CHANNEL.CHANNEL_6) },
+  { value: CHANNEL.CHANNEL_7, label: String(CHANNEL.CHANNEL_7) },
+  { value: CHANNEL.CHANNEL_8, label: String(CHANNEL.CHANNEL_8) },
 ];
 
 const CUSTOM_VTX_ID = "custom";
@@ -307,7 +312,7 @@ function parseCSV(text: string): VtxData[] {
       const warningStr = row[8] ?? "0";
       const tableData = row[9] ?? "";
 
-      let port = UART.UART1;
+      let port: UART = UART.UART1;
       const portMatch = portStr.match(/UART\s*(\d+)/i);
       if (portMatch && portMatch[1]) {
         const portNum = parseInt(portMatch[1], 10);
@@ -362,7 +367,7 @@ function parseCSV(text: string): VtxData[] {
         ],
       };
     })
-    .filter((x): x is VtxData => x !== null);
+    .filter((x): x is NonNullable<typeof x> => x !== null);
 }
 
 function generateConfig(vtxData: VtxData): string {
@@ -989,7 +994,9 @@ vtxtable powervalues 14 20 23 26 28`}
                     label="AUX"
                     items={bandChannelAuxOptions}
                     value={currentVtx.band_channel_aux}
-                    onValueChange={(val) => updateCurrentVtx({ band_channel_aux: Number(val) })}
+                    onValueChange={(val) =>
+                      updateCurrentVtx({ band_channel_aux: Number(val) as AUX })
+                    }
                     placeholder="Wybierz AUX"
                     disabled={currentVtx.band_channel_mode === -1}
                     compactOnMobile

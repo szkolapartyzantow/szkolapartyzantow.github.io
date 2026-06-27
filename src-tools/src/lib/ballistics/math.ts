@@ -6,11 +6,15 @@
  */
 
 export class Vector3 {
-  constructor(
-    public readonly x: number,
-    public readonly y: number,
-    public readonly z: number
-  ) {}
+  readonly x: number;
+  readonly y: number;
+  readonly z: number;
+
+  constructor(x: number, y: number, z: number) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
 
   static readonly ZERO = new Vector3(0, 0, 0);
 

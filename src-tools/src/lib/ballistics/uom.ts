@@ -5,40 +5,42 @@
  * All values are stored internally in SI base units.
  */
 
-export enum LengthUnit {
-  Meter = "m",
-  Centimeter = "cm",
-  Millimeter = "mm",
-  Inch = "in",
-  Feet = "ft",
-  Yard = "yd",
-}
+export const LengthUnit = {
+  Meter: "m",
+  Centimeter: "cm",
+  Millimeter: "mm",
+  Inch: "in",
+  Feet: "ft",
+  Yard: "yd",
+} as const;
+export type LengthUnit = (typeof LengthUnit)[keyof typeof LengthUnit];
 
 export class Length {
-  rawValue: any;
+  readonly value: number;
+  readonly unit: LengthUnit;
+  rawValue: number;
 
-  constructor(
-    public readonly value: number,
-    public readonly unit = LengthUnit.Meter
-  ) {
+  constructor(value: number, unit: LengthUnit = LengthUnit.Meter) {
+    this.value = value;
+    this.unit = unit;
     switch (unit) {
       case LengthUnit.Meter:
         this.rawValue = value;
         break;
       case LengthUnit.Centimeter:
-        this.rawValue = Length.centimeters(value).in(unit);
+        this.rawValue = value * 0.01;
         break;
       case LengthUnit.Millimeter:
-        this.rawValue = rawValue;
+        this.rawValue = value * 0.001;
         break;
       case LengthUnit.Inch:
-        this.rawValue = rawValue;
+        this.rawValue = value * 0.0254;
         break;
       case LengthUnit.Feet:
-        this.rawValue = rawValue;
+        this.rawValue = value * 0.3048;
         break;
       case LengthUnit.Yard:
-        this.rawValue = rawValue;
+        this.rawValue = value * 0.9144;
         break;
     }
   }
@@ -115,7 +117,11 @@ export class Length {
 }
 
 export class Velocity {
-  private constructor(public readonly rawValue: number) {} // m/s
+  readonly rawValue: number;
+
+  private constructor(rawValue: number) {
+    this.rawValue = rawValue;
+  } // m/s
 
   static readonly ZERO = new Velocity(0);
 
@@ -160,7 +166,11 @@ export class Velocity {
 }
 
 export class Mass {
-  private constructor(public readonly rawValue: number) {} // kg
+  readonly rawValue: number;
+
+  private constructor(rawValue: number) {
+    this.rawValue = rawValue;
+  } // kg
 
   static readonly ZERO = new Mass(0);
 
@@ -205,7 +215,11 @@ export class Mass {
 }
 
 export class MassDensity {
-  private constructor(public readonly rawValue: number) {} // kg/m^3
+  readonly rawValue: number;
+
+  private constructor(rawValue: number) {
+    this.rawValue = rawValue;
+  } // kg/m^3
 
   static readonly ZERO = new MassDensity(0);
 
@@ -238,7 +252,11 @@ export class MassDensity {
 }
 
 export class Energy {
-  private constructor(public readonly rawValue: number) {} // Joules
+  readonly rawValue: number;
+
+  private constructor(rawValue: number) {
+    this.rawValue = rawValue;
+  } // Joules
 
   static readonly ZERO = new Energy(0);
 
@@ -271,7 +289,11 @@ export class Energy {
 }
 
 export class Pressure {
-  private constructor(public readonly rawValue: number) {} // Pascals
+  readonly rawValue: number;
+
+  private constructor(rawValue: number) {
+    this.rawValue = rawValue;
+  } // Pascals
 
   static readonly ZERO = new Pressure(0);
 
@@ -316,7 +338,11 @@ export class Pressure {
 }
 
 export class Temperature {
-  private constructor(public readonly rawValue: number) {} // Kelvin
+  readonly rawValue: number;
+
+  private constructor(rawValue: number) {
+    this.rawValue = rawValue;
+  } // Kelvin
 
   static readonly ZERO = new Temperature(0);
 
@@ -342,7 +368,11 @@ export class Temperature {
 }
 
 export class Angle {
-  private constructor(public readonly rawValue: number) {} // Radians
+  readonly rawValue: number;
+
+  private constructor(rawValue: number) {
+    this.rawValue = rawValue;
+  } // Radians
 
   static readonly ZERO = new Angle(0);
 
@@ -398,7 +428,11 @@ export class Angle {
 }
 
 export class Time {
-  private constructor(public readonly rawValue: number) {} // Seconds
+  readonly rawValue: number;
+
+  private constructor(rawValue: number) {
+    this.rawValue = rawValue;
+  } // Seconds
 
   static readonly ZERO = new Time(0);
 

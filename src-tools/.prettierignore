@@ -4,3 +4,4 @@ build
 .cursor
 package-lock.json
 bun.lockb
+tools/vtx-catalog-backup

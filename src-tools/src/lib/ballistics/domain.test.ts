@@ -1,4 +1,4 @@
-import { describe, it, expect } from "bun:test";
+import { describe, it, expect } from "vitest";
 import { Ammunition, BallisticCoefficient, BallisticCoefficientType } from "./ammunition";
 import { DragTableId } from "./drag_table";
 import { Length, Mass, Velocity } from "./uom";

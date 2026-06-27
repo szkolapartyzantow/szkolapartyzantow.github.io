@@ -10,6 +10,7 @@ import { useHash } from "@/hooks/use-hash";
 import { useGoogleAnalytics } from "@/hooks/use-google-analytics";
 import "./index.css";
 import { Kontakt } from "./components/kontakt";
+import { OfflineInstallPrompt } from "./components/offline-install-prompt";
 
 const components: Record<string, ComponentType> = {
   "kalkulator-los": KalkulatorLOS,
@@ -33,6 +34,7 @@ export function App() {
       <SidebarInset>
         <Component />
       </SidebarInset>
+      <OfflineInstallPrompt />
     </SidebarProvider>
   );
 }

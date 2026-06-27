@@ -12,14 +12,14 @@ import { PageContainer } from "./page-container";
 import { getToolByUrl } from "@/lib/tools";
 import { ToolHelp } from "./tool-help";
 
-enum FREQUENCIES {
-  F_440_MHZ = "0.44",
-  F_868_MHZ = "0.868",
-  F_915_MHZ = "0.915",
-  F_1_3_GHZ = "1.3",
-  F_2_4_GHZ = "2.4",
-  F_5_8_GHZ = "5.8",
-}
+const FREQUENCIES = {
+  F_440_MHZ: "0.44",
+  F_868_MHZ: "0.868",
+  F_915_MHZ: "0.915",
+  F_1_3_GHZ: "1.3",
+  F_2_4_GHZ: "2.4",
+  F_5_8_GHZ: "5.8",
+} as const;
 
 export const FREQUENCIES_DROPDOWN_MAP = [
   { value: FREQUENCIES.F_440_MHZ, label: "440 MHz" },

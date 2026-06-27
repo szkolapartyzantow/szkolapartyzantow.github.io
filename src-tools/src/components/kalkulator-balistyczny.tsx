@@ -512,7 +512,7 @@ export function KalkulatorBalistyczny() {
                   <Input
                     type="number"
                     value={altitude}
-                    onChange={(e) => setAltitude(e.target.value)}
+                    onChange={(e) => setAltitude(e.target.valueAsNumber)}
                     className="flex-1 no-spin-button"
                     disabled={!editAtmosphere}
                   />
@@ -540,7 +540,7 @@ export function KalkulatorBalistyczny() {
                   <Input
                     type="number"
                     value={temperature}
-                    onChange={(e) => setTemperature(e.target.value)}
+                    onChange={(e) => setTemperature(e.target.valueAsNumber)}
                     className="flex-1 no-spin-button"
                     disabled={!editAtmosphere}
                   />
@@ -567,7 +567,7 @@ export function KalkulatorBalistyczny() {
                 <Input
                   type="number"
                   value={pressure}
-                  onChange={(e) => setPressure(e.target.value)}
+                  onChange={(e) => setPressure(e.target.valueAsNumber)}
                   className="no-spin-button"
                   disabled={!editAtmosphere}
                 />
@@ -577,7 +577,7 @@ export function KalkulatorBalistyczny() {
                 <Input
                   type="number"
                   value={humidity}
-                  onChange={(e) => setHumidity(e.target.value)}
+                  onChange={(e) => setHumidity(e.target.valueAsNumber)}
                   className="no-spin-button"
                   disabled={!editAtmosphere}
                 />
@@ -589,7 +589,7 @@ export function KalkulatorBalistyczny() {
                     type="number"
                     step="0.1"
                     value={windSpeed}
-                    onChange={(e) => setWindSpeed(e.target.value)}
+                    onChange={(e) => setWindSpeed(e.target.valueAsNumber)}
                     className="flex-1 no-spin-button"
                     disabled={!editAtmosphere}
                   />
@@ -616,7 +616,7 @@ export function KalkulatorBalistyczny() {
                 <Input
                   type="number"
                   value={windDirection}
-                  onChange={(e) => setWindDirection(e.target.value)}
+                  onChange={(e) => setWindDirection(e.target.valueAsNumber)}
                   placeholder="90 = z prawej"
                   className="no-spin-button"
                   disabled={!editAtmosphere}

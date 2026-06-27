@@ -1,27 +1,45 @@
 import { Length, Mass, Velocity } from "./uom";
 import { DragTableId } from "./drag_table";
 
-export enum BallisticCoefficientType {
-  Coefficient,
-  FormFactor,
-}
+export const BallisticCoefficientType = {
+  Coefficient: 0,
+  FormFactor: 1,
+} as const;
+export type BallisticCoefficientType =
+  (typeof BallisticCoefficientType)[keyof typeof BallisticCoefficientType];
 
 export class BallisticCoefficient {
-  constructor(
-    public readonly value: number,
-    public readonly type: BallisticCoefficientType,
-    public readonly dragTableId: DragTableId
-  ) {}
+  readonly value: number;
+  readonly type: BallisticCoefficientType;
+  readonly dragTableId: DragTableId;
+
+  constructor(value: number, type: BallisticCoefficientType, dragTableId: DragTableId) {
+    this.value = value;
+    this.type = type;
+    this.dragTableId = dragTableId;
+  }
 }
 
 export class Ammunition {
+  readonly weight: Mass;
+  readonly ballisticCoefficient: BallisticCoefficient;
+  readonly muzzleVelocity: Velocity;
+  readonly diameter?: Length;
+  readonly length?: Length;
+
   constructor(
-    public readonly weight: Mass,
-    public readonly ballisticCoefficient: BallisticCoefficient,
-    public readonly muzzleVelocity: Velocity,
-    public readonly diameter?: Length,
-    public readonly length?: Length
-  ) {}
+    weight: Mass,
+    ballisticCoefficient: BallisticCoefficient,
+    muzzleVelocity: Velocity,
+    diameter?: Length,
+    length?: Length
+  ) {
+    this.weight = weight;
+    this.ballisticCoefficient = ballisticCoefficient;
+    this.muzzleVelocity = muzzleVelocity;
+    this.diameter = diameter;
+    this.length = length;
+  }
 
   private calculateBallisticCoefficientFromFormFactor(ballisticCoefficientValue: number): number {
     const bulletWeight = this.weight.inPounds;

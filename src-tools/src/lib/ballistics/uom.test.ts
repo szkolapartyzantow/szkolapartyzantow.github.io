@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vitest";
 import { Length, Velocity, Mass, Pressure, Temperature, Angle, Time } from "./uom";
 
 describe("Length", () => {

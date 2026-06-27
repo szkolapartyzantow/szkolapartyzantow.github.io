@@ -1,4 +1,4 @@
-import { describe, it, expect } from "bun:test";
+import { describe, it, expect } from "vitest";
 import { Ammunition, BallisticCoefficient, BallisticCoefficientType } from "./ammunition";
 import { Atmosphere } from "./atmosphere";
 import { DragTableId } from "./drag_table";
@@ -28,7 +28,7 @@ describe("TrajectoryCalculator - Cant and Shot Angle", () => {
     );
 
     const traj1 = calc.calculateTrajectory(ammo, rifle, Atmosphere.standard(), params1);
-    const point1 = traj1[traj1.length - 1];
+    const point1 = traj1[traj1.length - 1]!;
 
     // Case 2: 90 deg Cant
     const params2 = ShotParameters.new(
@@ -40,7 +40,7 @@ describe("TrajectoryCalculator - Cant and Shot Angle", () => {
     );
 
     const traj2 = calc.calculateTrajectory(ammo, rifle, Atmosphere.standard(), params2);
-    const point2 = traj2[traj2.length - 1];
+    const point2 = traj2[traj2.length - 1]!;
 
     // Expect Windage to be non-zero (drift to right due to initial velocity vector rotation)
     expect(point2.windage.inMeters).toBeGreaterThan(0.5);
@@ -63,7 +63,7 @@ describe("TrajectoryCalculator - Cant and Shot Angle", () => {
     );
 
     const traj3 = calc.calculateTrajectory(ammo, rifle, Atmosphere.standard(), params3);
-    const point3 = traj3[traj3.length - 1];
+    const point3 = traj3[traj3.length - 1]!;
 
     // If bug existed, drop would be huge positive (Altitude ~700m).
     // Correct drop should be small negative (relative to LOS).

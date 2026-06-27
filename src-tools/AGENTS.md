@@ -1,4 +1,4 @@
 After you finish work, always run the following commands to lint, test and build project:
-`bun format`
-`bun test`
-`bun run build.ts --outdir ../narzedzia && git add ../narzedzia`
+`npm run format`
+`npm test`
+`npm run build -- --outDir ../../narzedzia && git add ../narzedzia`

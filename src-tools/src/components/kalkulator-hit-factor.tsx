@@ -10,10 +10,10 @@ import { DropdownSelect } from "./dropdown-select";
 import { PageContainer } from "./page-container";
 import { getToolByUrl } from "@/lib/tools";
 
-enum POWER_FACTOR {
-  MINOR = "Minor",
-  MAJOR = "Major",
-}
+const POWER_FACTOR = {
+  MINOR: "Minor",
+  MAJOR: "Major",
+} as const;
 
 const POWER_FACTOR_OPTIONS = [
   { value: POWER_FACTOR.MINOR, label: POWER_FACTOR.MINOR },

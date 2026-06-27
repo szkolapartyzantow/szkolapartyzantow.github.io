@@ -1,13 +1,15 @@
-export enum DragTableId {
-  G1 = "G1",
-  G2 = "G2",
-  G5 = "G5",
-  G6 = "G6",
-  G7 = "G7",
-  G8 = "G8",
-  GI = "GI",
-  RA4 = "RA4",
-}
+export const DragTableId = {
+  G1: "G1",
+  G2: "G2",
+  G5: "G5",
+  G6: "G6",
+  G7: "G7",
+  G8: "G8",
+  GI: "GI",
+  RA4: "RA4",
+  GC: "GC",
+} as const;
+export type DragTableId = (typeof DragTableId)[keyof typeof DragTableId];
 
 export interface DragTableDataPoint {
   mach: number;
@@ -15,13 +17,19 @@ export interface DragTableDataPoint {
 }
 
 export class DragTableNode {
-  constructor(
-    public mach: number,
-    public drag_coefficient: number,
-    public a: number,
-    public b: number,
-    public c: number
-  ) {}
+  mach: number;
+  drag_coefficient: number;
+  a: number;
+  b: number;
+  c: number;
+
+  constructor(mach: number, drag_coefficient: number, a: number, b: number, c: number) {
+    this.mach = mach;
+    this.drag_coefficient = drag_coefficient;
+    this.a = a;
+    this.b = b;
+    this.c = c;
+  }
 
   calculate_drag(mach: number): number {
     return this.c + mach * (this.b + this.a * mach);
@@ -43,27 +51,33 @@ export class DragTable {
     const size = data.length;
 
     // First node
-    const rate =
-      (data[1].drag_coefficient - data[0].drag_coefficient) / (data[1].mach - data[0].mach);
+    const first = data[0]!;
+    const second = data[1]!;
+    const last = data[size - 1]!;
+    const rate = (second.drag_coefficient - first.drag_coefficient) / (second.mach - first.mach);
     this.nodes.push(
       new DragTableNode(
-        data[0].mach,
-        data[0].drag_coefficient,
+        first.mach,
+        first.drag_coefficient,
         0.0,
         rate,
-        data[0].drag_coefficient - data[0].mach * rate
+        first.drag_coefficient - first.mach * rate
       )
     );
 
     // Middle nodes
     for (let i = 1; i < size - 1; i++) {
-      const x1 = data[i - 1].mach;
-      const x2 = data[i].mach;
-      const x3 = data[i + 1].mach;
+      const previous = data[i - 1]!;
+      const current = data[i]!;
+      const next = data[i + 1]!;
 
-      const y1 = data[i - 1].drag_coefficient;
-      const y2 = data[i].drag_coefficient;
-      const y3 = data[i + 1].drag_coefficient;
+      const x1 = previous.mach;
+      const x2 = current.mach;
+      const x3 = next.mach;
+
+      const y1 = previous.drag_coefficient;
+      const y2 = current.drag_coefficient;
+      const y3 = next.drag_coefficient;
 
       const a =
         ((y3 - y1) * (x2 - x1) - (y2 - y1) * (x3 - x1)) /
@@ -71,23 +85,17 @@ export class DragTable {
       const b = (y2 - y1 - a * (x2 * x2 - x1 * x1)) / (x2 - x1);
       const c = y1 - (a * x1 * x1 + b * x1);
 
-      this.nodes.push(new DragTableNode(data[i].mach, data[i].drag_coefficient, a, b, c));
+      this.nodes.push(new DragTableNode(current.mach, current.drag_coefficient, a, b, c));
     }
 
     // Last node
     this.nodes.push(
-      new DragTableNode(
-        data[size - 1].mach,
-        data[size - 1].drag_coefficient,
-        0.0,
-        0.0,
-        data[size - 1].drag_coefficient
-      )
+      new DragTableNode(last.mach, last.drag_coefficient, 0.0, 0.0, last.drag_coefficient)
     );
   }
 
   get_node(index: number): DragTableNode {
-    return this.nodes[index];
+    return this.nodes[index]!;
   }
 
   find_node(mach: number): { node: DragTableNode; index: number } {
@@ -96,17 +104,17 @@ export class DragTable {
 
     while (high - low > 1) {
       const mid = Math.floor((high + low) / 2.0);
-      if (this.nodes[mid].mach < mach) {
+      if (this.nodes[mid]!.mach < mach) {
         low = mid;
       } else {
         high = mid;
       }
     }
 
-    if (this.nodes[high].mach - mach > mach - this.nodes[low].mach) {
-      return { node: this.nodes[low], index: low };
+    if (this.nodes[high]!.mach - mach > mach - this.nodes[low]!.mach) {
+      return { node: this.nodes[low]!, index: low };
     } else {
-      return { node: this.nodes[high], index: high };
+      return { node: this.nodes[high]!, index: high };
     }
   }
 }

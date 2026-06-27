@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { Atmosphere } from "./atmosphere";
 import { Length, Pressure, Temperature, UOM } from "./uom";
 
