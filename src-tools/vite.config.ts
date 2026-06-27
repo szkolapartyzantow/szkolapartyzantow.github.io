@@ -4,6 +4,10 @@ import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
 
 function offlinePwa(): Plugin {
+  const googleDocsDataUrls = [
+    "https://docs.google.com/spreadsheets/d/1pSce3OR-ZkvILul03hWvtaR-mHh861qv2u8pIxIHbWQ/export?format=csv",
+  ];
+
   return {
     name: "offline-pwa",
     apply: "build",
@@ -25,6 +29,7 @@ function offlinePwa(): Plugin {
         source: `
 const CACHE_NAME = "szkolapartyzantow-tools-v${Date.now()}";
 const PRECACHE_URLS = ${JSON.stringify(precacheFiles, null, 2)};
+const GOOGLE_DOCS_DATA_URLS = ${JSON.stringify(googleDocsDataUrls, null, 2)};
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -58,6 +63,22 @@ self.addEventListener("fetch", (event) => {
   }
 
   const requestUrl = new URL(request.url);
+
+  if (GOOGLE_DOCS_DATA_URLS.includes(requestUrl.href)) {
+    event.respondWith(
+      fetch(request)
+        .then((networkResponse) => {
+          if (networkResponse.ok) {
+            const response = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, response));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(request)),
+    );
+    return;
+  }
+
   if (requestUrl.origin !== self.location.origin) {
     return;
   }
