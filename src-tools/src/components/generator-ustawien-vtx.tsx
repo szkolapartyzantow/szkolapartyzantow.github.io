@@ -6,6 +6,7 @@ import type { SelectItemData, SelectItemGroup } from "./dropdown-select";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
+import { ToastNotification } from "./ui/toast-notification";
 import {
   Dialog,
   DialogClose,
@@ -16,7 +17,7 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Upload } from "lucide-react";
 import { getToolByUrl } from "@/lib/tools";
 import { ToolHelp } from "./tool-help";
 
@@ -152,10 +153,211 @@ const DB_NAME = "VTX_SETTINGS_DB";
 const STORE_NAME = "vtx_store";
 const DB_VERSION = 2;
 const CACHE_KEY = "vtx_data_cache_v3";
+const VTX_URL_PARAM = "vtx";
+const VTX_SETTING_URL_PARAMS = [
+  "uart",
+  "protocol",
+  "band",
+  "channel",
+  "aux",
+  "sw",
+  "p",
+  "bcm",
+  "bcaux",
+  "bc",
+] as const;
 
 interface CachedData {
   csv: string;
   data: VtxData[];
+}
+
+function getVtxIdFromUrl(): string | null {
+  const hashQuery = window.location.hash.split("?")[1];
+  if (!hashQuery) return null;
+
+  return new URLSearchParams(hashQuery).get(VTX_URL_PARAM);
+}
+
+function getHashSearchParams(): URLSearchParams {
+  const hashQuery = window.location.hash.split("?")[1] ?? "";
+  return new URLSearchParams(hashQuery);
+}
+
+function setVtxUrlParams(vtxId: string | null, vtxData?: VtxData, defaultVtxData?: VtxData) {
+  const url = new URL(window.location.href);
+  const [hashPath = "", hashQuery = ""] = url.hash.split("?");
+  const hashParams = new URLSearchParams(hashQuery);
+
+  for (const param of VTX_SETTING_URL_PARAMS) {
+    hashParams.delete(param);
+  }
+
+  if (vtxId) {
+    hashParams.set(VTX_URL_PARAM, vtxId);
+  } else {
+    hashParams.delete(VTX_URL_PARAM);
+  }
+
+  if (vtxData && defaultVtxData) {
+    setVtxSettingUrlParams(hashParams, vtxData, defaultVtxData);
+  }
+
+  const nextHashQuery = hashParams.toString();
+  url.hash = nextHashQuery ? `${hashPath}?${nextHashQuery}` : hashPath;
+  window.history.replaceState(window.history.state, "", url);
+}
+
+function isAux(value: number): value is AUX {
+  return AUX_DROPDOWN_MAP.some((item) => item.value === value);
+}
+
+function isSwitchType(value: number): value is SWITCH_TYPE {
+  return SWITCH_DROPDOWN_MAP.some((item) => item.value === value);
+}
+
+function isBandChannelSwitchType(value: number) {
+  return BAND_CHANNEL_SWITCH_DROPDOWN_MAP.some((item) => item.value === value);
+}
+
+function isChannel(value: number): value is CHANNEL {
+  return VTX_CHANNEL_DROPDOWN_MAP.some((item) => item.value === value);
+}
+
+function parseNumberParam(params: URLSearchParams, key: string): number | null {
+  const value = params.get(key);
+  if (value === null) return null;
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function setIfDifferent(
+  params: URLSearchParams,
+  key: string,
+  value: string | number,
+  defaultValue: string | number
+) {
+  if (value !== defaultValue) {
+    params.set(key, String(value));
+  }
+}
+
+function setVtxSettingUrlParams(
+  params: URLSearchParams,
+  vtxData: VtxData,
+  defaultVtxData: VtxData
+) {
+  setIfDifferent(params, "uart", vtxData.port, defaultVtxData.port);
+  setIfDifferent(params, "protocol", vtxData.protocol, defaultVtxData.protocol);
+  setIfDifferent(params, "band", vtxData.default_band, defaultVtxData.default_band);
+  setIfDifferent(params, "channel", vtxData.default_channel, defaultVtxData.default_channel);
+  setIfDifferent(params, "aux", vtxData.vtx_power_aux, defaultVtxData.vtx_power_aux);
+  setIfDifferent(params, "sw", vtxData.switch_type, defaultVtxData.switch_type);
+
+  const powerValue = vtxData.powers.join(",");
+  const defaultPowerValue = defaultVtxData.powers.join(",");
+  setIfDifferent(params, "p", powerValue, defaultPowerValue);
+
+  setIfDifferent(params, "bcm", vtxData.band_channel_mode, defaultVtxData.band_channel_mode);
+  setIfDifferent(params, "bcaux", vtxData.band_channel_aux, defaultVtxData.band_channel_aux);
+
+  const bandChannelValue = vtxData.band_channel_settings
+    .map((setting) => `${setting.band}.${setting.channel}`)
+    .join(",");
+  const defaultBandChannelValue = defaultVtxData.band_channel_settings
+    .map((setting) => `${setting.band}.${setting.channel}`)
+    .join(",");
+  setIfDifferent(params, "bc", bandChannelValue, defaultBandChannelValue);
+}
+
+function applyVtxSettingsFromUrl(vtxData: VtxData): VtxData {
+  const params = getHashSearchParams();
+  const nextVtx: VtxData = {
+    ...vtxData,
+    powers: [...vtxData.powers],
+    band_channel_settings: vtxData.band_channel_settings.map((setting) => ({ ...setting })),
+  };
+
+  const uart = parseNumberParam(params, "uart");
+  if (uart !== null && VTX_UART_DROPDOWN_MAP.some((item) => item.value === uart)) {
+    nextVtx.port = uart as UART;
+  }
+
+  const protocol = params.get("protocol");
+  if (protocol === PROTOCOL.SMART_AUDIO || protocol === PROTOCOL.TRAMP) {
+    nextVtx.protocol = protocol;
+  }
+
+  const validBands = getBandsFromTable(nextVtx.table).map((band) => band.value);
+  const defaultBand = parseNumberParam(params, "band");
+  if (defaultBand !== null && validBands.includes(defaultBand)) {
+    nextVtx.default_band = defaultBand;
+  }
+
+  const defaultChannel = parseNumberParam(params, "channel");
+  if (defaultChannel !== null && isChannel(defaultChannel)) {
+    nextVtx.default_channel = defaultChannel;
+  }
+
+  const powerAux = parseNumberParam(params, "aux");
+  if (powerAux !== null && isAux(powerAux)) {
+    nextVtx.vtx_power_aux = powerAux;
+  }
+
+  const switchType = parseNumberParam(params, "sw");
+  if (switchType !== null && isSwitchType(switchType)) {
+    nextVtx.switch_type = switchType;
+  }
+
+  const validPowerIndexes = new Set(nextVtx.power_levels.map((level) => level.index));
+  const powerParam = params.get("p");
+  if (powerParam) {
+    const powers = powerParam.split(",").map((item) => Number(item));
+    if (
+      powers.length === nextVtx.powers.length &&
+      powers.every((power) => validPowerIndexes.has(power))
+    ) {
+      nextVtx.powers = powers;
+    }
+  }
+
+  const bandChannelMode = parseNumberParam(params, "bcm");
+  if (bandChannelMode !== null && isBandChannelSwitchType(bandChannelMode)) {
+    nextVtx.band_channel_mode = bandChannelMode;
+  }
+
+  const bandChannelAux = parseNumberParam(params, "bcaux");
+  if (
+    bandChannelAux !== null &&
+    isAux(bandChannelAux) &&
+    bandChannelAux !== nextVtx.vtx_power_aux
+  ) {
+    nextVtx.band_channel_aux = bandChannelAux;
+  }
+
+  const bandChannelParam = params.get("bc");
+  if (bandChannelParam) {
+    const settings = bandChannelParam.split(",").map((item) => {
+      const [bandValue, channelValue] = item.split(".");
+      return { band: Number(bandValue), channel: Number(channelValue) };
+    });
+
+    if (
+      settings.length === nextVtx.band_channel_settings.length &&
+      settings.every(
+        (setting) =>
+          Number.isFinite(setting.band) &&
+          Number.isFinite(setting.channel) &&
+          (setting.band === 0 || validBands.includes(setting.band)) &&
+          (setting.channel === 0 || isChannel(setting.channel))
+      )
+    ) {
+      nextVtx.band_channel_settings = settings;
+    }
+  }
+
+  return nextVtx;
 }
 
 function openDB(): Promise<IDBDatabase> {
@@ -505,6 +707,7 @@ export function GeneratorUstawienVTX() {
   const [isErrorOpen, setIsErrorOpen] = React.useState(false);
   const [isProtocolWarningOpen, setIsProtocolWarningOpen] = React.useState(false);
   const [pendingProtocol, setPendingProtocol] = React.useState<PROTOCOL | null>(null);
+  const [isShareToastVisible, setIsShareToastVisible] = React.useState(false);
 
   const lastDataRef = React.useRef<string | null>(null);
   const initializedRef = React.useRef(false);
@@ -572,8 +775,15 @@ export function GeneratorUstawienVTX() {
 
       // Initialize selection only once
       if (!initializedRef.current) {
-        if (data.length > 0) {
-          const first = data[0]!;
+        const vtxIdFromUrl = getVtxIdFromUrl();
+        const selectedFromUrl = vtxIdFromUrl ? map[vtxIdFromUrl] : null;
+        if (selectedFromUrl) {
+          const selectedWithUrlSettings = applyVtxSettingsFromUrl(selectedFromUrl);
+          setVtxUrlParams(selectedFromUrl.id, selectedWithUrlSettings, selectedFromUrl);
+          setCurrentVtx(selectedWithUrlSettings);
+          setConfigText(generateConfig(selectedWithUrlSettings));
+        } else if (sanitizedData.length > 0) {
+          const first = sanitizedData[0]!;
           setCurrentVtx(first);
           setConfigText(generateConfig(first));
         } else {
@@ -626,6 +836,7 @@ export function GeneratorUstawienVTX() {
 
   const handleVtxChange = (val: string) => {
     if (val === CUSTOM_VTX_ID) {
+      setVtxUrlParams(null);
       setCurrentVtx({
         id: CUSTOM_VTX_ID,
         name: "Własna tabela VTX",
@@ -662,6 +873,7 @@ export function GeneratorUstawienVTX() {
         return;
       }
       // When switching VTX, we reset to the defaults from that VTX
+      setVtxUrlParams(selected.id);
       setCurrentVtx(selected);
     }
   };
@@ -682,6 +894,11 @@ export function GeneratorUstawienVTX() {
         if (firstAvailable) {
           nextVtx.band_channel_aux = firstAvailable.value as AUX;
         }
+      }
+
+      const defaultVtx = vtxDataMap[nextVtx.id];
+      if (nextVtx.id !== CUSTOM_VTX_ID && defaultVtx) {
+        setVtxUrlParams(nextVtx.id, nextVtx, defaultVtx);
       }
 
       setCurrentVtx(nextVtx);
@@ -809,6 +1026,11 @@ export function GeneratorUstawienVTX() {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(configText);
+  };
+
+  const copyShareUrlToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setIsShareToastVisible(true);
   };
 
   const toolInfo = getToolByUrl("#generator-ustawien-vtx");
@@ -1098,9 +1320,17 @@ vtxtable powervalues 14 20 23 26 28`}
             <Button onClick={copyToClipboard} className="w-full">
               Kopiuj
             </Button>
+            <Button onClick={copyShareUrlToClipboard} variant="outline" className="w-full">
+              <Upload className="h-4 w-4" />
+              Udostępnij
+            </Button>
           </CardContent>
         </Card>
       </div>
+
+      <ToastNotification open={isShareToastVisible} onOpenChange={setIsShareToastVisible}>
+        Link do ustawień VTX skopiowano do schowka.
+      </ToastNotification>
 
       <Dialog open={isProtocolWarningOpen} onOpenChange={handleProtocolWarningOpenChange}>
         <DialogContent>

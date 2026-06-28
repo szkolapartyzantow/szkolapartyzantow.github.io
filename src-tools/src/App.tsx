@@ -24,7 +24,7 @@ export function App() {
   const hash = useHash();
   useGoogleAnalytics(hash);
   const Component = useMemo(() => {
-    const componentName = hash.slice(1);
+    const componentName = hash.slice(1).split("?")[0];
     return components[componentName] ?? Home;
   }, [hash]);
 
