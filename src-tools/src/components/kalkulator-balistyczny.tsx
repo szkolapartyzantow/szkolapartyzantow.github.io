@@ -937,7 +937,7 @@ export function KalkulatorBalistyczny() {
                   className="no-spin-button"
                 />
               </div>
-              <div>
+              <div className="space-y-2">
                 <Label>Kierunek gwintu</Label>
                 <DropdownSelect
                   label=""
