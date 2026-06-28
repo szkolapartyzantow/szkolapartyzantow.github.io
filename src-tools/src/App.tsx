@@ -2,6 +2,7 @@ import { useMemo, type ComponentType } from "react";
 import { AppSidebar } from "./components/app-sidebar";
 import { Home } from "./components/home";
 import { GeneratorUstawienVTX } from "./components/generator-ustawien-vtx";
+import { KatalogVTX } from "./components/katalog-vtx";
 import { KalkulatorLOS } from "./components/kalkulator-los";
 import { KalkulatorHitFactor } from "./components/kalkulator-hit-factor";
 import { KalkulatorBalistyczny } from "./components/kalkulator-balistyczny";
@@ -16,6 +17,7 @@ import { ListaZmian } from "./components/lista-zmian";
 const components: Record<string, ComponentType> = {
   "kalkulator-los": KalkulatorLOS,
   "generator-ustawien-vtx": GeneratorUstawienVTX,
+  "katalog-vtx": KatalogVTX,
   "kalkulator-hit-factor": KalkulatorHitFactor,
   "kalkulator-balistyczny": KalkulatorBalistyczny,
   kontakt: Kontakt,
@@ -39,7 +41,7 @@ export function App() {
           <Component />
         </div>
         <footer className="border-t border-border px-4 py-4 text-center text-sm text-muted-foreground">
-          Copyright (c) {currentYear} Szkoła Partyzantów | SZKP Struś
+          SZKP Struś | Szkoła Partyzantów
         </footer>
       </SidebarInset>
       <OfflineInstallPrompt />

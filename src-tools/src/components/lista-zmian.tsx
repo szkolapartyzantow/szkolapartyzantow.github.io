@@ -6,6 +6,7 @@ const changes = [
   {
     date: "2026-06-28",
     items: [
+      "Dodano Katalog VTX.",
       "Dodano możliwość udostępniania ustawień VTX przez link.",
       "Dodano import i eksport ustawień w kalkulatorze balistycznym.",
     ],

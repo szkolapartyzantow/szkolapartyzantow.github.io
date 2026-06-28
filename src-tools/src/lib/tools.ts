@@ -10,6 +10,11 @@ export const DRONE_TOOLS = [
       "Wygeneruj konfigurację VTX - tabelę oraz zmianę mocy/pasma/kanału za pomocą przełączników.",
     url: "#generator-ustawien-vtx",
   },
+  {
+    title: "Katalog VTX",
+    description: "Katalog VTX - zdjęcia, dane techniczne, instrukcje.",
+    url: "#katalog-vtx",
+  },
 ] as const;
 
 export const SHOOTING_TOOLS = [

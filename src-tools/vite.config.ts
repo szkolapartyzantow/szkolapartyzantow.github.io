@@ -2,19 +2,59 @@ import fs from "node:fs";
 import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import type { OutputAsset } from "rollup";
 import { defineConfig, type Plugin } from "vite";
 
 function offlinePwa(): Plugin {
   const bundledVtxDataUrl = "./vtx-data.csv";
-  const googleDocsDataUrls = [
-    "https://docs.google.com/spreadsheets/d/1pSce3OR-ZkvILul03hWvtaR-mHh861qv2u8pIxIHbWQ/export?format=csv",
+  const vtxCatalogAssetPath = "assets/vtx-catalog/";
+  const remoteDataSources = [
+    {
+      remoteUrl:
+        "https://docs.google.com/spreadsheets/d/1pSce3OR-ZkvILul03hWvtaR-mHh861qv2u8pIxIHbWQ/export?format=csv",
+      bundledUrl: bundledVtxDataUrl,
+    },
   ];
+
+  function getOriginalFileNames(asset: OutputAsset) {
+    return asset.originalFileNames ?? [];
+  }
+
+  function isVtxCatalogSource(fileName: string) {
+    return fileName.includes(vtxCatalogAssetPath);
+  }
 
   return {
     name: "offline-pwa",
     apply: "build",
     generateBundle(_, bundle) {
       const bundledVtxDataPath = path.resolve(__dirname, "src/public/vtx-data.csv");
+      const catalogCsvAsset = Object.values(bundle).find(
+        (asset) =>
+          asset.type === "asset" &&
+          getOriginalFileNames(asset).some((fileName) =>
+            fileName.endsWith(`${vtxCatalogAssetPath}catalog.csv`),
+          ),
+      );
+      const bundledCatalogDataUrl = catalogCsvAsset ? `./${catalogCsvAsset.fileName}` : null;
+      if (bundledCatalogDataUrl) {
+        remoteDataSources.push({
+          remoteUrl:
+            "https://docs.google.com/spreadsheets/d/1NKE5B1u5A8hL-Flh942pD51NE_eiRQ-5NaSDGjM0-LM/export?format=csv",
+          bundledUrl: bundledCatalogDataUrl,
+        });
+      }
+
+      const bundledAssetUrls = Object.values(bundle)
+        .map((asset) => `./${asset.fileName}`)
+        .filter((fileName) => !fileName.endsWith(".map"));
+      const vtxCatalogPrecacheUrls = Object.values(bundle)
+        .filter(
+          (asset) =>
+            asset.type === "asset" && getOriginalFileNames(asset).some(isVtxCatalogSource),
+        )
+        .map((asset) => `./${asset.fileName}`)
+        .filter((fileName) => !fileName.endsWith(".map"));
       const precacheFiles = [
         "./",
         "./index.html",
@@ -22,10 +62,10 @@ function offlinePwa(): Plugin {
         "./icons/SZKP_logo_sigint.svg",
         "./icons/favicon.png",
         ...(fs.existsSync(bundledVtxDataPath) ? [bundledVtxDataUrl] : []),
-        ...Object.values(bundle)
-          .map((asset) => `./${asset.fileName}`)
-          .filter((fileName) => !fileName.endsWith(".map")),
+        ...bundledAssetUrls,
       ];
+      const uniquePrecacheFiles = [...new Set(precacheFiles)];
+      const uniqueVtxCatalogPrecacheUrls = [...new Set(vtxCatalogPrecacheUrls)];
 
       this.emitFile({
         type: "asset",
@@ -34,11 +74,45 @@ function offlinePwa(): Plugin {
 const CACHE_NAME = "szkolapartyzantow-tools-v${Date.now()}";
 const DATA_CACHE_NAME = "szkolapartyzantow-tools-data-v1";
 const BUNDLED_VTX_DATA_URL = ${JSON.stringify(bundledVtxDataUrl)};
-const PRECACHE_URLS = ${JSON.stringify(precacheFiles, null, 2)};
-const GOOGLE_DOCS_DATA_URLS = ${JSON.stringify(googleDocsDataUrls, null, 2)};
+const PRECACHE_URLS = ${JSON.stringify(uniquePrecacheFiles, null, 2)};
+const VTX_CATALOG_PRECACHE_URLS = ${JSON.stringify(uniqueVtxCatalogPrecacheUrls, null, 2)};
+const REQUIRED_PRECACHE_URLS = [...new Set([...PRECACHE_URLS, ...VTX_CATALOG_PRECACHE_URLS])];
+const REMOTE_DATA_SOURCES = ${JSON.stringify(remoteDataSources, null, 2)};
+const GOOGLE_DOCS_DATA_URLS = REMOTE_DATA_SOURCES.map((source) => source.remoteUrl);
+
+async function addAllInChunks(cache, urls, chunkSize = 40) {
+  for (let index = 0; index < urls.length; index += chunkSize) {
+    await cache.addAll(urls.slice(index, index + chunkSize));
+  }
+}
+
+async function seedBundledData() {
+  const dataCache = await caches.open(DATA_CACHE_NAME);
+
+  await Promise.all(REMOTE_DATA_SOURCES.map(async ({ remoteUrl, bundledUrl }) => {
+    if (!REQUIRED_PRECACHE_URLS.includes(bundledUrl)) {
+      return;
+    }
+
+    const appCache = await caches.open(CACHE_NAME);
+    let bundledResponse = await appCache.match(bundledUrl);
+
+    if (!bundledResponse) {
+      const fetchedResponse = await fetch(bundledUrl);
+      if (!fetchedResponse.ok) {
+        throw new Error(\`Bundled data HTTP \${fetchedResponse.status}\`);
+      }
+
+      bundledResponse = fetchedResponse.clone();
+      await appCache.put(bundledUrl, fetchedResponse);
+    }
+
+    await dataCache.put(new Request(remoteUrl), bundledResponse.clone());
+  }));
+}
 
 async function seedBundledVtxData() {
-  if (!PRECACHE_URLS.includes(BUNDLED_VTX_DATA_URL)) {
+  if (!REQUIRED_PRECACHE_URLS.includes(BUNDLED_VTX_DATA_URL)) {
     return;
   }
 
@@ -75,8 +149,8 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(PRECACHE_URLS))
-      .then(() => seedBundledVtxData())
+      .then((cache) => addAllInChunks(cache, REQUIRED_PRECACHE_URLS))
+      .then(() => seedBundledData())
       .then(() => self.skipWaiting()),
   );
 });
