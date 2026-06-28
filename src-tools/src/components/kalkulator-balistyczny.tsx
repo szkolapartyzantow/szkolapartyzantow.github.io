@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Download, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -117,8 +117,8 @@ const RESULT_ENERGY_UNITS = [
 ];
 
 const CORRECTION_DISPLAY_OPTIONS = [
-  { value: "signed", label: "+/-" },
   { value: "directional", label: "U/D/L/R" },
+  { value: "signed", label: "+/-" },
   { value: "polishDirectional", label: "G/D/L/P" },
 ];
 
@@ -126,8 +126,64 @@ type CorrectionUnit = (typeof CORRECTION_UNITS)[number]["value"];
 type CorrectionDisplay = (typeof CORRECTION_DISPLAY_OPTIONS)[number]["value"];
 type ResultVelocityUnit = (typeof RESULT_VELOCITY_UNITS)[number]["value"];
 type ResultEnergyUnit = (typeof RESULT_ENERGY_UNITS)[number]["value"];
+type OptionalResultColumnId = "vertical" | "horizontal" | "velocity" | "energy";
+type ResultColumnId = "distance" | OptionalResultColumnId;
+type BallisticCalculatorData = {
+  version: 1;
+  ammunition: {
+    bulletWeight: string;
+    bulletWeightUnit: string;
+    ballisticCoefficient: string;
+    dragTable: string;
+    muzzleVelocity: string;
+    muzzleVelocityUnit: string;
+    bulletDiameter: string;
+    bulletDiameterUnit: string;
+  };
+  rifle: {
+    sightHeight: string;
+    sightHeightUnit: string;
+    zeroDistance: string;
+    zeroDistanceUnit: string;
+    twistRate: string;
+    twistDirection: string;
+    cant: string;
+    shotAngle: string;
+  };
+  atmosphere: {
+    editAtmosphere: boolean;
+    altitude: number;
+    altitudeUnit: string;
+    temperature: number;
+    temperatureUnit: string;
+    pressure: number;
+    humidity: number;
+    windSpeed: number;
+    windSpeedUnit: string;
+    windDirection: number;
+  };
+  shot: {
+    maxDistance: string;
+    maxDistanceUnit: string;
+    stepSize: string;
+    correctionUnit: CorrectionUnit;
+    correctionDisplay: CorrectionDisplay;
+    resultVelocityUnit: ResultVelocityUnit;
+    resultEnergyUnit: ResultEnergyUnit;
+    visibleResultColumns: Record<OptionalResultColumnId, boolean>;
+  };
+};
+
+const DEFAULT_VISIBLE_RESULT_COLUMNS: Record<OptionalResultColumnId, boolean> = {
+  vertical: true,
+  horizontal: true,
+  velocity: true,
+  energy: true,
+};
 
 export function KalkulatorBalistyczny() {
+  const importFileInputRef = React.useRef<HTMLInputElement>(null);
+
   // Ammunition
   const [bulletWeight, setBulletWeight] = React.useState("55"); // grains or grams
   const [bulletWeightUnit, setBulletWeightUnit] = React.useState("gr");
@@ -175,6 +231,9 @@ export function KalkulatorBalistyczny() {
   const [correctionDisplay, setCorrectionDisplay] = React.useState<CorrectionDisplay>("signed");
   const [resultVelocityUnit, setResultVelocityUnit] = React.useState<ResultVelocityUnit>("m/s");
   const [resultEnergyUnit, setResultEnergyUnit] = React.useState<ResultEnergyUnit>("J");
+  const [visibleResultColumns, setVisibleResultColumns] = React.useState(
+    DEFAULT_VISIBLE_RESULT_COLUMNS
+  );
 
   const [editAtmosphere, setEditAtmosphere] = React.useState(false);
 
@@ -280,6 +339,264 @@ export function KalkulatorBalistyczny() {
         return point.energy.inFootPounds.toFixed(0);
       default:
         return point.energy.inJoules.toFixed(0);
+    }
+  };
+
+  const setResultColumnVisible = (columnId: OptionalResultColumnId, visible: boolean) => {
+    setVisibleResultColumns((columns) => ({
+      ...columns,
+      [columnId]: visible,
+    }));
+  };
+
+  const getCalculatorData = (): BallisticCalculatorData => ({
+    version: 1,
+    ammunition: {
+      bulletWeight,
+      bulletWeightUnit,
+      ballisticCoefficient,
+      dragTable,
+      muzzleVelocity,
+      muzzleVelocityUnit,
+      bulletDiameter,
+      bulletDiameterUnit,
+    },
+    rifle: {
+      sightHeight,
+      sightHeightUnit,
+      zeroDistance,
+      zeroDistanceUnit,
+      twistRate,
+      twistDirection,
+      cant,
+      shotAngle,
+    },
+    atmosphere: {
+      editAtmosphere,
+      altitude,
+      altitudeUnit,
+      temperature,
+      temperatureUnit,
+      pressure,
+      humidity,
+      windSpeed,
+      windSpeedUnit,
+      windDirection,
+    },
+    shot: {
+      maxDistance,
+      maxDistanceUnit,
+      stepSize,
+      correctionUnit,
+      correctionDisplay,
+      resultVelocityUnit,
+      resultEnergyUnit,
+      visibleResultColumns,
+    },
+  });
+
+  const isBallisticCalculatorData = (value: unknown): value is BallisticCalculatorData => {
+    if (!value || typeof value !== "object") {
+      return false;
+    }
+
+    const data = value as Partial<BallisticCalculatorData>;
+    const isString = (field: unknown) => typeof field === "string";
+    const isNumber = (field: unknown) => typeof field === "number" && Number.isFinite(field);
+    const isBoolean = (field: unknown) => typeof field === "boolean";
+    const hasOption = <T extends string>(options: readonly { value: T }[], field: unknown) =>
+      isString(field) && options.some((option) => option.value === field);
+
+    return (
+      data.version === 1 &&
+      Boolean(data.ammunition) &&
+      Boolean(data.rifle) &&
+      Boolean(data.atmosphere) &&
+      Boolean(data.shot) &&
+      isString(data.ammunition?.bulletWeight) &&
+      hasOption(WEIGHT_UNITS, data.ammunition?.bulletWeightUnit) &&
+      isString(data.ammunition?.ballisticCoefficient) &&
+      hasOption(DRAG_TABLE_OPTIONS, data.ammunition?.dragTable) &&
+      isString(data.ammunition?.muzzleVelocity) &&
+      hasOption(VELOCITY_UNITS, data.ammunition?.muzzleVelocityUnit) &&
+      isString(data.ammunition?.bulletDiameter) &&
+      hasOption(DIAMETER_UNITS, data.ammunition?.bulletDiameterUnit) &&
+      isString(data.rifle?.sightHeight) &&
+      hasOption(SIGHT_HEIGHT_UNITS, data.rifle?.sightHeightUnit) &&
+      isString(data.rifle?.zeroDistance) &&
+      hasOption(DISTANCE_UNITS, data.rifle?.zeroDistanceUnit) &&
+      isString(data.rifle?.twistRate) &&
+      hasOption(TWIST_DIRECTIONS, data.rifle?.twistDirection) &&
+      isString(data.rifle?.cant) &&
+      isString(data.rifle?.shotAngle) &&
+      isBoolean(data.atmosphere?.editAtmosphere) &&
+      isNumber(data.atmosphere?.altitude) &&
+      hasOption(ALTITUDE_UNITS, data.atmosphere?.altitudeUnit) &&
+      isNumber(data.atmosphere?.temperature) &&
+      hasOption(TEMPERATURE_UNITS, data.atmosphere?.temperatureUnit) &&
+      isNumber(data.atmosphere?.pressure) &&
+      isNumber(data.atmosphere?.humidity) &&
+      isNumber(data.atmosphere?.windSpeed) &&
+      hasOption(WIND_SPEED_UNITS, data.atmosphere?.windSpeedUnit) &&
+      isNumber(data.atmosphere?.windDirection) &&
+      isString(data.shot?.maxDistance) &&
+      hasOption(DISTANCE_UNITS, data.shot?.maxDistanceUnit) &&
+      isString(data.shot?.stepSize) &&
+      hasOption(CORRECTION_UNITS, data.shot?.correctionUnit) &&
+      hasOption(CORRECTION_DISPLAY_OPTIONS, data.shot?.correctionDisplay) &&
+      hasOption(RESULT_VELOCITY_UNITS, data.shot?.resultVelocityUnit) &&
+      hasOption(RESULT_ENERGY_UNITS, data.shot?.resultEnergyUnit) &&
+      isBoolean(data.shot?.visibleResultColumns?.vertical) &&
+      isBoolean(data.shot?.visibleResultColumns?.horizontal) &&
+      isBoolean(data.shot?.visibleResultColumns?.velocity) &&
+      isBoolean(data.shot?.visibleResultColumns?.energy)
+    );
+  };
+
+  const applyCalculatorData = (data: BallisticCalculatorData) => {
+    setBulletWeight(data.ammunition.bulletWeight);
+    setBulletWeightUnit(data.ammunition.bulletWeightUnit);
+    setBallisticCoefficient(data.ammunition.ballisticCoefficient);
+    setDragTable(data.ammunition.dragTable);
+    setMuzzleVelocity(data.ammunition.muzzleVelocity);
+    setMuzzleVelocityUnit(data.ammunition.muzzleVelocityUnit);
+    setBulletDiameter(data.ammunition.bulletDiameter);
+    setBulletDiameterUnit(data.ammunition.bulletDiameterUnit);
+
+    setSightHeight(data.rifle.sightHeight);
+    setSightHeightUnit(data.rifle.sightHeightUnit);
+    setZeroDistance(data.rifle.zeroDistance);
+    setZeroDistanceUnit(data.rifle.zeroDistanceUnit);
+    setTwistRate(data.rifle.twistRate);
+    setTwistDirection(data.rifle.twistDirection);
+    setCant(data.rifle.cant);
+    setShotAngle(data.rifle.shotAngle);
+
+    setEditAtmosphere(data.atmosphere.editAtmosphere);
+    setAltitude(data.atmosphere.altitude);
+    setAltitudeUnit(data.atmosphere.altitudeUnit);
+    setTemperature(data.atmosphere.temperature);
+    setTemperatureUnit(data.atmosphere.temperatureUnit);
+    setPressure(data.atmosphere.pressure);
+    setHumidity(data.atmosphere.humidity);
+    setWindSpeed(data.atmosphere.windSpeed);
+    setWindSpeedUnit(data.atmosphere.windSpeedUnit);
+    setWindDirection(data.atmosphere.windDirection);
+
+    setMaxDistance(data.shot.maxDistance);
+    setMaxDistanceUnit(data.shot.maxDistanceUnit);
+    setStepSize(data.shot.stepSize);
+    setCorrectionUnit(data.shot.correctionUnit);
+    setCorrectionDisplay(data.shot.correctionDisplay);
+    setResultVelocityUnit(data.shot.resultVelocityUnit);
+    setResultEnergyUnit(data.shot.resultEnergyUnit);
+    setVisibleResultColumns(data.shot.visibleResultColumns);
+    setResults(null);
+  };
+
+  const resultColumns: {
+    id: ResultColumnId;
+    label: string;
+    render: (point: TrajectoryPoint) => React.ReactNode;
+  }[] = [
+      {
+        id: "distance",
+        label: `Dystans (${maxDistanceUnit})`,
+        render: (point) =>
+          (maxDistanceUnit === "m" ? point.distance.inMeters : point.distance.inYards).toFixed(0),
+      },
+      {
+        id: "vertical",
+        label: `Poprawka pionowa (${correctionUnitLabel})`,
+        render: formatVerticalCorrection,
+      },
+      {
+        id: "horizontal",
+        label: `Poprawka pozioma (${correctionUnitLabel})`,
+        render: formatHorizontalCorrection,
+      },
+      {
+        id: "velocity",
+        label: `Prędkość pocisku (${resultVelocityUnitLabel})`,
+        render: formatResultVelocity,
+      },
+      {
+        id: "energy",
+        label: `Energia pocisku (${resultEnergyUnitLabel})`,
+        render: formatResultEnergy,
+      },
+    ];
+
+  const optionalResultColumns = resultColumns.filter(
+    (column): column is typeof column & { id: OptionalResultColumnId } => column.id !== "distance"
+  );
+  const visibleColumns = resultColumns.filter(
+    (column) => column.id === "distance" || visibleResultColumns[column.id]
+  );
+
+  const escapeCsvValue = (value: React.ReactNode) => {
+    const text = String(value ?? "");
+    return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  };
+
+  const exportResultsToCsv = () => {
+    if (!results?.length) {
+      return;
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const rows = [
+      visibleColumns.map((column) => column.label),
+      ...results.map((point) => visibleColumns.map((column) => column.render(point))),
+    ];
+    const csv = rows.map((row) => row.map(escapeCsvValue).join(",")).join("\n");
+    const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `tabela-bal-${timestamp}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportCalculatorData = () => {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const json = JSON.stringify(getCalculatorData(), null, 2);
+    const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `dane-bal-${timestamp}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const importCalculatorData = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(await file.text());
+
+      if (!isBallisticCalculatorData(parsed)) {
+        window.alert("Błąd parsowania danych!");
+        return;
+      }
+
+      applyCalculatorData(parsed);
+    } catch (error) {
+      console.error(error);
+      window.alert("Błąd parsowania danych!");
     }
   };
 
@@ -430,6 +747,27 @@ export function KalkulatorBalistyczny() {
 
   return (
     <PageContainer title={toolInfo?.title || "Kalkulator Balistyczny"}>
+      <div className="mb-6 flex gap-2">
+        <input
+          ref={importFileInputRef}
+          type="file"
+          accept="application/json,.json"
+          className="hidden"
+          onChange={importCalculatorData}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => importFileInputRef.current?.click()}
+        >
+          <Download />
+          Importuj dane
+        </Button>
+        <Button type="button" variant="outline" onClick={exportCalculatorData}>
+          <Upload />
+          Eksportuj dane
+        </Button>
+      </div>
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card className="h-full">
           <CardContent className="pt-6 space-y-4">
@@ -888,20 +1226,42 @@ export function KalkulatorBalistyczny() {
 
       {results && (
         <Card className="mt-6">
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-center mb-4">
+          <CardContent className="pt-6 space-y-4">
+            <div className="flex justify-between items-center">
               <h3 className="font-semibold text-lg">Wyniki</h3>
+              <Button type="button" variant="outline" size="sm" onClick={exportResultsToCsv}>
+                <Upload />
+                Eksportuj do CSV
+              </Button>
+            </div>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-3">
+              {optionalResultColumns.map((column) => (
+                <div key={column.id} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`result-column-${column.id}`}
+                    checked={visibleResultColumns[column.id]}
+                    onCheckedChange={(checked) => setResultColumnVisible(column.id, !!checked)}
+                  />
+                  <label
+                    htmlFor={`result-column-${column.id}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {column.label}
+                  </label>
+                </div>
+              ))}
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-center">
                 <thead className="text-muted-foreground border-b">
                   <tr>
-                    <th className="py-2 px-2">Dystans ({maxDistanceUnit})</th>
-                    <th className="py-2 px-2">Poprawka pionowa ({correctionUnitLabel})</th>
-                    <th className="py-2 px-2">Poprawka pozioma ({correctionUnitLabel})</th>
-                    <th className="py-2 px-2">Prędkość pocisku ({resultVelocityUnitLabel})</th>
-                    <th className="py-2 px-2">Energia pocisku ({resultEnergyUnitLabel})</th>
+                    {visibleColumns.map((column) => (
+                      <th key={column.id} className="py-2 px-2">
+                        {column.label}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
@@ -910,16 +1270,11 @@ export function KalkulatorBalistyczny() {
                       key={point.distance.inMeters}
                       className="border-b last:border-0 hover:bg-muted/50"
                     >
-                      <td className="py-2 px-2">
-                        {(maxDistanceUnit === "m"
-                          ? point.distance.inMeters
-                          : point.distance.inYards
-                        ).toFixed(0)}
-                      </td>
-                      <td className="py-2 px-2">{formatVerticalCorrection(point)}</td>
-                      <td className="py-2 px-2">{formatHorizontalCorrection(point)}</td>
-                      <td className="py-2 px-2">{formatResultVelocity(point)}</td>
-                      <td className="py-2 px-2">{formatResultEnergy(point)}</td>
+                      {visibleColumns.map((column) => (
+                        <td key={column.id} className="py-2 px-2">
+                          {column.render(point)}
+                        </td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>
