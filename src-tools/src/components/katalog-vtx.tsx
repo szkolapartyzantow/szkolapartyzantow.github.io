@@ -162,8 +162,6 @@ function getSearchText(item: VtxCatalogItem) {
     item.title,
     getField(item, "Producent"),
     getField(item, "Nazwa"),
-    getField(item, "Pasmo"),
-    getField(item, "Moc"),
   ]
     .filter(Boolean)
     .join(" ")
@@ -401,7 +399,6 @@ function VtxCard({ item }: { item: VtxCatalogItem }) {
         ) : null}
 
         <div className="space-y-1">
-          <p className="text-muted-foreground text-xs">#{String(item.row).padStart(3, "0")}</p>
           <h2 className="text-lg leading-tight font-semibold">{item.title}</h2>
         </div>
 
@@ -510,7 +507,7 @@ export function KatalogVTX() {
               <Input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Szukaj po nazwie, producencie, paśmie..."
+                placeholder="Szukaj"
                 className="pl-9"
                 type="search"
               />
