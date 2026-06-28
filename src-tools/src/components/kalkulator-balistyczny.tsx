@@ -135,6 +135,7 @@ type CorrectionUnit = (typeof CORRECTION_UNITS)[number]["value"];
 type CorrectionDisplay = (typeof CORRECTION_DISPLAY_OPTIONS)[number]["value"];
 type ResultVelocityUnit = (typeof RESULT_VELOCITY_UNITS)[number]["value"];
 type ResultEnergyUnit = (typeof RESULT_ENERGY_UNITS)[number]["value"];
+type CalculatorMode = "table" | "singleShot";
 type OptionalResultColumnId = "vertical" | "horizontal" | "velocity" | "energy";
 type ResultColumnId = "distance" | OptionalResultColumnId;
 type BallisticCalculatorData = {
@@ -236,8 +237,10 @@ export function KalkulatorBalistyczny() {
   const [maxDistance, setMaxDistance] = React.useState("500"); // m
   const [maxDistanceUnit, setMaxDistanceUnit] = React.useState("m");
   const [stepSize, setStepSize] = React.useState("10"); // m
+  const [singleShotDistance, setSingleShotDistance] = React.useState("100");
+  const [singleShotDistanceUnit, setSingleShotDistanceUnit] = React.useState("m");
   const [correctionUnit, setCorrectionUnit] = React.useState<CorrectionUnit>("cm");
-  const [correctionDisplay, setCorrectionDisplay] = React.useState<CorrectionDisplay>("signed");
+  const [correctionDisplay, setCorrectionDisplay] = React.useState<CorrectionDisplay>("directional");
   const [resultVelocityUnit, setResultVelocityUnit] = React.useState<ResultVelocityUnit>("m/s");
   const [resultEnergyUnit, setResultEnergyUnit] = React.useState<ResultEnergyUnit>("J");
   const [visibleResultColumns, setVisibleResultColumns] = React.useState(
@@ -246,8 +249,10 @@ export function KalkulatorBalistyczny() {
 
   const [isImportErrorOpen, setIsImportErrorOpen] = React.useState(false);
   const [editAtmosphere, setEditAtmosphere] = React.useState(false);
+  const [calculatorMode, setCalculatorMode] = React.useState<CalculatorMode>("table");
 
   const [results, setResults] = React.useState<TrajectoryPoint[] | null>(null);
+  const [singleShotResult, setSingleShotResult] = React.useState<TrajectoryPoint | null>(null);
 
   const correctionUnitLabel =
     CORRECTION_UNITS.find((unit) => unit.value === correctionUnit)?.label ?? "cm";
@@ -502,6 +507,7 @@ export function KalkulatorBalistyczny() {
     setResultEnergyUnit(data.shot.resultEnergyUnit);
     setVisibleResultColumns(data.shot.visibleResultColumns);
     setResults(null);
+    setSingleShotResult(null);
   };
 
   const resultColumns: {
@@ -542,6 +548,70 @@ export function KalkulatorBalistyczny() {
   );
   const visibleColumns = resultColumns.filter(
     (column) => column.id === "distance" || visibleResultColumns[column.id]
+  );
+
+  const angleFields = (
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="space-y-2">
+        <Label>Kanting [przechył] (stopnie)</Label>
+        <Input
+          type="number"
+          value={cant}
+          onChange={(e) => setCant(e.target.value)}
+          className="no-spin-button"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Kąt strzału [w górę/w dół] (stopnie)</Label>
+        <Input
+          type="number"
+          value={shotAngle}
+          onChange={(e) => setShotAngle(e.target.value)}
+          className="no-spin-button"
+        />
+      </div>
+    </div>
+  );
+
+  const correctionSettingsFields = (
+    <div className="grid sm:grid-cols-2 gap-4">
+      <div className="space-y-2">
+        <Label>Poprawka pionowa/pozioma</Label>
+        <Select
+          value={correctionUnit}
+          onValueChange={(value) => setCorrectionUnit(value as CorrectionUnit)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {CORRECTION_UNITS.map((unit) => (
+              <SelectItem key={unit.value} value={unit.value}>
+                {unit.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>Zapis poprawki</Label>
+        <Select
+          value={correctionDisplay}
+          onValueChange={(value) => setCorrectionDisplay(value as CorrectionDisplay)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {CORRECTION_DISPLAY_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
   );
 
   const escapeCsvValue = (value: React.ReactNode) => {
@@ -610,146 +680,158 @@ export function KalkulatorBalistyczny() {
     }
   };
 
+  const calculateTrajectory = (distance: number, step: number, distanceUnit: string) => {
+    // Parse inputs
+    const weightGr = parseFloat(bulletWeight);
+    const bcVal = parseFloat(ballisticCoefficient);
+    const mv = parseFloat(muzzleVelocity);
+    const diam = parseFloat(bulletDiameter);
+
+    const sightHeightVal = parseFloat(sightHeight);
+    const zeroDistVal = parseFloat(zeroDistance);
+    const twistRateIn = parseFloat(twistRate);
+    const cantDeg = parseFloat(cant);
+    const shotAngleDeg = parseFloat(shotAngle);
+
+    if (
+      [
+        weightGr,
+        bcVal,
+        mv,
+        diam,
+        sightHeightVal,
+        zeroDistVal,
+        twistRateIn,
+        cantDeg,
+        shotAngleDeg,
+        distance,
+        step,
+      ].some(isNaN)
+    ) {
+      return null;
+    }
+
+    // Build Objects
+    const ammo = new Ammunition(
+      bulletWeightUnit === "g" ? UOM.Mass.grams(weightGr) : UOM.Mass.grains(weightGr),
+      new BallisticCoefficient(
+        bcVal,
+        BallisticCoefficientType.Coefficient,
+        dragTable as DragTableId
+      ),
+      muzzleVelocityUnit === "ft/s" ? UOM.Velocity.fps(mv) : UOM.Velocity.mps(mv),
+      bulletDiameterUnit === "in" ? UOM.Length.inches(diam) : UOM.Length.millimeters(diam)
+    );
+
+    let atmosphere: Atmosphere;
+    let wind: Wind;
+
+    if (editAtmosphere) {
+      const altVal = altitude;
+      const tempVal = temperature;
+      const pressHpa = pressure;
+      const humPct = humidity / 100.0;
+      const windSpd = windSpeed;
+      const windDirDeg = windDirection;
+
+      if ([altVal, tempVal, pressHpa, humPct, windSpd, windDirDeg].some(isNaN)) {
+        return null;
+      }
+
+      atmosphere = Atmosphere.create(
+        altitudeUnit === "ft" ? UOM.Length.feet(altVal) : UOM.Length.meters(altVal),
+        UOM.Pressure.hectoPascals(pressHpa),
+        false, // Pressure is station pressure
+        temperatureUnit === "F"
+          ? UOM.Temperature.fahrenheit(tempVal)
+          : UOM.Temperature.celsius(tempVal),
+        humPct
+      );
+
+      let windSpdMps: number;
+      switch (windSpeedUnit) {
+        case "km/h":
+          windSpdMps = UOM.Velocity.kmh(windSpd).inMps;
+          break;
+        case "mph":
+          windSpdMps = UOM.Velocity.mph(windSpd).inMps;
+          break;
+        case "ft/s":
+          windSpdMps = UOM.Velocity.fps(windSpd).inMps;
+          break;
+        default: // m/s
+          windSpdMps = windSpd;
+          break;
+      }
+      wind = new Wind(UOM.Angle.degrees(windDirDeg), UOM.Velocity.mps(windSpdMps));
+    } else {
+      atmosphere = Atmosphere.create(
+        defaultAltitude,
+        defaultPressure,
+        false,
+        defaultTemperature,
+        defaultHumidityPercent / 100
+      );
+      wind = new Wind(defaultWindDirection, defaultWindSpeed);
+    }
+
+    const rifling = new Rifling(
+      UOM.Length.inches(twistRateIn),
+      twistDirection === "Right" ? TwistDirection.Right : TwistDirection.Left
+    );
+
+    const rifle = new Rifle(
+      new Sight(
+        sightHeightUnit === "in"
+          ? UOM.Length.inches(sightHeightVal)
+          : UOM.Length.centimeters(sightHeightVal)
+      ),
+      new ZeroingParameters(
+        zeroDistanceUnit === "yd" ? UOM.Length.yards(zeroDistVal) : UOM.Length.meters(zeroDistVal),
+        atmosphere,
+        ammo
+      ),
+      rifling
+    );
+
+    const calc = new TrajectoryCalculator();
+
+    // Calculate Zero Angle
+    const sightAngle = calc.calculateSightAngle(ammo, rifle, atmosphere);
+    const shotParams = ShotParameters.new(
+      sightAngle,
+      distanceUnit === "yd" ? UOM.Length.yards(step) : UOM.Length.meters(step),
+      distanceUnit === "yd" ? UOM.Length.yards(distance) : UOM.Length.meters(distance),
+      UOM.Angle.degrees(cantDeg), // Cant
+      UOM.Angle.degrees(shotAngleDeg), // Shot Angle
+      UOM.Angle.ZERO // Barrel Azimuth
+    );
+
+    return calc.calculateTrajectory(ammo, rifle, atmosphere, shotParams, [wind]);
+  };
+
   const calculate = () => {
     try {
-      // Parse inputs
-      const weightGr = parseFloat(bulletWeight);
-      const bcVal = parseFloat(ballisticCoefficient);
-      const mv = parseFloat(muzzleVelocity);
-      const diam = parseFloat(bulletDiameter);
-
-      const sightHeightVal = parseFloat(sightHeight);
-      const zeroDistVal = parseFloat(zeroDistance);
-      const twistRateIn = parseFloat(twistRate);
-      const cantDeg = parseFloat(cant);
-      const shotAngleDeg = parseFloat(shotAngle);
-
-      const maxDist = parseFloat(maxDistance);
-      const step = parseFloat(stepSize);
-
-      if (
-        [
-          weightGr,
-          bcVal,
-          mv,
-          diam,
-          sightHeightVal,
-          zeroDistVal,
-          twistRateIn,
-          cantDeg,
-          shotAngleDeg,
-          maxDist,
-          step,
-        ].some(isNaN)
-      ) {
-        return;
-      }
-
-      // Build Objects
-      const ammo = new Ammunition(
-        bulletWeightUnit === "g" ? UOM.Mass.grams(weightGr) : UOM.Mass.grains(weightGr),
-        new BallisticCoefficient(
-          bcVal,
-          BallisticCoefficientType.Coefficient,
-          dragTable as DragTableId
-        ),
-        muzzleVelocityUnit === "ft/s" ? UOM.Velocity.fps(mv) : UOM.Velocity.mps(mv),
-        bulletDiameterUnit === "in" ? UOM.Length.inches(diam) : UOM.Length.millimeters(diam)
+      const trajectory = calculateTrajectory(
+        parseFloat(maxDistance),
+        parseFloat(stepSize),
+        maxDistanceUnit
       );
-
-      let atmosphere: Atmosphere;
-      let wind: Wind;
-
-      if (editAtmosphere) {
-        const altVal = altitude;
-        const tempVal = temperature;
-        const pressHpa = pressure;
-        const humPct = humidity / 100.0;
-        const windSpd = windSpeed;
-        const windDirDeg = windDirection;
-
-        if ([altVal, tempVal, pressHpa, humPct, windSpd, windDirDeg].some(isNaN)) {
-          setResults(null);
-          return;
-        }
-
-        atmosphere = Atmosphere.create(
-          altitudeUnit === "ft" ? UOM.Length.feet(altVal) : UOM.Length.meters(altVal),
-          UOM.Pressure.hectoPascals(pressHpa),
-          false, // Pressure is station pressure
-          temperatureUnit === "F"
-            ? UOM.Temperature.fahrenheit(tempVal)
-            : UOM.Temperature.celsius(tempVal),
-          humPct
-        );
-
-        let windSpdMps: number;
-        switch (windSpeedUnit) {
-          case "km/h":
-            windSpdMps = UOM.Velocity.kmh(windSpd).inMps;
-            break;
-          case "mph":
-            windSpdMps = UOM.Velocity.mph(windSpd).inMps;
-            break;
-          case "ft/s":
-            windSpdMps = UOM.Velocity.fps(windSpd).inMps;
-            break;
-          default: // m/s
-            windSpdMps = windSpd;
-            break;
-        }
-        wind = new Wind(UOM.Angle.degrees(windDirDeg), UOM.Velocity.mps(windSpdMps));
-      } else {
-        atmosphere = Atmosphere.create(
-          defaultAltitude,
-          defaultPressure,
-          false,
-          defaultTemperature,
-          defaultHumidityPercent / 100
-        );
-        wind = new Wind(defaultWindDirection, defaultWindSpeed);
-      }
-
-      const rifling = new Rifling(
-        UOM.Length.inches(twistRateIn),
-        twistDirection === "Right" ? TwistDirection.Right : TwistDirection.Left
-      );
-
-      const rifle = new Rifle(
-        new Sight(
-          sightHeightUnit === "in"
-            ? UOM.Length.inches(sightHeightVal)
-            : UOM.Length.centimeters(sightHeightVal)
-        ),
-        new ZeroingParameters(
-          zeroDistanceUnit === "yd"
-            ? UOM.Length.yards(zeroDistVal)
-            : UOM.Length.meters(zeroDistVal),
-          atmosphere,
-          ammo
-        ),
-        rifling
-      );
-
-      const calc = new TrajectoryCalculator();
-
-      // Calculate Zero Angle
-      const sightAngle = calc.calculateSightAngle(ammo, rifle, atmosphere);
-      const shotParams = ShotParameters.new(
-        sightAngle,
-        maxDistanceUnit === "yd" ? UOM.Length.yards(step) : UOM.Length.meters(step),
-        maxDistanceUnit === "yd" ? UOM.Length.yards(maxDist) : UOM.Length.meters(maxDist),
-        UOM.Angle.degrees(cantDeg), // Cant
-        UOM.Angle.degrees(shotAngleDeg), // Shot Angle
-        UOM.Angle.ZERO // Barrel Azimuth
-      );
-
-      const trajectory = calc.calculateTrajectory(ammo, rifle, atmosphere, shotParams, [wind]);
-
       setResults(trajectory);
     } catch (e) {
       console.error(e);
       setResults(null);
+    }
+  };
+
+  const calculateSingleShot = () => {
+    try {
+      const distance = parseFloat(singleShotDistance);
+      const trajectory = calculateTrajectory(distance, distance, singleShotDistanceUnit);
+      setSingleShotResult(trajectory?.at(-1) ?? null);
+    } catch (e) {
+      console.error(e);
+      setSingleShotResult(null);
     }
   };
 
@@ -949,24 +1031,6 @@ export function KalkulatorBalistyczny() {
                   fullWidth
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Kanting [przechył] (stopnie)</Label>
-                <Input
-                  type="number"
-                  value={cant}
-                  onChange={(e) => setCant(e.target.value)}
-                  className="no-spin-button"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Kąt strzału [w górę/w dół] (stopnie)</Label>
-                <Input
-                  type="number"
-                  value={shotAngle}
-                  onChange={(e) => setShotAngle(e.target.value)}
-                  className="no-spin-button"
-                />
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -1111,130 +1175,171 @@ export function KalkulatorBalistyczny() {
 
       <Card className="mb-6">
         <CardContent className="pt-6 space-y-4">
-          <h3 className="font-semibold">Parametry obliczeń</h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Maks. dystans</Label>
-              <div className="flex gap-2">
-                <Input
-                  type="number"
-                  value={maxDistance}
-                  onChange={(e) => setMaxDistance(e.target.value)}
-                  className="flex-1 no-spin-button"
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Krok</Label>
-              <div className="flex gap-2">
-                <Input
-                  type="number"
-                  value={stepSize}
-                  onChange={(e) => setStepSize(e.target.value)}
-                  className="no-spin-button"
-                />
-                <Select value={maxDistanceUnit} onValueChange={setMaxDistanceUnit}>
-                  <SelectTrigger className="w-[80px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DISTANCE_UNITS.map((unit) => (
-                      <SelectItem key={unit.value} value={unit.value}>
-                        {unit.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h3 className="font-semibold">Parametry obliczeń</h3>
+            <div
+              className="inline-flex rounded-md border bg-muted p-1"
+              role="tablist"
+              aria-label="Tryb kalkulatora"
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected={calculatorMode === "table"}
+                className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${calculatorMode === "table"
+                  ? "bg-background text-foreground shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+                  }`}
+                onClick={() => setCalculatorMode("table")}
+              >
+                Tabela
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={calculatorMode === "singleShot"}
+                className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${calculatorMode === "singleShot"
+                  ? "bg-background text-foreground shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+                  }`}
+                onClick={() => setCalculatorMode("singleShot")}
+              >
+                Pojedyńczy Strzał
+              </button>
             </div>
           </div>
-          <Separator className="my-6" />
-          <h3 className="font-semibold">Jednostki</h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Poprawka pionowa/pozioma</Label>
-                <Select
-                  value={correctionUnit}
-                  onValueChange={(value) => setCorrectionUnit(value as CorrectionUnit)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CORRECTION_UNITS.map((unit) => (
-                      <SelectItem key={unit.value} value={unit.value}>
-                        {unit.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+
+          {calculatorMode === "table" && (
+            <>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Maks. dystans</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={maxDistance}
+                      onChange={(e) => setMaxDistance(e.target.value)}
+                      className="flex-1 no-spin-button"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Krok</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={stepSize}
+                      onChange={(e) => setStepSize(e.target.value)}
+                      className="no-spin-button"
+                    />
+                    <Select value={maxDistanceUnit} onValueChange={setMaxDistanceUnit}>
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DISTANCE_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>Zapis poprawki</Label>
-                <Select
-                  value={correctionDisplay}
-                  onValueChange={(value) => setCorrectionDisplay(value as CorrectionDisplay)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CORRECTION_DISPLAY_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              {angleFields}
+              <Separator className="my-6" />
+              <h3 className="font-semibold">Jednostki</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                {correctionSettingsFields}
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Prędkość pocisku</Label>
+                    <Select
+                      value={resultVelocityUnit}
+                      onValueChange={(value) => setResultVelocityUnit(value as ResultVelocityUnit)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {RESULT_VELOCITY_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Energia pocisku</Label>
+                    <Select
+                      value={resultEnergyUnit}
+                      onValueChange={(value) => setResultEnergyUnit(value as ResultEnergyUnit)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {RESULT_ENERGY_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Prędkość pocisku</Label>
-                <Select
-                  value={resultVelocityUnit}
-                  onValueChange={(value) => setResultVelocityUnit(value as ResultVelocityUnit)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {RESULT_VELOCITY_UNITS.map((unit) => (
-                      <SelectItem key={unit.value} value={unit.value}>
-                        {unit.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <Button onClick={calculate} className="w-full mt-4">
+                Oblicz
+              </Button>
+            </>
+          )}
+
+          {calculatorMode === "singleShot" && (
+            <>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Odległość do celu</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={singleShotDistance}
+                      onChange={(e) => setSingleShotDistance(e.target.value)}
+                      className="flex-1 no-spin-button"
+                    />
+                    <Select
+                      value={singleShotDistanceUnit}
+                      onValueChange={setSingleShotDistanceUnit}
+                    >
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DISTANCE_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>Energia pocisku</Label>
-                <Select
-                  value={resultEnergyUnit}
-                  onValueChange={(value) => setResultEnergyUnit(value as ResultEnergyUnit)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {RESULT_ENERGY_UNITS.map((unit) => (
-                      <SelectItem key={unit.value} value={unit.value}>
-                        {unit.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-          <Button onClick={calculate} className="w-full mt-4">
-            Oblicz
-          </Button>
+              {angleFields}
+              <Separator className="my-6" />
+              <h3 className="font-semibold">Jednostki</h3>
+              {correctionSettingsFields}
+              <Button onClick={calculateSingleShot} className="w-full mt-4">
+                Oblicz
+              </Button>
+            </>
+          )}
         </CardContent>
       </Card>
 
-      {results && (
+      {calculatorMode === "table" && results && (
         <Card className="mt-6">
           <CardContent className="pt-6 space-y-4">
             <div className="flex justify-between items-center">
@@ -1289,6 +1394,32 @@ export function KalkulatorBalistyczny() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {calculatorMode === "singleShot" && singleShotResult && (
+        <Card className="mt-6">
+          <CardContent className="pt-6 space-y-4">
+            <h3 className="font-semibold text-lg">Wyniki</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <div className="text-sm text-muted-foreground">
+                  Poprawka pionowa ({correctionUnitLabel})
+                </div>
+                <div className="text-2xl font-semibold">
+                  {formatVerticalCorrection(singleShotResult)}
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-sm text-muted-foreground">
+                  Poprawka pozioma ({correctionUnitLabel})
+                </div>
+                <div className="text-2xl font-semibold">
+                  {formatHorizontalCorrection(singleShotResult)}
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

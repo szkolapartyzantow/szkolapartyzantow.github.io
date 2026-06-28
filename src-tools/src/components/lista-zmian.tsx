@@ -9,6 +9,7 @@ const changes = [
       "Dodano Katalog VTX.",
       "Dodano możliwość udostępniania ustawień VTX przez link.",
       "Dodano import i eksport ustawień w kalkulatorze balistycznym.",
+      "Dodano tryb pojedyńczego strzału w kalkulatorze balistycznym.",
     ],
   },
   {
