@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import type { OutputAsset } from "rollup";
 import { defineConfig, type Plugin } from "vite";
 
 function offlinePwa(): Plugin {
@@ -16,14 +15,6 @@ function offlinePwa(): Plugin {
     },
   ];
 
-  function getOriginalFileNames(asset: OutputAsset) {
-    return asset.originalFileNames ?? [];
-  }
-
-  function isVtxCatalogSource(fileName: string) {
-    return fileName.includes(vtxCatalogAssetPath);
-  }
-
   return {
     name: "offline-pwa",
     apply: "build",
@@ -32,7 +23,7 @@ function offlinePwa(): Plugin {
       const catalogCsvAsset = Object.values(bundle).find(
         (asset) =>
           asset.type === "asset" &&
-          getOriginalFileNames(asset).some((fileName) =>
+          asset.originalFileNames?.some((fileName) =>
             fileName.endsWith(`${vtxCatalogAssetPath}catalog.csv`),
           ),
       );
@@ -47,14 +38,7 @@ function offlinePwa(): Plugin {
 
       const bundledAssetUrls = Object.values(bundle)
         .map((asset) => `./${asset.fileName}`)
-        .filter((fileName) => !fileName.endsWith(".map"));
-      const vtxCatalogPrecacheUrls = Object.values(bundle)
-        .filter(
-          (asset) =>
-            asset.type === "asset" && getOriginalFileNames(asset).some(isVtxCatalogSource),
-        )
-        .map((asset) => `./${asset.fileName}`)
-        .filter((fileName) => !fileName.endsWith(".map"));
+        .filter((fileName) => /\.(?:css|js|csv)$/.test(fileName));
       const precacheFiles = [
         "./",
         "./index.html",
@@ -65,7 +49,6 @@ function offlinePwa(): Plugin {
         ...bundledAssetUrls,
       ];
       const uniquePrecacheFiles = [...new Set(precacheFiles)];
-      const uniqueVtxCatalogPrecacheUrls = [...new Set(vtxCatalogPrecacheUrls)];
 
       this.emitFile({
         type: "asset",
@@ -75,8 +58,6 @@ const CACHE_NAME = "szkolapartyzantow-tools-v${Date.now()}";
 const DATA_CACHE_NAME = "szkolapartyzantow-tools-data-v1";
 const BUNDLED_VTX_DATA_URL = ${JSON.stringify(bundledVtxDataUrl)};
 const PRECACHE_URLS = ${JSON.stringify(uniquePrecacheFiles, null, 2)};
-const VTX_CATALOG_PRECACHE_URLS = ${JSON.stringify(uniqueVtxCatalogPrecacheUrls, null, 2)};
-const REQUIRED_PRECACHE_URLS = [...new Set([...PRECACHE_URLS, ...VTX_CATALOG_PRECACHE_URLS])];
 const REMOTE_DATA_SOURCES = ${JSON.stringify(remoteDataSources, null, 2)};
 const GOOGLE_DOCS_DATA_URLS = REMOTE_DATA_SOURCES.map((source) => source.remoteUrl);
 
@@ -90,7 +71,7 @@ async function seedBundledData() {
   const dataCache = await caches.open(DATA_CACHE_NAME);
 
   await Promise.all(REMOTE_DATA_SOURCES.map(async ({ remoteUrl, bundledUrl }) => {
-    if (!REQUIRED_PRECACHE_URLS.includes(bundledUrl)) {
+    if (!PRECACHE_URLS.includes(bundledUrl)) {
       return;
     }
 
@@ -112,7 +93,7 @@ async function seedBundledData() {
 }
 
 async function seedBundledVtxData() {
-  if (!REQUIRED_PRECACHE_URLS.includes(BUNDLED_VTX_DATA_URL)) {
+  if (!PRECACHE_URLS.includes(BUNDLED_VTX_DATA_URL)) {
     return;
   }
 
@@ -145,11 +126,21 @@ async function fetchAndCacheData(request) {
   return networkResponse;
 }
 
+function shouldRuntimeCache(request, response) {
+  const requestUrl = new URL(request.url);
+  return (
+    response.ok &&
+    requestUrl.origin === self.location.origin &&
+    /\.(?:html|css|js|csv|webmanifest|svg|png)$/.test(requestUrl.pathname) &&
+    !requestUrl.pathname.match(/\.(?:webp|jpe?g|pdf)$/i)
+  );
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => addAllInChunks(cache, REQUIRED_PRECACHE_URLS))
+      .then((cache) => addAllInChunks(cache, PRECACHE_URLS))
       .then(() => seedBundledData())
       .then(() => self.skipWaiting()),
   );
@@ -208,8 +199,10 @@ self.addEventListener("fetch", (event) => {
       }
 
       return fetch(request).then((networkResponse) => {
-        const response = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, response));
+        if (shouldRuntimeCache(request, networkResponse)) {
+          const response = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, response));
+        }
         return networkResponse;
       });
     }),

@@ -219,11 +219,13 @@ function VtxPhotoGallery({
   photos,
   activePhotoIndex,
   onActivePhotoIndexChange,
+  onPhotoUnavailable,
 }: {
   title: string;
   photos: string[];
   activePhotoIndex: number;
   onActivePhotoIndexChange: (index: number) => void;
+  onPhotoUnavailable: (photo: string) => void;
 }) {
   const activePhoto = photos[activePhotoIndex];
   const hasMultiplePhotos = photos.length > 1;
@@ -249,6 +251,7 @@ function VtxPhotoGallery({
             src={activePhoto}
             alt={`${title} ${activePhotoIndex + 1}`}
             className="max-h-[76vh] w-auto max-w-full object-contain"
+            onError={() => onPhotoUnavailable(activePhoto)}
           />
           {hasMultiplePhotos ? (
             <>
@@ -292,6 +295,7 @@ function VtxPhotoGallery({
                   alt=""
                   className="h-full w-full object-cover"
                   loading="lazy"
+                  onError={() => onPhotoUnavailable(photo)}
                 />
               </button>
             ))}
@@ -303,7 +307,12 @@ function VtxPhotoGallery({
 }
 
 function VtxCard({ item }: { item: VtxCatalogItem }) {
-  const photos = getPhotos(item);
+  const allPhotos = React.useMemo(() => getPhotos(item), [item]);
+  const [failedPhotoUrls, setFailedPhotoUrls] = React.useState<Set<string>>(() => new Set());
+  const photos = React.useMemo(
+    () => allPhotos.filter((photo) => !failedPhotoUrls.has(photo)),
+    [allPhotos, failedPhotoUrls],
+  );
   const primaryPhoto = photos[0];
   const manual = getManual(item);
   const configGeneratorUrl = getField(item, CONFIG_GENERATOR_COLUMN);
@@ -312,6 +321,31 @@ function VtxCard({ item }: { item: VtxCatalogItem }) {
   const links = LINK_COLUMNS.map((column) => ({ label: column, url: getField(item, column) })).filter(
     (link): link is { label: string; url: string } => Boolean(link.url),
   );
+
+  React.useEffect(() => {
+    setFailedPhotoUrls(new Set());
+  }, [item.row]);
+
+  React.useEffect(() => {
+    if (activePhotoIndex >= photos.length) {
+      setActivePhotoIndex(Math.max(photos.length - 1, 0));
+    }
+    if (photos.length === 0) {
+      setIsGalleryOpen(false);
+    }
+  }, [activePhotoIndex, photos.length]);
+
+  const markPhotoUnavailable = React.useCallback((photo: string) => {
+    setFailedPhotoUrls((current) => {
+      if (current.has(photo)) {
+        return current;
+      }
+
+      const next = new Set(current);
+      next.add(photo);
+      return next;
+    });
+  }, []);
 
   const openGallery = (photoIndex: number) => {
     setActivePhotoIndex(photoIndex);
@@ -337,6 +371,7 @@ function VtxCard({ item }: { item: VtxCatalogItem }) {
             alt={item.title}
             className="h-full w-full object-contain"
             loading="lazy"
+            onError={() => markPhotoUnavailable(primaryPhoto)}
           />
         ) : (
           <span className="text-muted-foreground text-sm">Brak zdjęcia</span>
@@ -358,6 +393,7 @@ function VtxCard({ item }: { item: VtxCatalogItem }) {
                   alt={`${item.title} ${index + 2}`}
                   className="h-full w-full object-cover"
                   loading="lazy"
+                  onError={() => markPhotoUnavailable(photo)}
                 />
               </button>
             ))}
@@ -420,6 +456,7 @@ function VtxCard({ item }: { item: VtxCatalogItem }) {
           photos={photos}
           activePhotoIndex={activePhotoIndex}
           onActivePhotoIndexChange={setActivePhotoIndex}
+          onPhotoUnavailable={markPhotoUnavailable}
         />
       </Dialog>
     </Card>
