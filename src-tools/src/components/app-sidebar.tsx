@@ -55,7 +55,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuButton
                 size="lg"
                 asChild
-                className="h-auto rounded-none px-0 py-2 hover:bg-transparent data-[active=true]:bg-transparent"
+                className="h-auto rounded-none px-0 py-2 hover:bg-transparent active:bg-transparent active:text-sidebar-foreground data-[active=true]:bg-transparent"
               >
                 <a href="#" onClick={handleMenuClick} className="group/brand">
                   <div className="bg-background/25 flex size-16 shrink-0 items-center justify-center">
