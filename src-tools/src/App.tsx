@@ -11,6 +11,7 @@ import { useGoogleAnalytics } from "@/hooks/use-google-analytics";
 import "./index.css";
 import { Kontakt } from "./components/kontakt";
 import { OfflineInstallPrompt } from "./components/offline-install-prompt";
+import { ListaZmian } from "./components/lista-zmian";
 
 const components: Record<string, ComponentType> = {
   "kalkulator-los": KalkulatorLOS,
@@ -18,11 +19,13 @@ const components: Record<string, ComponentType> = {
   "kalkulator-hit-factor": KalkulatorHitFactor,
   "kalkulator-balistyczny": KalkulatorBalistyczny,
   kontakt: Kontakt,
+  "lista-zmian": ListaZmian,
 };
 
 export function App() {
   const hash = useHash();
   useGoogleAnalytics(hash);
+  const currentYear = new Date().getFullYear();
   const Component = useMemo(() => {
     const componentName = hash.slice(1).split("?")[0];
     return components[componentName] ?? Home;
@@ -32,7 +35,12 @@ export function App() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <Component />
+        <div className="flex-1">
+          <Component />
+        </div>
+        <footer className="border-t border-border px-4 py-4 text-center text-sm text-muted-foreground">
+          Copyright (c) {currentYear} Szkoła Partyzantów | SZKP Struś
+        </footer>
       </SidebarInset>
       <OfflineInstallPrompt />
     </SidebarProvider>

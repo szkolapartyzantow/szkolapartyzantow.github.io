@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Mail } from "lucide-react";
+import { History, Mail } from "lucide-react";
 import SZKPLogo from "@/assets/SZKP_logo_sigint.svg";
 import {
   Sidebar,
@@ -124,6 +124,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         >
           <Mail className="size-4 opacity-70" />
           <span>Kontakt</span>
+        </a>
+        <a
+          href="#lista-zmian"
+          className="hover:bg-sidebar-accent flex h-10 items-center gap-3 px-3 text-sm font-semibold transition-colors hover:text-sidebar-accent-foreground"
+          onClick={handleMenuClick}
+        >
+          <History className="size-4 opacity-70" />
+          <span>Lista zmian</span>
         </a>
         <a href="https://patronite.pl/szkola_partyzantow" className="block">
           <Card className="hover:bg-muted/50">

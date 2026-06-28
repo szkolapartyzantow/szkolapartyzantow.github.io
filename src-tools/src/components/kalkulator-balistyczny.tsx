@@ -5,6 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -235,6 +244,7 @@ export function KalkulatorBalistyczny() {
     DEFAULT_VISIBLE_RESULT_COLUMNS
   );
 
+  const [isImportErrorOpen, setIsImportErrorOpen] = React.useState(false);
   const [editAtmosphere, setEditAtmosphere] = React.useState(false);
 
   const [results, setResults] = React.useState<TrajectoryPoint[] | null>(null);
@@ -589,14 +599,14 @@ export function KalkulatorBalistyczny() {
       const parsed = JSON.parse(await file.text());
 
       if (!isBallisticCalculatorData(parsed)) {
-        window.alert("Błąd parsowania danych!");
+        setIsImportErrorOpen(true);
         return;
       }
 
       applyCalculatorData(parsed);
     } catch (error) {
       console.error(error);
-      window.alert("Błąd parsowania danych!");
+      setIsImportErrorOpen(true);
     }
   };
 
@@ -1283,6 +1293,23 @@ export function KalkulatorBalistyczny() {
           </CardContent>
         </Card>
       )}
+
+      <Dialog open={isImportErrorOpen} onOpenChange={setIsImportErrorOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Błąd</DialogTitle>
+            <DialogDescription>
+              Błąd parsowania danych. Wybierz poprawny plik JSON wyeksportowany z kalkulatora
+              balistycznego.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button>OK</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageContainer>
   );
 }
