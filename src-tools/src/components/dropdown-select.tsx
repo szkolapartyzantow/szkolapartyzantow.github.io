@@ -101,7 +101,7 @@ export function DropdownSelect({
               aria-expanded={open}
               disabled={disabled}
               className={cn(
-                "min-w-0 justify-between font-normal",
+                "min-w-0 justify-between font-medium",
                 fullWidth ? "w-full" : "w-fit",
                 compactOnMobile && "h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
               )}

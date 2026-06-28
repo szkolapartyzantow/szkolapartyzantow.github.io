@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Mail } from "lucide-react";
 import SZKPLogo from "@/assets/SZKP_logo_sigint.svg";
 import {
   Sidebar,
@@ -45,20 +46,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   return (
-    <Sidebar {...props}>
-      <SidebarHeader>
-        <div className="flex items-center md:mt-5">
-          <SidebarTrigger className="md:hidden h-8 w-8 [&_svg]:size-8" />
+    <Sidebar {...props} className="border-sidebar-border/70">
+      <SidebarHeader className="border-sidebar-border/60 border-b px-4 pb-5 pt-4">
+        <div className="flex items-center gap-2 md:mt-2">
+          <SidebarTrigger className="h-9 w-9 text-sidebar-foreground/80 md:hidden [&_svg]:size-6" />
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton size="lg" asChild className="h-auto">
-                <a href="#" onClick={handleMenuClick}>
-                  <div className="bg-sidebar-secondary text-sidebar-primary-foreground flex items-center justify-center rounded-lg">
-                    <img src={SZKPLogo} className="size-20" alt="SZKP Logo" />
+              <SidebarMenuButton
+                size="lg"
+                asChild
+                className="h-auto rounded-none px-0 py-2 hover:bg-transparent data-[active=true]:bg-transparent"
+              >
+                <a href="#" onClick={handleMenuClick} className="group/brand">
+                  <div className="bg-background/25 flex size-16 shrink-0 items-center justify-center">
+                    <img
+                      src={SZKPLogo}
+                      className="size-13 transition-transform duration-200 group-hover/brand:scale-105"
+                      alt="SZKP Logo"
+                    />
                   </div>
-                  <div className="grid flex-1 text-left leading-tight">
-                    <span className="truncate font-bold text-lg">Szkoła Partyzantów</span>
-                    <span className="truncate font-medium text-lg">Narzędzia</span>
+                  <div className="grid flex-1 gap-1 text-left leading-tight">
+                    <span className="group-hover/brand:text-primary truncate text-lg font-bold tracking-normal">
+                      Szkoła Partyzantów
+                    </span>
+                    <span className="text-sidebar-foreground/65 truncate text-[0.8rem] font-semibold uppercase tracking-[0.14em]">
+                      Narzędzia
+                    </span>
                   </div>
                 </a>
               </SidebarMenuButton>
@@ -66,31 +79,53 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </div>
       </SidebarHeader>
-      <SidebarContent>
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item.items.map((subItem) => (
-                  <SidebarMenuItem key={subItem.title}>
-                    <SidebarMenuButton asChild isActive={activeHash === subItem.url} size="lg">
-                      <a href={subItem.url} onClick={handleMenuClick}>
-                        {subItem.title}
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+      <SidebarContent className="gap-5 px-3 py-5">
+        {data.navMain.map((item) => {
+          return (
+            <SidebarGroup key={item.title} className="p-0">
+              <SidebarGroupLabel className="text-sidebar-foreground/55 mb-2 h-auto rounded-none px-1 text-[0.72rem] font-bold uppercase tracking-[0.18em]">
+                {item.title}
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu className="gap-1.5">
+                  {item.items.map((subItem) => {
+                    const isActive = activeHash === subItem.url;
+
+                    return (
+                      <SidebarMenuItem key={subItem.title}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={isActive}
+                          size="lg"
+                          className="hover:bg-sidebar-accent/60 data-[active=true]:bg-primary data-[active=true]:text-primary-foreground h-11 rounded-none border border-transparent px-3 font-semibold transition-colors data-[active=true]:border-primary data-[active=true]:shadow-sm"
+                        >
+                          <a
+                            href={subItem.url}
+                            onClick={handleMenuClick}
+                            title={subItem.description}
+                          >
+                            <span className="truncate">{subItem.title}</span>
+                          </a>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          );
+        })}
       </SidebarContent>
-      <SidebarFooter>
-        <a href="#kontakt" className="hover:underline hover:text-primary" onClick={handleMenuClick}>
+      <SidebarFooter className="border-sidebar-border/60 gap-3 border-t p-4">
+        <a
+          href="#kontakt"
+          className="hover:bg-sidebar-accent flex h-10 items-center gap-3 px-3 text-sm font-semibold transition-colors hover:text-sidebar-accent-foreground"
+          onClick={handleMenuClick}
+        >
+          <Mail className="size-4 opacity-70" />
           <span>Kontakt</span>
         </a>
-        <a href="https://patronite.pl/szkola_partyzantow">
+        <a href="https://patronite.pl/szkola_partyzantow" className="block">
           <Card className="hover:bg-muted/50">
             <CardContent>
               <div className="flex flex-col items-center justify-center">
