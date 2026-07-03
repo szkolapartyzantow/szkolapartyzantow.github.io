@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight, ExternalLink, FileText, Search, Settings } from "lucide-react";
-import catalogCsvUrl from "@/assets/vtx-catalog/catalog.csv?url";
+import catalogCsvUrl from "@/assets/vtx-catalog/vtx-catalog.csv?url";
 import { PageContainer } from "./page-container";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";

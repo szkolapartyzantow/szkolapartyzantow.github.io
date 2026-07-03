@@ -21,6 +21,16 @@ import { PageContainer } from "./page-container";
 import { getToolByUrl } from "@/lib/tools";
 import { ToolHelp } from "./tool-help";
 import { DropdownSelect } from "./dropdown-select";
+import type { SelectItemData, SelectItemGroup } from "./dropdown-select";
+import {
+  Canvas2DReticleCanvas,
+  DEFAULT_RETICLE_ID,
+  drawReticle,
+  RETICLE_MAGNIFICATION_RANGES,
+  RETICLE_OPTIONS,
+  RETICLES,
+} from "@/lib/reticles";
+import type { ReticleId, ReticleVisualTargetKind } from "@/lib/reticles";
 
 import {
   TrajectoryCalculator,
@@ -61,6 +71,19 @@ const DRAG_TABLE_OPTIONS = [
   { value: DragTableId.GI, label: "GI" },
   { value: DragTableId.RA4, label: "RA4" },
 ];
+
+const RETICLE_TARGET_OPTIONS: Array<{
+  value: "none" | ReticleVisualTargetKind;
+  label: string;
+  widthCm: number;
+  heightCm: number;
+}> = [
+    { value: "none", label: "Brak", widthCm: 0, heightCm: 0 },
+    { value: "bullseye", label: "Tarcza okrągła", widthCm: 50, heightCm: 50 },
+    { value: "IDPA", label: "IDPA", widthCm: 46, heightCm: 78 },
+    { value: "plate", label: "Płyta", widthCm: 30, heightCm: 30 },
+    { value: "circle", label: "Koło", widthCm: 20, heightCm: 20 },
+  ];
 
 const WEIGHT_UNITS = [
   { value: "gr", label: "gr" },
@@ -139,7 +162,7 @@ type CalculatorMode = "table" | "singleShot";
 type OptionalResultColumnId = "vertical" | "horizontal" | "velocity" | "energy";
 type ResultColumnId = "distance" | OptionalResultColumnId;
 type BallisticCalculatorData = {
-  version: 1;
+  version: 2;
   ammunition: {
     bulletWeight: string;
     bulletWeightUnit: string;
@@ -155,6 +178,11 @@ type BallisticCalculatorData = {
     sightHeightUnit: string;
     zeroDistance: string;
     zeroDistanceUnit: string;
+    sightId: string;
+    firstFocalPlane: boolean;
+    minMagnification: string;
+    maxMagnification: string;
+    currentMagnification: string;
     twistRate: string;
     twistDirection: string;
     cant: string;
@@ -191,6 +219,325 @@ const DEFAULT_VISIBLE_RESULT_COLUMNS: Record<OptionalResultColumnId, boolean> = 
   energy: true,
 };
 
+const DEFAULT_RETICLE_MAGNIFICATION_RANGE = RETICLE_MAGNIFICATION_RANGES[DEFAULT_RETICLE_ID];
+const DEFAULT_RETICLE_MIN_MAGNIFICATION = String(
+  DEFAULT_RETICLE_MAGNIFICATION_RANGE.minMagnification
+);
+const DEFAULT_RETICLE_MAX_MAGNIFICATION = String(
+  DEFAULT_RETICLE_MAGNIFICATION_RANGE.maxMagnification
+);
+
+const RETICLE_UNKNOWN_MANUFACTURER_LABEL = "Inne";
+const RETICLE_MANUFACTURERS = [
+  "Premier Reticles",
+  "Schmidt&Bender",
+  "Nikko Stirling",
+  "Horus Vision",
+  "MTC Optics",
+  "US Optics",
+  "CenterPoint",
+  "Nightforce",
+  "Leatherwood",
+  "Swarovski",
+  "Sightron",
+  "Bushnell",
+  "Redfield",
+  "MakSnipe",
+  "Simmons",
+  "Shepherd",
+  "Leupold",
+  "Vortex",
+  "Cabelas",
+  "Millet",
+  "Kahles",
+  "Burris",
+  "Nikon",
+  "March",
+  "Falcon",
+  "Zeiss",
+  "Leica",
+  "Docter",
+  "Minox",
+  "Weaver",
+  "Meopta",
+  "NcStar",
+  "Barska",
+  "Osprey",
+  "Holland",
+  "Alpen",
+  "Wotac",
+  "Pentax",
+  "SWFA",
+  "Delta",
+  "Trijicon",
+  "Lynx",
+  "IOR",
+  "BSA",
+  "PFI",
+].sort((a, b) => b.length - a.length);
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function getReticleOptionParts(name: string) {
+  for (const manufacturer of RETICLE_MANUFACTURERS) {
+    const suffixPattern = new RegExp(
+      `(?:,\\s*|\\s+)${escapeRegExp(manufacturer)}(\\s*\\([^)]*\\))?$`
+    );
+    const match = name.match(suffixPattern);
+
+    if (match?.index !== undefined) {
+      const label = `${name.slice(0, match.index).trim()}${match[1] ?? ""}`.trim();
+
+      return {
+        manufacturer,
+        label,
+      };
+    }
+  }
+
+  return {
+    manufacturer: RETICLE_UNKNOWN_MANUFACTURER_LABEL,
+    label: name,
+  };
+}
+
+function ReticlePreview({
+  result,
+  reticleId,
+  reticleName,
+  firstFocalPlane,
+  trueMagnification,
+  currentMagnification,
+  minMagnification,
+  maxMagnification,
+  targetKind,
+  targetWidthCm,
+  targetHeightCm,
+  onCurrentMagnificationChange,
+  onTargetKindChange,
+  onTargetWidthCmChange,
+  onTargetHeightCmChange,
+}: {
+  result: TrajectoryPoint;
+  reticleId: ReticleId;
+  reticleName: string;
+  firstFocalPlane: boolean;
+  trueMagnification: number;
+  currentMagnification: number;
+  minMagnification: number;
+  maxMagnification: number;
+  targetKind: "none" | ReticleVisualTargetKind;
+  targetWidthCm: string;
+  targetHeightCm: string;
+  onCurrentMagnificationChange: (magnification: string) => void;
+  onTargetKindChange: (kind: "none" | ReticleVisualTargetKind) => void;
+  onTargetWidthCmChange: (width: string) => void;
+  onTargetHeightCmChange: (height: string) => void;
+}) {
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const animationFrameRef = React.useRef<number | null>(null);
+  const [sliderMagnification, setSliderMagnification] = React.useState(currentMagnification);
+  const distanceMeters = result.distance.inMeters;
+  const targetWidthValue = parseFloat(targetWidthCm);
+  const targetHeightValue = parseFloat(targetHeightCm);
+  const visualTarget =
+    targetKind !== "none" &&
+      Number.isFinite(targetWidthValue) &&
+      targetWidthValue > 0 &&
+      Number.isFinite(targetHeightValue) &&
+      targetHeightValue > 0 &&
+      distanceMeters > 0
+      ? {
+        kind: targetKind,
+        widthMrad: (targetWidthValue / 100 / distanceMeters) * 1000,
+        heightMrad: (targetHeightValue / 100 / distanceMeters) * 1000,
+      }
+      : undefined;
+
+  React.useEffect(() => {
+    setSliderMagnification(currentMagnification);
+  }, [currentMagnification]);
+
+  const renderReticle = React.useCallback(() => {
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext("2d");
+
+    if (!canvas || !context) {
+      return;
+    }
+
+    const render = () => {
+      const rect = canvas.getBoundingClientRect();
+      const pixelRatio = window.devicePixelRatio || 1;
+      const width = Math.max(1, Math.round(rect.width * pixelRatio));
+      const height = Math.max(1, Math.round(rect.height * pixelRatio));
+
+      canvas.width = width;
+      canvas.height = height;
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      context.clearRect(0, 0, rect.width, rect.height);
+
+      drawReticle(new Canvas2DReticleCanvas(context), {
+        width: rect.width,
+        height: rect.height,
+        reticleId,
+        magnification: {
+          firstFocalPlane,
+          trueMagnification,
+          currentMagnification: sliderMagnification,
+        },
+        target: {
+          horizontalMrad: -result.windageAdjustment.inMrad,
+          verticalMrad: -result.dropAdjustment.inMrad,
+        },
+        visualTarget,
+      });
+    };
+
+    render();
+  }, [firstFocalPlane, result, reticleId, sliderMagnification, trueMagnification, visualTarget]);
+
+  const scheduleRender = React.useCallback(() => {
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+
+    animationFrameRef.current = requestAnimationFrame(() => {
+      animationFrameRef.current = null;
+      renderReticle();
+    });
+  }, [renderReticle]);
+
+  React.useEffect(() => {
+    scheduleRender();
+  }, [scheduleRender]);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(scheduleRender);
+    resizeObserver.observe(canvas);
+
+    return () => {
+      resizeObserver.disconnect();
+
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+    };
+  }, [scheduleRender]);
+
+  const commitMagnification = React.useCallback(() => {
+    onCurrentMagnificationChange(String(sliderMagnification));
+  }, [onCurrentMagnificationChange, sliderMagnification]);
+
+  const selectTargetKind = React.useCallback(
+    (value: string) => {
+      const nextKind = value as "none" | ReticleVisualTargetKind;
+      const preset = RETICLE_TARGET_OPTIONS.find((option) => option.value === nextKind);
+
+      onTargetKindChange(nextKind);
+
+      if (preset && preset.value !== "none") {
+        onTargetWidthCmChange(String(preset.widthCm));
+        onTargetHeightCmChange(String(preset.heightCm));
+      }
+    },
+    [onTargetHeightCmChange, onTargetKindChange, onTargetWidthCmChange]
+  );
+
+  return (
+    <div className="space-y-2">
+      <div className="text-sm font-medium">{reticleName}</div>
+      <div className="aspect-square w-full max-w-[420px] overflow-hidden rounded-md border bg-neutral-100">
+        <canvas
+          ref={canvasRef}
+          className="block h-full w-full"
+          aria-label={`Siatka celownicza ${reticleName}`}
+        />
+      </div>
+      <div className="w-full max-w-[420px] space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="reticle-magnification">Powiększenie lunety</Label>
+          <span className="text-sm tabular-nums text-muted-foreground">
+            {sliderMagnification.toFixed(1)}x
+          </span>
+        </div>
+        <input
+          id="reticle-magnification"
+          type="range"
+          min={minMagnification}
+          max={maxMagnification}
+          step="0.1"
+          value={sliderMagnification}
+          onBlur={commitMagnification}
+          onChange={(event) => setSliderMagnification(event.target.valueAsNumber)}
+          onKeyUp={commitMagnification}
+          onPointerUp={commitMagnification}
+          className="w-full accent-primary"
+          aria-label="Powiększenie lunety"
+        />
+        <div className="flex justify-between text-xs tabular-nums text-muted-foreground">
+          <span>{minMagnification.toFixed(1)}x</span>
+          <span>{maxMagnification.toFixed(1)}x</span>
+        </div>
+      </div>
+      <div className="w-full max-w-[420px] space-y-3 rounded-md border p-3">
+        <div className="grid gap-3 sm:grid-cols-[1fr_88px_88px]">
+          <div className="space-y-2">
+            <Label htmlFor="reticle-target-kind">Cel na siatce</Label>
+            <Select value={targetKind} onValueChange={selectTargetKind}>
+              <SelectTrigger id="reticle-target-kind">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {RETICLE_TARGET_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="reticle-target-width">Szer. cm</Label>
+            <Input
+              id="reticle-target-width"
+              type="number"
+              min="1"
+              step="1"
+              value={targetWidthCm}
+              onChange={(event) => onTargetWidthCmChange(event.target.value)}
+              disabled={targetKind === "none"}
+              className="no-spin-button"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="reticle-target-height">Wys. cm</Label>
+            <Input
+              id="reticle-target-height"
+              type="number"
+              min="1"
+              step="1"
+              value={targetHeightCm}
+              onChange={(event) => onTargetHeightCmChange(event.target.value)}
+              disabled={targetKind === "none"}
+              className="no-spin-button"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function KalkulatorBalistyczny() {
   const importFileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -209,6 +556,13 @@ export function KalkulatorBalistyczny() {
   const [sightHeightUnit, setSightHeightUnit] = React.useState("cm");
   const [zeroDistance, setZeroDistance] = React.useState("50"); // m or yd
   const [zeroDistanceUnit, setZeroDistanceUnit] = React.useState("m");
+  const [selectedSightId, setSelectedSightId] = React.useState<string>(String(DEFAULT_RETICLE_ID));
+  const [firstFocalPlane, setFirstFocalPlane] = React.useState(false);
+  const [minMagnification, setMinMagnification] = React.useState(DEFAULT_RETICLE_MIN_MAGNIFICATION);
+  const [maxMagnification, setMaxMagnification] = React.useState(DEFAULT_RETICLE_MAX_MAGNIFICATION);
+  const [currentMagnification, setCurrentMagnification] = React.useState(
+    DEFAULT_RETICLE_MAX_MAGNIFICATION
+  );
   const [twistRate, setTwistRate] = React.useState("7"); // 1 in X inches
   const [twistDirection, setTwistDirection] = React.useState<string>("Right");
   const [cant, setCant] = React.useState("0"); // degrees
@@ -239,6 +593,11 @@ export function KalkulatorBalistyczny() {
   const [stepSize, setStepSize] = React.useState("10"); // m
   const [singleShotDistance, setSingleShotDistance] = React.useState("100");
   const [singleShotDistanceUnit, setSingleShotDistanceUnit] = React.useState("m");
+  const [reticleTargetKind, setReticleTargetKind] = React.useState<
+    "none" | ReticleVisualTargetKind
+  >("bullseye");
+  const [reticleTargetWidthCm, setReticleTargetWidthCm] = React.useState("50");
+  const [reticleTargetHeightCm, setReticleTargetHeightCm] = React.useState("50");
   const [correctionUnit, setCorrectionUnit] = React.useState<CorrectionUnit>("cm");
   const [correctionDisplay, setCorrectionDisplay] = React.useState<CorrectionDisplay>("directional");
   const [resultVelocityUnit, setResultVelocityUnit] = React.useState<ResultVelocityUnit>("m/s");
@@ -262,6 +621,61 @@ export function KalkulatorBalistyczny() {
 
   const resultEnergyUnitLabel =
     RESULT_ENERGY_UNITS.find((unit) => unit.value === resultEnergyUnit)?.label ?? "J";
+
+  const selectedReticleId = RETICLES[Number(selectedSightId) as ReticleId]
+    ? (Number(selectedSightId) as ReticleId)
+    : DEFAULT_RETICLE_ID;
+  const selectedReticleName = getReticleOptionParts(RETICLES[selectedReticleId]).label;
+  const selectedReticleMagnificationRange =
+    RETICLE_MAGNIFICATION_RANGES[selectedReticleId] ?? DEFAULT_RETICLE_MAGNIFICATION_RANGE;
+  const sightOptions = React.useMemo<(SelectItemData | SelectItemGroup)[]>(() => {
+    const groupedReticles = new Map<string, SelectItemData[]>();
+
+    for (const reticle of RETICLE_OPTIONS) {
+      const { manufacturer, label } = getReticleOptionParts(reticle.name);
+      const items = groupedReticles.get(manufacturer) ?? [];
+
+      items.push({
+        value: String(reticle.id),
+        label,
+      });
+      groupedReticles.set(manufacturer, items);
+    }
+
+    return Array.from(groupedReticles, ([label, items]) => ({ label, items }));
+  }, []);
+  const minMagnificationValue = parseFloat(minMagnification);
+  const maxMagnificationValue = parseFloat(maxMagnification);
+  const currentMagnificationValue = parseFloat(currentMagnification);
+  const reticleMinMagnification =
+    Number.isFinite(minMagnificationValue) && minMagnificationValue > 0
+      ? minMagnificationValue
+      : selectedReticleMagnificationRange.minMagnification;
+  const reticleMaxMagnification =
+    Number.isFinite(maxMagnificationValue) && maxMagnificationValue > 0
+      ? maxMagnificationValue
+      : selectedReticleMagnificationRange.maxMagnification;
+  const reticleTrueMagnification = selectedReticleMagnificationRange.maxMagnification;
+  const unclampedReticleCurrentMagnification =
+    Number.isFinite(currentMagnificationValue) && currentMagnificationValue > 0
+      ? currentMagnificationValue
+      : reticleMaxMagnification;
+  const reticleCurrentMagnification = Math.min(
+    reticleMaxMagnification,
+    Math.max(reticleMinMagnification, unclampedReticleCurrentMagnification)
+  );
+
+  const handleSightChange = (sightId: string) => {
+    const reticleId = RETICLES[Number(sightId) as ReticleId]
+      ? (Number(sightId) as ReticleId)
+      : DEFAULT_RETICLE_ID;
+    const range = RETICLE_MAGNIFICATION_RANGES[reticleId] ?? DEFAULT_RETICLE_MAGNIFICATION_RANGE;
+
+    setSelectedSightId(String(reticleId));
+    setMinMagnification(String(range.minMagnification));
+    setMaxMagnification(String(range.maxMagnification));
+    setCurrentMagnification(String(range.maxMagnification));
+  };
 
   const formatSignedCorrection = (value: number, fractionDigits: number) => {
     const formatted = value.toFixed(fractionDigits);
@@ -365,7 +779,7 @@ export function KalkulatorBalistyczny() {
   };
 
   const getCalculatorData = (): BallisticCalculatorData => ({
-    version: 1,
+    version: 2,
     ammunition: {
       bulletWeight,
       bulletWeightUnit,
@@ -381,6 +795,11 @@ export function KalkulatorBalistyczny() {
       sightHeightUnit,
       zeroDistance,
       zeroDistanceUnit,
+      sightId: selectedSightId,
+      firstFocalPlane,
+      minMagnification,
+      maxMagnification,
+      currentMagnification,
       twistRate,
       twistDirection,
       cant,
@@ -423,7 +842,7 @@ export function KalkulatorBalistyczny() {
       isString(field) && options.some((option) => option.value === field);
 
     return (
-      data.version === 1 &&
+      data.version === 2 &&
       Boolean(data.ammunition) &&
       Boolean(data.rifle) &&
       Boolean(data.atmosphere) &&
@@ -440,6 +859,11 @@ export function KalkulatorBalistyczny() {
       hasOption(SIGHT_HEIGHT_UNITS, data.rifle?.sightHeightUnit) &&
       isString(data.rifle?.zeroDistance) &&
       hasOption(DISTANCE_UNITS, data.rifle?.zeroDistanceUnit) &&
+      isString(data.rifle?.sightId) &&
+      isBoolean(data.rifle?.firstFocalPlane) &&
+      isString(data.rifle?.minMagnification) &&
+      isString(data.rifle?.maxMagnification) &&
+      isString(data.rifle?.currentMagnification) &&
       isString(data.rifle?.twistRate) &&
       hasOption(TWIST_DIRECTIONS, data.rifle?.twistDirection) &&
       isString(data.rifle?.cant) &&
@@ -482,6 +906,11 @@ export function KalkulatorBalistyczny() {
     setSightHeightUnit(data.rifle.sightHeightUnit);
     setZeroDistance(data.rifle.zeroDistance);
     setZeroDistanceUnit(data.rifle.zeroDistanceUnit);
+    setSelectedSightId(data.rifle.sightId);
+    setFirstFocalPlane(data.rifle.firstFocalPlane);
+    setMinMagnification(data.rifle.minMagnification);
+    setMaxMagnification(data.rifle.maxMagnification);
+    setCurrentMagnification(data.rifle.currentMagnification);
     setTwistRate(data.rifle.twistRate);
     setTwistDirection(data.rifle.twistDirection);
     setCant(data.rifle.cant);
@@ -1032,6 +1461,56 @@ export function KalkulatorBalistyczny() {
                 />
               </div>
             </div>
+            <Separator className="my-6" />
+            <h3 className="font-semibold">Optyka</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <DropdownSelect
+                label="Celownik"
+                items={sightOptions}
+                value={selectedSightId}
+                onValueChange={handleSightChange}
+                placeholder="Wybierz celownik"
+                searchable
+              />
+              <div className="space-y-2">
+                <Label>Typ siatki</Label>
+                <div className="flex h-10 items-center space-x-2">
+                  <Checkbox
+                    id="first-focal-plane"
+                    checked={firstFocalPlane}
+                    onCheckedChange={(checked) => setFirstFocalPlane(!!checked)}
+                  />
+                  <label
+                    htmlFor="first-focal-plane"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Pierwszy plan (FFP)
+                  </label>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Minimalne powiększenie</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value={minMagnification}
+                  onChange={(e) => setMinMagnification(e.target.value)}
+                  className="no-spin-button"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Maksymalne powiększenie</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value={maxMagnification}
+                  onChange={(e) => setMaxMagnification(e.target.value)}
+                  className="no-spin-button"
+                />
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -1403,21 +1882,40 @@ export function KalkulatorBalistyczny() {
         <Card className="mt-6">
           <CardContent className="pt-6 space-y-4">
             <h3 className="font-semibold text-lg">Wyniki</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <div className="text-sm text-muted-foreground">
-                  Poprawka pionowa ({correctionUnitLabel})
+            <div className="grid gap-6 lg:grid-cols-[minmax(260px,420px)_1fr]">
+              <ReticlePreview
+                result={singleShotResult}
+                reticleId={selectedReticleId}
+                reticleName={selectedReticleName}
+                firstFocalPlane={firstFocalPlane}
+                trueMagnification={reticleTrueMagnification}
+                currentMagnification={reticleCurrentMagnification}
+                minMagnification={reticleMinMagnification}
+                maxMagnification={reticleMaxMagnification}
+                targetKind={reticleTargetKind}
+                targetWidthCm={reticleTargetWidthCm}
+                targetHeightCm={reticleTargetHeightCm}
+                onCurrentMagnificationChange={setCurrentMagnification}
+                onTargetKindChange={setReticleTargetKind}
+                onTargetWidthCmChange={setReticleTargetWidthCm}
+                onTargetHeightCmChange={setReticleTargetHeightCm}
+              />
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                <div className="space-y-1">
+                  <div className="text-sm text-muted-foreground">
+                    Poprawka pionowa ({correctionUnitLabel})
+                  </div>
+                  <div className="text-2xl font-semibold">
+                    {formatVerticalCorrection(singleShotResult)}
+                  </div>
                 </div>
-                <div className="text-2xl font-semibold">
-                  {formatVerticalCorrection(singleShotResult)}
-                </div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-sm text-muted-foreground">
-                  Poprawka pozioma ({correctionUnitLabel})
-                </div>
-                <div className="text-2xl font-semibold">
-                  {formatHorizontalCorrection(singleShotResult)}
+                <div className="space-y-1">
+                  <div className="text-sm text-muted-foreground">
+                    Poprawka pozioma ({correctionUnitLabel})
+                  </div>
+                  <div className="text-2xl font-semibold">
+                    {formatHorizontalCorrection(singleShotResult)}
+                  </div>
                 </div>
               </div>
             </div>

@@ -24,7 +24,7 @@ function offlinePwa(): Plugin {
         (asset) =>
           asset.type === "asset" &&
           asset.originalFileNames?.some((fileName) =>
-            fileName.endsWith(`${vtxCatalogAssetPath}catalog.csv`),
+            fileName.endsWith(`${vtxCatalogAssetPath}vtx-catalog.csv`),
           ),
       );
       const bundledCatalogDataUrl = catalogCsvAsset ? `./${catalogCsvAsset.fileName}` : null;
