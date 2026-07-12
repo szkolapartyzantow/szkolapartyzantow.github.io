@@ -1900,7 +1900,7 @@ export function KalkulatorBalistyczny() {
                 onTargetWidthCmChange={setReticleTargetWidthCm}
                 onTargetHeightCmChange={setReticleTargetHeightCm}
               />
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              <div className="order-first grid gap-4 sm:grid-cols-2 lg:order-none lg:grid-cols-1 lg:content-start">
                 <div className="space-y-1">
                   <div className="text-sm text-muted-foreground">
                     Poprawka pionowa ({correctionUnitLabel})
