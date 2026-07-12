@@ -489,7 +489,7 @@ function ReticlePreview({
           <span>{maxMagnification.toFixed(1)}x</span>
         </div>
       </div>
-      <div className="w-full max-w-[420px] space-y-3 rounded-md border p-3">
+      <div className="w-full max-w-[420px] space-y-3 rounded-md p-3">
         <div className="grid gap-3 sm:grid-cols-[1fr_88px_88px]">
           <div className="space-y-2">
             <Label htmlFor="reticle-target-kind">Cel na siatce</Label>
@@ -1267,7 +1267,10 @@ export function KalkulatorBalistyczny() {
   const toolInfo = getToolByUrl("#kalkulator-balistyczny");
 
   return (
-    <PageContainer title={toolInfo?.title || "Kalkulator Balistyczny"}>
+    <PageContainer
+      title={toolInfo?.title || "Kalkulator Balistyczny"}
+      className="lg:max-w-[79.2rem]"
+    >
       <div className="mb-6 flex gap-2">
         <input
           ref={importFileInputRef}
@@ -1289,8 +1292,9 @@ export function KalkulatorBalistyczny() {
           Eksportuj dane
         </Button>
       </div>
-      <div className="grid gap-6 md:grid-cols-2 mb-6">
-        <Card className="h-full">
+      <div className="mb-6 grid items-start gap-6 lg:grid-cols-2">
+        <div className="space-y-6">
+          <Card>
           <CardContent className="pt-6 space-y-4">
             <h3 className="font-semibold">Amunicja</h3>
             <div className="grid md:grid-cols-2 gap-4">
@@ -1512,9 +1516,9 @@ export function KalkulatorBalistyczny() {
               </div>
             </div>
           </CardContent>
-        </Card>
+          </Card>
 
-        <Card className="h-full">
+          <Card>
           <CardContent className="pt-6 space-y-4">
             <h3 className="font-semibold">Warunki atmosferyczne</h3>
             <div className="flex items-center space-x-2">
@@ -1649,10 +1653,11 @@ export function KalkulatorBalistyczny() {
               </div>
             </div>
           </CardContent>
-        </Card>
-      </div>
+          </Card>
+        </div>
 
-      <Card className="mb-6">
+        <div className="space-y-6">
+          <Card>
         <CardContent className="pt-6 space-y-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 className="font-semibold">Parametry obliczeń</h3>
@@ -1816,10 +1821,10 @@ export function KalkulatorBalistyczny() {
             </>
           )}
         </CardContent>
-      </Card>
+          </Card>
 
       {calculatorMode === "table" && results && (
-        <Card className="mt-6">
+        <Card>
           <CardContent className="pt-6 space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="font-semibold text-lg">Wyniki</h3>
@@ -1879,10 +1884,10 @@ export function KalkulatorBalistyczny() {
       )}
 
       {calculatorMode === "singleShot" && singleShotResult && (
-        <Card className="mt-6">
+        <Card>
           <CardContent className="pt-6 space-y-4">
             <h3 className="font-semibold text-lg">Wyniki</h3>
-            <div className="grid gap-6 lg:grid-cols-[minmax(260px,420px)_1fr]">
+            <div className="grid gap-6 lg:grid-cols-[minmax(200px,350px)_1fr]">
               <ReticlePreview
                 result={singleShotResult}
                 reticleId={selectedReticleId}
@@ -1922,6 +1927,8 @@ export function KalkulatorBalistyczny() {
           </CardContent>
         </Card>
       )}
+        </div>
+      </div>
 
       <Dialog open={isImportErrorOpen} onOpenChange={setIsImportErrorOpen}>
         <DialogContent>
