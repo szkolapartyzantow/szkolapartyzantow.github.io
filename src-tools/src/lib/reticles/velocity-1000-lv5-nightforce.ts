@@ -1,7 +1,10 @@
 import { drawGridReticle } from "./grid-reticle";
 import type { ReticleCanvas, ReticleRenderInput } from "./types";
 
-export function drawVelocity1000Lv5Nightforce(canvas: ReticleCanvas, input: ReticleRenderInput): void {
+export function drawVelocity1000Lv5Nightforce(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad: 45,
     crosshairMrad: 14,

@@ -7,8 +7,20 @@ export function drawLrmoaSightron(canvas: ReticleCanvas, input: ReticleRenderInp
   drawGridReticle(canvas, input, {
     radiusMrad: 25 / MOA_PER_MRAD,
     crosshairMrad: 12 / MOA_PER_MRAD,
-    majorHashes: [2 / MOA_PER_MRAD, 4 / MOA_PER_MRAD, 6 / MOA_PER_MRAD, 8 / MOA_PER_MRAD, 10 / MOA_PER_MRAD],
-    minorHashes: [1 / MOA_PER_MRAD, 3 / MOA_PER_MRAD, 5 / MOA_PER_MRAD, 7 / MOA_PER_MRAD, 9 / MOA_PER_MRAD],
+    majorHashes: [
+      2 / MOA_PER_MRAD,
+      4 / MOA_PER_MRAD,
+      6 / MOA_PER_MRAD,
+      8 / MOA_PER_MRAD,
+      10 / MOA_PER_MRAD,
+    ],
+    minorHashes: [
+      1 / MOA_PER_MRAD,
+      3 / MOA_PER_MRAD,
+      5 / MOA_PER_MRAD,
+      7 / MOA_PER_MRAD,
+      9 / MOA_PER_MRAD,
+    ],
     postStartMrad: 12 / MOA_PER_MRAD,
     postHalfWidthMrad: 0.4 / MOA_PER_MRAD,
   });

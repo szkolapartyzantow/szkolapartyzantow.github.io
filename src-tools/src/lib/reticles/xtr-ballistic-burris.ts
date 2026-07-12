@@ -9,7 +9,12 @@ export function drawXtrBallistic762Burris(canvas: ReticleCanvas, input: ReticleR
   drawXtrBallistic(canvas, input, 40, 16);
 }
 
-function drawXtrBallistic(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMrad: number, postStartMrad: number): void {
+function drawXtrBallistic(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput,
+  radiusMrad: number,
+  postStartMrad: number
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad,
     crosshairMrad: postStartMrad,

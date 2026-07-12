@@ -11,10 +11,9 @@ export function getReticleMagnificationScale(magnification?: ReticleMagnificatio
   return 1;
 }
 
-export function getVisualTargetMagnificationScale(
-  magnification?: ReticleMagnification
-): number {
-  const currentMagnification = magnification?.currentMagnification ?? VISUAL_TARGET_BASE_MAGNIFICATION;
+export function getVisualTargetMagnificationScale(magnification?: ReticleMagnification): number {
+  const currentMagnification =
+    magnification?.currentMagnification ?? VISUAL_TARGET_BASE_MAGNIFICATION;
 
   if (Number.isFinite(currentMagnification) && currentMagnification > 0) {
     return currentMagnification / VISUAL_TARGET_BASE_MAGNIFICATION;
@@ -31,8 +30,7 @@ export function getVisualTargetPxPerMrad(
   const size = Math.min(width || 320, height || 320);
 
   return (
-    (size / (VISUAL_TARGET_BASE_RADIUS_MRAD * 2)) *
-    getVisualTargetMagnificationScale(magnification)
+    (size / (VISUAL_TARGET_BASE_RADIUS_MRAD * 2)) * getVisualTargetMagnificationScale(magnification)
   );
 }
 

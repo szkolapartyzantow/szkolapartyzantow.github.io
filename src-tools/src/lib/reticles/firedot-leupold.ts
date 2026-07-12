@@ -20,8 +20,7 @@ export function drawFiredotLeupold(canvas: ReticleCanvas, input: ReticleRenderIn
   const centerY = height / 2;
   const basePxPerMrad = size / (RETICLE_RADIUS_MRAD * 2);
   const pxPerMrad = basePxPerMrad * getReticleMagnificationScale(input.magnification);
-  const targetPxPerMrad =
-    getVisualTargetPxPerMrad(width, height, input.magnification);
+  const targetPxPerMrad = getVisualTargetPxPerMrad(width, height, input.magnification);
   const radius = basePxPerMrad * RETICLE_RADIUS_MRAD;
   const scaledRadius = pxPerMrad * RETICLE_RADIUS_MRAD;
 

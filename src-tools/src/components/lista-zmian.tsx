@@ -4,6 +4,13 @@ import { Card, CardContent } from "./ui/card";
 
 const changes = [
   {
+    date: "2026-07-12",
+    items: [
+      "Poprawiono układ kalkulatora balistycznego na komputerach.",
+      "Poprawiono proporcje celu IDPA na podglądzie siatki celowniczej.",
+    ],
+  },
+  {
     date: "2026-06-28",
     items: [
       "Dodano Katalog VTX.",
@@ -21,9 +28,7 @@ const changes = [
   },
   {
     date: "2026-02-26",
-    items: [
-      "Poprawiono układ generatora VTX na telefonach.",
-    ],
+    items: ["Poprawiono układ generatora VTX na telefonach."],
   },
   {
     date: "2025-12-24",
@@ -34,22 +39,16 @@ const changes = [
   },
   {
     date: "2025-12-22",
-    items: [
-      "Dodano kalkulator Hit Factor.",
-    ],
+    items: ["Dodano kalkulator Hit Factor."],
   },
   {
     date: "2025-12-20",
-    items: [
-      "Dodano generator ustawień VTX.",
-    ],
+    items: ["Dodano generator ustawień VTX."],
   },
   {
     date: "2025-12-18",
-    items: [
-      "Dodano kalkulator LOS anteny.",
-    ],
-  }
+    items: ["Dodano kalkulator LOS anteny."],
+  },
 ];
 
 export function ListaZmian() {

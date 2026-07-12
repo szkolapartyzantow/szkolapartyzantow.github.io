@@ -78,12 +78,12 @@ const RETICLE_TARGET_OPTIONS: Array<{
   widthCm: number;
   heightCm: number;
 }> = [
-    { value: "none", label: "Brak", widthCm: 0, heightCm: 0 },
-    { value: "bullseye", label: "Tarcza okrągła", widthCm: 50, heightCm: 50 },
-    { value: "IDPA", label: "IDPA", widthCm: 46, heightCm: 78 },
-    { value: "plate", label: "Płyta", widthCm: 30, heightCm: 30 },
-    { value: "circle", label: "Koło", widthCm: 20, heightCm: 20 },
-  ];
+  { value: "none", label: "Brak", widthCm: 0, heightCm: 0 },
+  { value: "bullseye", label: "Tarcza okrągła", widthCm: 50, heightCm: 50 },
+  { value: "IDPA", label: "IDPA", widthCm: 46, heightCm: 78 },
+  { value: "plate", label: "Płyta", widthCm: 30, heightCm: 30 },
+  { value: "circle", label: "Koło", widthCm: 20, heightCm: 20 },
+];
 
 const WEIGHT_UNITS = [
   { value: "gr", label: "gr" },
@@ -344,16 +344,16 @@ function ReticlePreview({
   const targetHeightValue = parseFloat(targetHeightCm);
   const visualTarget =
     targetKind !== "none" &&
-      Number.isFinite(targetWidthValue) &&
-      targetWidthValue > 0 &&
-      Number.isFinite(targetHeightValue) &&
-      targetHeightValue > 0 &&
-      distanceMeters > 0
+    Number.isFinite(targetWidthValue) &&
+    targetWidthValue > 0 &&
+    Number.isFinite(targetHeightValue) &&
+    targetHeightValue > 0 &&
+    distanceMeters > 0
       ? {
-        kind: targetKind,
-        widthMrad: (targetWidthValue / 100 / distanceMeters) * 1000,
-        heightMrad: (targetHeightValue / 100 / distanceMeters) * 1000,
-      }
+          kind: targetKind,
+          widthMrad: (targetWidthValue / 100 / distanceMeters) * 1000,
+          heightMrad: (targetHeightValue / 100 / distanceMeters) * 1000,
+        }
       : undefined;
 
   React.useEffect(() => {
@@ -599,7 +599,8 @@ export function KalkulatorBalistyczny() {
   const [reticleTargetWidthCm, setReticleTargetWidthCm] = React.useState("50");
   const [reticleTargetHeightCm, setReticleTargetHeightCm] = React.useState("50");
   const [correctionUnit, setCorrectionUnit] = React.useState<CorrectionUnit>("cm");
-  const [correctionDisplay, setCorrectionDisplay] = React.useState<CorrectionDisplay>("directional");
+  const [correctionDisplay, setCorrectionDisplay] =
+    React.useState<CorrectionDisplay>("directional");
   const [resultVelocityUnit, setResultVelocityUnit] = React.useState<ResultVelocityUnit>("m/s");
   const [resultEnergyUnit, setResultEnergyUnit] = React.useState<ResultEnergyUnit>("J");
   const [visibleResultColumns, setVisibleResultColumns] = React.useState(
@@ -944,33 +945,33 @@ export function KalkulatorBalistyczny() {
     label: string;
     render: (point: TrajectoryPoint) => React.ReactNode;
   }[] = [
-      {
-        id: "distance",
-        label: `Dystans (${maxDistanceUnit})`,
-        render: (point) =>
-          (maxDistanceUnit === "m" ? point.distance.inMeters : point.distance.inYards).toFixed(0),
-      },
-      {
-        id: "vertical",
-        label: `Poprawka pionowa (${correctionUnitLabel})`,
-        render: formatVerticalCorrection,
-      },
-      {
-        id: "horizontal",
-        label: `Poprawka pozioma (${correctionUnitLabel})`,
-        render: formatHorizontalCorrection,
-      },
-      {
-        id: "velocity",
-        label: `Prędkość pocisku (${resultVelocityUnitLabel})`,
-        render: formatResultVelocity,
-      },
-      {
-        id: "energy",
-        label: `Energia pocisku (${resultEnergyUnitLabel})`,
-        render: formatResultEnergy,
-      },
-    ];
+    {
+      id: "distance",
+      label: `Dystans (${maxDistanceUnit})`,
+      render: (point) =>
+        (maxDistanceUnit === "m" ? point.distance.inMeters : point.distance.inYards).toFixed(0),
+    },
+    {
+      id: "vertical",
+      label: `Poprawka pionowa (${correctionUnitLabel})`,
+      render: formatVerticalCorrection,
+    },
+    {
+      id: "horizontal",
+      label: `Poprawka pozioma (${correctionUnitLabel})`,
+      render: formatHorizontalCorrection,
+    },
+    {
+      id: "velocity",
+      label: `Prędkość pocisku (${resultVelocityUnitLabel})`,
+      render: formatResultVelocity,
+    },
+    {
+      id: "energy",
+      label: `Energia pocisku (${resultEnergyUnitLabel})`,
+      render: formatResultEnergy,
+    },
+  ];
 
   const optionalResultColumns = resultColumns.filter(
     (column): column is typeof column & { id: OptionalResultColumnId } => column.id !== "distance"
@@ -1279,11 +1280,7 @@ export function KalkulatorBalistyczny() {
           className="hidden"
           onChange={importCalculatorData}
         />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => importFileInputRef.current?.click()}
-        >
+        <Button type="button" variant="outline" onClick={() => importFileInputRef.current?.click()}>
           <Download />
           Importuj dane
         </Button>
@@ -1295,638 +1292,642 @@ export function KalkulatorBalistyczny() {
       <div className="mb-6 grid items-start gap-6 lg:grid-cols-2">
         <div className="space-y-6">
           <Card>
-          <CardContent className="pt-6 space-y-4">
-            <h3 className="font-semibold">Amunicja</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Kaliber</Label>
-                <div className="flex gap-2">
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={bulletDiameter}
-                    onChange={(e) => setBulletDiameter(e.target.value)}
-                    className="flex-1 no-spin-button"
-                  />
-                  <Select value={bulletDiameterUnit} onValueChange={setBulletDiameterUnit}>
-                    <SelectTrigger className="w-[80px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {DIAMETER_UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+            <CardContent className="pt-6 space-y-4">
+              <h3 className="font-semibold">Amunicja</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Kaliber</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={bulletDiameter}
+                      onChange={(e) => setBulletDiameter(e.target.value)}
+                      className="flex-1 no-spin-button"
+                    />
+                    <Select value={bulletDiameterUnit} onValueChange={setBulletDiameterUnit}>
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DIAMETER_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Masa pocisku</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={bulletWeight}
+                      onChange={(e) => setBulletWeight(e.target.value)}
+                      className="flex-1 no-spin-button"
+                    />
+                    <Select value={bulletWeightUnit} onValueChange={setBulletWeightUnit}>
+                      <SelectTrigger className="w-[70px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {WEIGHT_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Prędkość wylotowa</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={muzzleVelocity}
+                      onChange={(e) => setMuzzleVelocity(e.target.value)}
+                      className="flex-1 no-spin-button"
+                    />
+                    <Select value={muzzleVelocityUnit} onValueChange={setMuzzleVelocityUnit}>
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {VELOCITY_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Współczynnik balistyczny</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      step="0.001"
+                      value={ballisticCoefficient}
+                      onChange={(e) => setBallisticCoefficient(e.target.value)}
+                      className="flex-1 no-spin-button"
+                    />
+                    <Select value={dragTable} onValueChange={setDragTable}>
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DRAG_TABLE_OPTIONS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>Masa pocisku</Label>
-                <div className="flex gap-2">
+              <Separator className="my-6" />
+              <h3 className="font-semibold">Broń</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Wysokość linii celowania</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      step="0.1"
+                      value={sightHeight}
+                      onChange={(e) => setSightHeight(e.target.value)}
+                      className="flex-1 no-spin-button"
+                    />
+                    <Select value={sightHeightUnit} onValueChange={setSightHeightUnit}>
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SIGHT_HEIGHT_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Zero</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={zeroDistance}
+                      onChange={(e) => setZeroDistance(e.target.value)}
+                      className="flex-1 no-spin-button"
+                    />
+                    <Select value={zeroDistanceUnit} onValueChange={setZeroDistanceUnit}>
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DISTANCE_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Skok gwintu (1:x cal)</Label>
                   <Input
                     type="number"
-                    value={bulletWeight}
-                    onChange={(e) => setBulletWeight(e.target.value)}
-                    className="flex-1 no-spin-button"
+                    value={twistRate}
+                    onChange={(e) => setTwistRate(e.target.value)}
+                    className="no-spin-button"
                   />
-                  <Select value={bulletWeightUnit} onValueChange={setBulletWeightUnit}>
-                    <SelectTrigger className="w-[70px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {WEIGHT_UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Kierunek gwintu</Label>
+                  <DropdownSelect
+                    label=""
+                    items={TWIST_DIRECTIONS}
+                    value={twistDirection}
+                    onValueChange={setTwistDirection}
+                    placeholder="Wybierz"
+                    className="no-spin-button"
+                    fullWidth
+                  />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>Prędkość wylotowa</Label>
-                <div className="flex gap-2">
-                  <Input
-                    type="number"
-                    value={muzzleVelocity}
-                    onChange={(e) => setMuzzleVelocity(e.target.value)}
-                    className="flex-1 no-spin-button"
-                  />
-                  <Select value={muzzleVelocityUnit} onValueChange={setMuzzleVelocityUnit}>
-                    <SelectTrigger className="w-[80px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {VELOCITY_UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Współczynnik balistyczny</Label>
-                <div className="flex gap-2">
-                  <Input
-                    type="number"
-                    step="0.001"
-                    value={ballisticCoefficient}
-                    onChange={(e) => setBallisticCoefficient(e.target.value)}
-                    className="flex-1 no-spin-button"
-                  />
-                  <Select value={dragTable} onValueChange={setDragTable}>
-                    <SelectTrigger className="w-[80px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {DRAG_TABLE_OPTIONS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-            <Separator className="my-6" />
-            <h3 className="font-semibold">Broń</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Wysokość linii celowania</Label>
-                <div className="flex gap-2">
-                  <Input
-                    type="number"
-                    step="0.1"
-                    value={sightHeight}
-                    onChange={(e) => setSightHeight(e.target.value)}
-                    className="flex-1 no-spin-button"
-                  />
-                  <Select value={sightHeightUnit} onValueChange={setSightHeightUnit}>
-                    <SelectTrigger className="w-[80px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SIGHT_HEIGHT_UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Zero</Label>
-                <div className="flex gap-2">
-                  <Input
-                    type="number"
-                    value={zeroDistance}
-                    onChange={(e) => setZeroDistance(e.target.value)}
-                    className="flex-1 no-spin-button"
-                  />
-                  <Select value={zeroDistanceUnit} onValueChange={setZeroDistanceUnit}>
-                    <SelectTrigger className="w-[80px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {DISTANCE_UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Skok gwintu (1:x cal)</Label>
-                <Input
-                  type="number"
-                  value={twistRate}
-                  onChange={(e) => setTwistRate(e.target.value)}
-                  className="no-spin-button"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Kierunek gwintu</Label>
+              <Separator className="my-6" />
+              <h3 className="font-semibold">Optyka</h3>
+              <div className="grid md:grid-cols-2 gap-4">
                 <DropdownSelect
-                  label=""
-                  items={TWIST_DIRECTIONS}
-                  value={twistDirection}
-                  onValueChange={setTwistDirection}
-                  placeholder="Wybierz"
-                  className="no-spin-button"
-                  fullWidth
+                  label="Celownik"
+                  items={sightOptions}
+                  value={selectedSightId}
+                  onValueChange={handleSightChange}
+                  placeholder="Wybierz celownik"
+                  searchable
                 />
-              </div>
-            </div>
-            <Separator className="my-6" />
-            <h3 className="font-semibold">Optyka</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <DropdownSelect
-                label="Celownik"
-                items={sightOptions}
-                value={selectedSightId}
-                onValueChange={handleSightChange}
-                placeholder="Wybierz celownik"
-                searchable
-              />
-              <div className="space-y-2">
-                <Label>Typ siatki</Label>
-                <div className="flex h-10 items-center space-x-2">
-                  <Checkbox
-                    id="first-focal-plane"
-                    checked={firstFocalPlane}
-                    onCheckedChange={(checked) => setFirstFocalPlane(!!checked)}
+                <div className="space-y-2">
+                  <Label>Typ siatki</Label>
+                  <div className="flex h-10 items-center space-x-2">
+                    <Checkbox
+                      id="first-focal-plane"
+                      checked={firstFocalPlane}
+                      onCheckedChange={(checked) => setFirstFocalPlane(!!checked)}
+                    />
+                    <label
+                      htmlFor="first-focal-plane"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Pierwszy plan (FFP)
+                    </label>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Minimalne powiększenie</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={minMagnification}
+                    onChange={(e) => setMinMagnification(e.target.value)}
+                    className="no-spin-button"
                   />
-                  <label
-                    htmlFor="first-focal-plane"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Pierwszy plan (FFP)
-                  </label>
+                </div>
+                <div className="space-y-2">
+                  <Label>Maksymalne powiększenie</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={maxMagnification}
+                    onChange={(e) => setMaxMagnification(e.target.value)}
+                    className="no-spin-button"
+                  />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>Minimalne powiększenie</Label>
-                <Input
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  value={minMagnification}
-                  onChange={(e) => setMinMagnification(e.target.value)}
-                  className="no-spin-button"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Maksymalne powiększenie</Label>
-                <Input
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  value={maxMagnification}
-                  onChange={(e) => setMaxMagnification(e.target.value)}
-                  className="no-spin-button"
-                />
-              </div>
-            </div>
-          </CardContent>
+            </CardContent>
           </Card>
 
           <Card>
-          <CardContent className="pt-6 space-y-4">
-            <h3 className="font-semibold">Warunki atmosferyczne</h3>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="edit-atmosphere"
-                checked={editAtmosphere}
-                onCheckedChange={(checked) => setEditAtmosphere(!!checked)}
-              />
-              <label
-                htmlFor="edit-atmosphere"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Edytuj domyślne warunki atmosferyczne
-              </label>
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Wysokość n.p.m.</Label>
-                <div className="flex gap-2">
+            <CardContent className="pt-6 space-y-4">
+              <h3 className="font-semibold">Warunki atmosferyczne</h3>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="edit-atmosphere"
+                  checked={editAtmosphere}
+                  onCheckedChange={(checked) => setEditAtmosphere(!!checked)}
+                />
+                <label
+                  htmlFor="edit-atmosphere"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Edytuj domyślne warunki atmosferyczne
+                </label>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Wysokość n.p.m.</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={altitude}
+                      onChange={(e) => setAltitude(e.target.valueAsNumber)}
+                      className="flex-1 no-spin-button"
+                      disabled={!editAtmosphere}
+                    />
+                    <Select
+                      value={altitudeUnit}
+                      onValueChange={setAltitudeUnit}
+                      disabled={!editAtmosphere}
+                    >
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ALTITUDE_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Temperatura</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={temperature}
+                      onChange={(e) => setTemperature(e.target.valueAsNumber)}
+                      className="flex-1 no-spin-button"
+                      disabled={!editAtmosphere}
+                    />
+                    <Select
+                      value={temperatureUnit}
+                      onValueChange={setTemperatureUnit}
+                      disabled={!editAtmosphere}
+                    >
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TEMPERATURE_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Ciśnienie (hPa)</Label>
                   <Input
                     type="number"
-                    value={altitude}
-                    onChange={(e) => setAltitude(e.target.valueAsNumber)}
-                    className="flex-1 no-spin-button"
+                    value={pressure}
+                    onChange={(e) => setPressure(e.target.valueAsNumber)}
+                    className="no-spin-button"
                     disabled={!editAtmosphere}
                   />
-                  <Select
-                    value={altitudeUnit}
-                    onValueChange={setAltitudeUnit}
-                    disabled={!editAtmosphere}
-                  >
-                    <SelectTrigger className="w-[80px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ALTITUDE_UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Temperatura</Label>
-                <div className="flex gap-2">
+                <div className="space-y-2">
+                  <Label>Wilgotność (%)</Label>
                   <Input
                     type="number"
-                    value={temperature}
-                    onChange={(e) => setTemperature(e.target.valueAsNumber)}
-                    className="flex-1 no-spin-button"
+                    value={humidity}
+                    onChange={(e) => setHumidity(e.target.valueAsNumber)}
+                    className="no-spin-button"
                     disabled={!editAtmosphere}
                   />
-                  <Select
-                    value={temperatureUnit}
-                    onValueChange={setTemperatureUnit}
-                    disabled={!editAtmosphere}
-                  >
-                    <SelectTrigger className="w-[80px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {TEMPERATURE_UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Ciśnienie (hPa)</Label>
-                <Input
-                  type="number"
-                  value={pressure}
-                  onChange={(e) => setPressure(e.target.valueAsNumber)}
-                  className="no-spin-button"
-                  disabled={!editAtmosphere}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Wilgotność (%)</Label>
-                <Input
-                  type="number"
-                  value={humidity}
-                  onChange={(e) => setHumidity(e.target.valueAsNumber)}
-                  className="no-spin-button"
-                  disabled={!editAtmosphere}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Prędkość wiatru</Label>
-                <div className="flex gap-2">
+                <div className="space-y-2">
+                  <Label>Prędkość wiatru</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      step="0.1"
+                      value={windSpeed}
+                      onChange={(e) => setWindSpeed(e.target.valueAsNumber)}
+                      className="flex-1 no-spin-button"
+                      disabled={!editAtmosphere}
+                    />
+                    <Select
+                      value={windSpeedUnit}
+                      onValueChange={setWindSpeedUnit}
+                      disabled={!editAtmosphere}
+                    >
+                      <SelectTrigger className="w-[100px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {WIND_SPEED_UNITS.map((unit) => (
+                          <SelectItem key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Kierunek wiatru (stopnie)</Label>
                   <Input
                     type="number"
-                    step="0.1"
-                    value={windSpeed}
-                    onChange={(e) => setWindSpeed(e.target.valueAsNumber)}
-                    className="flex-1 no-spin-button"
+                    value={windDirection}
+                    onChange={(e) => setWindDirection(e.target.valueAsNumber)}
+                    placeholder="90 = z prawej"
+                    className="no-spin-button"
                     disabled={!editAtmosphere}
                   />
-                  <Select
-                    value={windSpeedUnit}
-                    onValueChange={setWindSpeedUnit}
-                    disabled={!editAtmosphere}
-                  >
-                    <SelectTrigger className="w-[100px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {WIND_SPEED_UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>Kierunek wiatru (stopnie)</Label>
-                <Input
-                  type="number"
-                  value={windDirection}
-                  onChange={(e) => setWindDirection(e.target.valueAsNumber)}
-                  placeholder="90 = z prawej"
-                  className="no-spin-button"
-                  disabled={!editAtmosphere}
-                />
-              </div>
-            </div>
-          </CardContent>
+            </CardContent>
           </Card>
         </div>
 
         <div className="space-y-6">
           <Card>
-        <CardContent className="pt-6 space-y-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h3 className="font-semibold">Parametry obliczeń</h3>
-            <div
-              className="inline-flex rounded-md border bg-muted p-1"
-              role="tablist"
-              aria-label="Tryb kalkulatora"
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={calculatorMode === "table"}
-                className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${calculatorMode === "table"
-                  ? "bg-background text-foreground shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-                  }`}
-                onClick={() => setCalculatorMode("table")}
-              >
-                Tabela
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={calculatorMode === "singleShot"}
-                className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${calculatorMode === "singleShot"
-                  ? "bg-background text-foreground shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-                  }`}
-                onClick={() => setCalculatorMode("singleShot")}
-              >
-                Pojedyńczy Strzał
-              </button>
-            </div>
-          </div>
+            <CardContent className="pt-6 space-y-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <h3 className="font-semibold">Parametry obliczeń</h3>
+                <div
+                  className="inline-flex rounded-md border bg-muted p-1"
+                  role="tablist"
+                  aria-label="Tryb kalkulatora"
+                >
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={calculatorMode === "table"}
+                    className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${
+                      calculatorMode === "table"
+                        ? "bg-background text-foreground shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    onClick={() => setCalculatorMode("table")}
+                  >
+                    Tabela
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={calculatorMode === "singleShot"}
+                    className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${
+                      calculatorMode === "singleShot"
+                        ? "bg-background text-foreground shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    onClick={() => setCalculatorMode("singleShot")}
+                  >
+                    Pojedyńczy Strzał
+                  </button>
+                </div>
+              </div>
 
-          {calculatorMode === "table" && (
-            <>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Maks. dystans</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      value={maxDistance}
-                      onChange={(e) => setMaxDistance(e.target.value)}
-                      className="flex-1 no-spin-button"
-                    />
+              {calculatorMode === "table" && (
+                <>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Maks. dystans</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          value={maxDistance}
+                          onChange={(e) => setMaxDistance(e.target.value)}
+                          className="flex-1 no-spin-button"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Krok</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          value={stepSize}
+                          onChange={(e) => setStepSize(e.target.value)}
+                          className="no-spin-button"
+                        />
+                        <Select value={maxDistanceUnit} onValueChange={setMaxDistanceUnit}>
+                          <SelectTrigger className="w-[80px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {DISTANCE_UNITS.map((unit) => (
+                              <SelectItem key={unit.value} value={unit.value}>
+                                {unit.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label>Krok</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      value={stepSize}
-                      onChange={(e) => setStepSize(e.target.value)}
-                      className="no-spin-button"
-                    />
-                    <Select value={maxDistanceUnit} onValueChange={setMaxDistanceUnit}>
-                      <SelectTrigger className="w-[80px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {DISTANCE_UNITS.map((unit) => (
-                          <SelectItem key={unit.value} value={unit.value}>
-                            {unit.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  {angleFields}
+                  <Separator className="my-6" />
+                  <h3 className="font-semibold">Jednostki</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {correctionSettingsFields}
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Prędkość pocisku</Label>
+                        <Select
+                          value={resultVelocityUnit}
+                          onValueChange={(value) =>
+                            setResultVelocityUnit(value as ResultVelocityUnit)
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {RESULT_VELOCITY_UNITS.map((unit) => (
+                              <SelectItem key={unit.value} value={unit.value}>
+                                {unit.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Energia pocisku</Label>
+                        <Select
+                          value={resultEnergyUnit}
+                          onValueChange={(value) => setResultEnergyUnit(value as ResultEnergyUnit)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {RESULT_ENERGY_UNITS.map((unit) => (
+                              <SelectItem key={unit.value} value={unit.value}>
+                                {unit.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              {angleFields}
-              <Separator className="my-6" />
-              <h3 className="font-semibold">Jednostki</h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                {correctionSettingsFields}
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Prędkość pocisku</Label>
-                    <Select
-                      value={resultVelocityUnit}
-                      onValueChange={(value) => setResultVelocityUnit(value as ResultVelocityUnit)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {RESULT_VELOCITY_UNITS.map((unit) => (
-                          <SelectItem key={unit.value} value={unit.value}>
-                            {unit.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Energia pocisku</Label>
-                    <Select
-                      value={resultEnergyUnit}
-                      onValueChange={(value) => setResultEnergyUnit(value as ResultEnergyUnit)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {RESULT_ENERGY_UNITS.map((unit) => (
-                          <SelectItem key={unit.value} value={unit.value}>
-                            {unit.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-              <Button onClick={calculate} className="w-full mt-4">
-                Oblicz
-              </Button>
-            </>
-          )}
+                  <Button onClick={calculate} className="w-full mt-4">
+                    Oblicz
+                  </Button>
+                </>
+              )}
 
-          {calculatorMode === "singleShot" && (
-            <>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Odległość do celu</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      value={singleShotDistance}
-                      onChange={(e) => setSingleShotDistance(e.target.value)}
-                      className="flex-1 no-spin-button"
-                    />
-                    <Select
-                      value={singleShotDistanceUnit}
-                      onValueChange={setSingleShotDistanceUnit}
-                    >
-                      <SelectTrigger className="w-[80px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {DISTANCE_UNITS.map((unit) => (
-                          <SelectItem key={unit.value} value={unit.value}>
-                            {unit.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+              {calculatorMode === "singleShot" && (
+                <>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Odległość do celu</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          value={singleShotDistance}
+                          onChange={(e) => setSingleShotDistance(e.target.value)}
+                          className="flex-1 no-spin-button"
+                        />
+                        <Select
+                          value={singleShotDistanceUnit}
+                          onValueChange={setSingleShotDistanceUnit}
+                        >
+                          <SelectTrigger className="w-[80px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {DISTANCE_UNITS.map((unit) => (
+                              <SelectItem key={unit.value} value={unit.value}>
+                                {unit.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              {angleFields}
-              <Separator className="my-6" />
-              <h3 className="font-semibold">Jednostki</h3>
-              {correctionSettingsFields}
-              <Button onClick={calculateSingleShot} className="w-full mt-4">
-                Oblicz
-              </Button>
-            </>
-          )}
-        </CardContent>
+                  {angleFields}
+                  <Separator className="my-6" />
+                  <h3 className="font-semibold">Jednostki</h3>
+                  {correctionSettingsFields}
+                  <Button onClick={calculateSingleShot} className="w-full mt-4">
+                    Oblicz
+                  </Button>
+                </>
+              )}
+            </CardContent>
           </Card>
 
-      {calculatorMode === "table" && results && (
-        <Card>
-          <CardContent className="pt-6 space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-lg">Wyniki</h3>
-              <Button type="button" variant="outline" size="sm" onClick={exportResultsToCsv}>
-                <Upload />
-                Eksportuj do CSV
-              </Button>
-            </div>
-
-            <div className="flex flex-wrap gap-x-4 gap-y-3">
-              {optionalResultColumns.map((column) => (
-                <div key={column.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`result-column-${column.id}`}
-                    checked={visibleResultColumns[column.id]}
-                    onCheckedChange={(checked) => setResultColumnVisible(column.id, !!checked)}
-                  />
-                  <label
-                    htmlFor={`result-column-${column.id}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {column.label}
-                  </label>
+          {calculatorMode === "table" && results && (
+            <Card>
+              <CardContent className="pt-6 space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-semibold text-lg">Wyniki</h3>
+                  <Button type="button" variant="outline" size="sm" onClick={exportResultsToCsv}>
+                    <Upload />
+                    Eksportuj do CSV
+                  </Button>
                 </div>
-              ))}
-            </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-center">
-                <thead className="text-muted-foreground border-b">
-                  <tr>
-                    {visibleColumns.map((column) => (
-                      <th key={column.id} className="py-2 px-2">
+                <div className="flex flex-wrap gap-x-4 gap-y-3">
+                  {optionalResultColumns.map((column) => (
+                    <div key={column.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`result-column-${column.id}`}
+                        checked={visibleResultColumns[column.id]}
+                        onCheckedChange={(checked) => setResultColumnVisible(column.id, !!checked)}
+                      />
+                      <label
+                        htmlFor={`result-column-${column.id}`}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
                         {column.label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {results.map((point) => (
-                    <tr
-                      key={point.distance.inMeters}
-                      className="border-b last:border-0 hover:bg-muted/50"
-                    >
-                      {visibleColumns.map((column) => (
-                        <td key={column.id} className="py-2 px-2">
-                          {column.render(point)}
-                        </td>
-                      ))}
-                    </tr>
+                      </label>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+                </div>
 
-      {calculatorMode === "singleShot" && singleShotResult && (
-        <Card>
-          <CardContent className="pt-6 space-y-4">
-            <h3 className="font-semibold text-lg">Wyniki</h3>
-            <div className="grid gap-6 lg:grid-cols-[minmax(200px,350px)_1fr]">
-              <ReticlePreview
-                result={singleShotResult}
-                reticleId={selectedReticleId}
-                reticleName={selectedReticleName}
-                firstFocalPlane={firstFocalPlane}
-                trueMagnification={reticleTrueMagnification}
-                currentMagnification={reticleCurrentMagnification}
-                minMagnification={reticleMinMagnification}
-                maxMagnification={reticleMaxMagnification}
-                targetKind={reticleTargetKind}
-                targetWidthCm={reticleTargetWidthCm}
-                targetHeightCm={reticleTargetHeightCm}
-                onCurrentMagnificationChange={setCurrentMagnification}
-                onTargetKindChange={setReticleTargetKind}
-                onTargetWidthCmChange={setReticleTargetWidthCm}
-                onTargetHeightCmChange={setReticleTargetHeightCm}
-              />
-              <div className="order-first grid gap-4 sm:grid-cols-2 lg:order-none lg:grid-cols-1 lg:content-start">
-                <div className="space-y-1">
-                  <div className="text-sm text-muted-foreground">
-                    Poprawka pionowa ({correctionUnitLabel})
-                  </div>
-                  <div className="text-2xl font-semibold">
-                    {formatVerticalCorrection(singleShotResult)}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-center">
+                    <thead className="text-muted-foreground border-b">
+                      <tr>
+                        {visibleColumns.map((column) => (
+                          <th key={column.id} className="py-2 px-2">
+                            {column.label}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {results.map((point) => (
+                        <tr
+                          key={point.distance.inMeters}
+                          className="border-b last:border-0 hover:bg-muted/50"
+                        >
+                          {visibleColumns.map((column) => (
+                            <td key={column.id} className="py-2 px-2">
+                              {column.render(point)}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {calculatorMode === "singleShot" && singleShotResult && (
+            <Card>
+              <CardContent className="pt-6 space-y-4">
+                <h3 className="font-semibold text-lg">Wyniki</h3>
+                <div className="grid gap-6 lg:grid-cols-[minmax(200px,350px)_1fr]">
+                  <ReticlePreview
+                    result={singleShotResult}
+                    reticleId={selectedReticleId}
+                    reticleName={selectedReticleName}
+                    firstFocalPlane={firstFocalPlane}
+                    trueMagnification={reticleTrueMagnification}
+                    currentMagnification={reticleCurrentMagnification}
+                    minMagnification={reticleMinMagnification}
+                    maxMagnification={reticleMaxMagnification}
+                    targetKind={reticleTargetKind}
+                    targetWidthCm={reticleTargetWidthCm}
+                    targetHeightCm={reticleTargetHeightCm}
+                    onCurrentMagnificationChange={setCurrentMagnification}
+                    onTargetKindChange={setReticleTargetKind}
+                    onTargetWidthCmChange={setReticleTargetWidthCm}
+                    onTargetHeightCmChange={setReticleTargetHeightCm}
+                  />
+                  <div className="order-first grid gap-4 sm:grid-cols-2 lg:order-none lg:grid-cols-1 lg:content-start">
+                    <div className="space-y-1">
+                      <div className="text-sm text-muted-foreground">
+                        Poprawka pionowa ({correctionUnitLabel})
+                      </div>
+                      <div className="text-2xl font-semibold">
+                        {formatVerticalCorrection(singleShotResult)}
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-sm text-muted-foreground">
+                        Poprawka pozioma ({correctionUnitLabel})
+                      </div>
+                      <div className="text-2xl font-semibold">
+                        {formatHorizontalCorrection(singleShotResult)}
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <div className="text-sm text-muted-foreground">
-                    Poprawka pozioma ({correctionUnitLabel})
-                  </div>
-                  <div className="text-2xl font-semibold">
-                    {formatHorizontalCorrection(singleShotResult)}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
 

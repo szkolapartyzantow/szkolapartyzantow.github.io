@@ -3,19 +3,31 @@ import type { ReticleCanvas, ReticleRenderInput } from "./types";
 
 const MOA_PER_MRAD = 3.4377;
 
-export function drawVelocity1000HvNightforce(canvas: ReticleCanvas, input: ReticleRenderInput): void {
+export function drawVelocity1000HvNightforce(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput
+): void {
   drawVelocity(canvas, input, 33, 14);
 }
 
-export function drawVelocity600LvNightforce(canvas: ReticleCanvas, input: ReticleRenderInput): void {
+export function drawVelocity600LvNightforce(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput
+): void {
   drawVelocity(canvas, input, 20, 9);
 }
 
-export function drawMvVelocity600Nightforce(canvas: ReticleCanvas, input: ReticleRenderInput): void {
+export function drawMvVelocity600Nightforce(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput
+): void {
   drawVelocity(canvas, input, 20, 8);
 }
 
-export function drawVelocity1000UhvNightforce(canvas: ReticleCanvas, input: ReticleRenderInput): void {
+export function drawVelocity1000UhvNightforce(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput
+): void {
   drawVelocity(canvas, input, 33, 13);
 }
 
@@ -79,7 +91,10 @@ export function drawPrecisionPlexPentax(canvas: ReticleCanvas, input: ReticleRen
   drawBallistic(canvas, input, 20, 7);
 }
 
-export function drawBallisticPlex3510Burris(canvas: ReticleCanvas, input: ReticleRenderInput): void {
+export function drawBallisticPlex3510Burris(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput
+): void {
   drawBallistic(canvas, input, 20, 7);
 }
 
@@ -138,7 +153,12 @@ export function drawG2DmrBushnell(canvas: ReticleCanvas, input: ReticleRenderInp
   drawMilGrid(canvas, input, 13, 6);
 }
 
-function drawVelocity(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMrad: number, postStartMrad: number): void {
+function drawVelocity(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput,
+  radiusMrad: number,
+  postStartMrad: number
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad,
     crosshairMrad: postStartMrad,
@@ -154,7 +174,12 @@ function drawVelocity(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMr
   });
 }
 
-function drawBallistic(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMrad: number, postStartMrad: number): void {
+function drawBallistic(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput,
+  radiusMrad: number,
+  postStartMrad: number
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad,
     crosshairMrad: postStartMrad,
@@ -169,7 +194,12 @@ function drawBallistic(canvas: ReticleCanvas, input: ReticleRenderInput, radiusM
   });
 }
 
-function drawRangefinder(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMrad: number, postStartMrad: number): void {
+function drawRangefinder(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput,
+  radiusMrad: number,
+  postStartMrad: number
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad,
     crosshairMrad: postStartMrad,
@@ -185,7 +215,12 @@ function drawRangefinder(canvas: ReticleCanvas, input: ReticleRenderInput, radiu
   });
 }
 
-function drawMilGrid(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMrad: number, postStartMrad: number): void {
+function drawMilGrid(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput,
+  radiusMrad: number,
+  postStartMrad: number
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad,
     crosshairMrad: postStartMrad,
@@ -201,7 +236,12 @@ function drawMilGrid(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMra
   });
 }
 
-function drawMoaGrid(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMoa: number, postStartMoa: number): void {
+function drawMoaGrid(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput,
+  radiusMoa: number,
+  postStartMoa: number
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad: radiusMoa / MOA_PER_MRAD,
     crosshairMrad: postStartMoa / MOA_PER_MRAD,

@@ -1,7 +1,10 @@
 import { drawGridReticle } from "./grid-reticle";
 import type { ReticleCanvas, ReticleRenderInput } from "./types";
 
-export function drawDeadHoldBdcHashesVortex(canvas: ReticleCanvas, input: ReticleRenderInput): void {
+export function drawDeadHoldBdcHashesVortex(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad: 13,
     crosshairMrad: 5,

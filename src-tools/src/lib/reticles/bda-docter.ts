@@ -9,7 +9,12 @@ export function drawBdaDocter3(canvas: ReticleCanvas, input: ReticleRenderInput)
   drawBdaDocter(canvas, input, 8, 4.5);
 }
 
-function drawBdaDocter(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMrad: number, postStartMrad: number): void {
+function drawBdaDocter(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput,
+  radiusMrad: number,
+  postStartMrad: number
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad,
     crosshairMrad: postStartMrad,

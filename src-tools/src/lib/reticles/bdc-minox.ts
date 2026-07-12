@@ -9,7 +9,12 @@ export function drawBdc05001Minox10(canvas: ReticleCanvas, input: ReticleRenderI
   drawBdcMinox(canvas, input, 10, 4);
 }
 
-function drawBdcMinox(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMrad: number, postStartMrad: number): void {
+function drawBdcMinox(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput,
+  radiusMrad: number,
+  postStartMrad: number
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad,
     crosshairMrad: postStartMrad,

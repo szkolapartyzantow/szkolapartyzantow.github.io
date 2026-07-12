@@ -75,10 +75,34 @@ export function drawGridReticle(
   }
 
   const postHalfWidth = (options.postHalfWidthMrad ?? 0.2) * pxPerMrad;
-  canvas.rect(centerX + postStart * pxPerMrad, centerY - postHalfWidth, centerX + scaledRadius, centerY + postHalfWidth, fillPaint);
-  canvas.rect(centerX - scaledRadius, centerY - postHalfWidth, centerX - postStart * pxPerMrad, centerY + postHalfWidth, fillPaint);
-  canvas.rect(centerX - postHalfWidth, centerY - scaledRadius, centerX + postHalfWidth, centerY - postStart * pxPerMrad, fillPaint);
-  canvas.rect(centerX - postHalfWidth, centerY + postStart * pxPerMrad, centerX + postHalfWidth, centerY + scaledRadius, fillPaint);
+  canvas.rect(
+    centerX + postStart * pxPerMrad,
+    centerY - postHalfWidth,
+    centerX + scaledRadius,
+    centerY + postHalfWidth,
+    fillPaint
+  );
+  canvas.rect(
+    centerX - scaledRadius,
+    centerY - postHalfWidth,
+    centerX - postStart * pxPerMrad,
+    centerY + postHalfWidth,
+    fillPaint
+  );
+  canvas.rect(
+    centerX - postHalfWidth,
+    centerY - scaledRadius,
+    centerX + postHalfWidth,
+    centerY - postStart * pxPerMrad,
+    fillPaint
+  );
+  canvas.rect(
+    centerX - postHalfWidth,
+    centerY + postStart * pxPerMrad,
+    centerX + postHalfWidth,
+    centerY + scaledRadius,
+    fillPaint
+  );
 }
 
 function drawHashPair(
@@ -94,10 +118,20 @@ function drawHashPair(
   drawHorizontalHash(canvas, centerX, centerY - offsetPx, halfLength);
 }
 
-function drawVerticalHash(canvas: ReticleCanvas, x: number, centerY: number, halfHeight: number): void {
+function drawVerticalHash(
+  canvas: ReticleCanvas,
+  x: number,
+  centerY: number,
+  halfHeight: number
+): void {
   canvas.line(x, centerY - halfHeight, x, centerY + halfHeight, linePaint);
 }
 
-function drawHorizontalHash(canvas: ReticleCanvas, centerX: number, y: number, halfWidth: number): void {
+function drawHorizontalHash(
+  canvas: ReticleCanvas,
+  centerX: number,
+  y: number,
+  halfWidth: number
+): void {
   canvas.line(centerX - halfWidth, y, centerX + halfWidth, y, linePaint);
 }

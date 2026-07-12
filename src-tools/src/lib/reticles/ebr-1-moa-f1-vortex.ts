@@ -19,7 +19,7 @@ export function drawEbr1MoaF1Vortex(canvas: ReticleCanvas, input: ReticleRenderI
   const reticleRadiusMrad = RETICLE_RADIUS_MOA / MOA_PER_MRAD;
   const basePxPerMrad = size / (reticleRadiusMrad * 2);
   const pxPerMrad = basePxPerMrad * getReticleMagnificationScale(input.magnification);
-  const pxPerMoa = (pxPerMrad / MOA_PER_MRAD);
+  const pxPerMoa = pxPerMrad / MOA_PER_MRAD;
   const targetPxPerMrad = getVisualTargetPxPerMrad(width, height, input.magnification);
   const radius = basePxPerMrad * reticleRadiusMrad;
   const scaledRadius = pxPerMoa * RETICLE_RADIUS_MOA;
@@ -42,16 +42,50 @@ export function drawEbr1MoaF1Vortex(canvas: ReticleCanvas, input: ReticleRenderI
   }
 
   const postHalfWidth = 0.5 * pxPerMoa;
-  canvas.rect(centerX + POST_START_MOA * pxPerMoa, centerY - postHalfWidth, centerX + scaledRadius, centerY + postHalfWidth, fillPaint);
-  canvas.rect(centerX - scaledRadius, centerY - postHalfWidth, centerX - POST_START_MOA * pxPerMoa, centerY + postHalfWidth, fillPaint);
-  canvas.rect(centerX - postHalfWidth, centerY + POST_START_MOA * pxPerMoa, centerX + postHalfWidth, centerY + scaledRadius, fillPaint);
-  canvas.rect(centerX - postHalfWidth, centerY - scaledRadius, centerX + postHalfWidth, centerY - POST_START_MOA * pxPerMoa, fillPaint);
+  canvas.rect(
+    centerX + POST_START_MOA * pxPerMoa,
+    centerY - postHalfWidth,
+    centerX + scaledRadius,
+    centerY + postHalfWidth,
+    fillPaint
+  );
+  canvas.rect(
+    centerX - scaledRadius,
+    centerY - postHalfWidth,
+    centerX - POST_START_MOA * pxPerMoa,
+    centerY + postHalfWidth,
+    fillPaint
+  );
+  canvas.rect(
+    centerX - postHalfWidth,
+    centerY + POST_START_MOA * pxPerMoa,
+    centerX + postHalfWidth,
+    centerY + scaledRadius,
+    fillPaint
+  );
+  canvas.rect(
+    centerX - postHalfWidth,
+    centerY - scaledRadius,
+    centerX + postHalfWidth,
+    centerY - POST_START_MOA * pxPerMoa,
+    fillPaint
+  );
 }
 
-function drawVerticalHash(canvas: ReticleCanvas, x: number, centerY: number, halfHeight: number): void {
+function drawVerticalHash(
+  canvas: ReticleCanvas,
+  x: number,
+  centerY: number,
+  halfHeight: number
+): void {
   canvas.line(x, centerY - halfHeight, x, centerY + halfHeight, linePaint);
 }
 
-function drawHorizontalHash(canvas: ReticleCanvas, centerX: number, y: number, halfWidth: number): void {
+function drawHorizontalHash(
+  canvas: ReticleCanvas,
+  centerX: number,
+  y: number,
+  halfWidth: number
+): void {
   canvas.line(centerX - halfWidth, y, centerX + halfWidth, y, linePaint);
 }

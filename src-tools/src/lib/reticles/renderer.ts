@@ -5,7 +5,10 @@ import { drawAccuRangeRedfield } from "./accu-range-redfield";
 import { drawA8VarmintSchmidtBender } from "./a8varmint-schmidt-bender";
 import { drawA1Optic } from "./a1optic";
 import { drawBallisticLeica25, drawBallisticLeica35 } from "./ballistic-leica";
-import { drawBallisticPlex27Burris, drawBallisticPlex312Burris } from "./ballistic-plex-burris-variants";
+import {
+  drawBallisticPlex27Burris,
+  drawBallisticPlex312Burris,
+} from "./ballistic-plex-burris-variants";
 import { drawBdaDocter25, drawBdaDocter3 } from "./bda-docter";
 import { drawBallisticBushnell } from "./ballistic-bushnell";
 import { drawBallisticCq556Burris } from "./ballistic-cq-556-burris";

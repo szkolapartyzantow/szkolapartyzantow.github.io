@@ -13,7 +13,12 @@ export function drawRfLynx(canvas: ReticleCanvas, input: ReticleRenderInput): vo
   drawRangeFinder(canvas, input, 13, 5);
 }
 
-function drawRangeFinder(canvas: ReticleCanvas, input: ReticleRenderInput, radiusMrad: number, postStartMrad: number): void {
+function drawRangeFinder(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput,
+  radiusMrad: number,
+  postStartMrad: number
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad,
     crosshairMrad: postStartMrad,

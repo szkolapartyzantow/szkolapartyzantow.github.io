@@ -1,7 +1,10 @@
 import { drawGridReticle } from "./grid-reticle";
 import type { ReticleCanvas, ReticleRenderInput } from "./types";
 
-export function drawSixDotsMildotCenterpoint(canvas: ReticleCanvas, input: ReticleRenderInput): void {
+export function drawSixDotsMildotCenterpoint(
+  canvas: ReticleCanvas,
+  input: ReticleRenderInput
+): void {
   drawGridReticle(canvas, input, {
     radiusMrad: 8,
     crosshairMrad: 5,

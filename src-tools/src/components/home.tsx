@@ -10,7 +10,10 @@ export function Home() {
       <div className="space-y-6">
         <Card>
           <CardContent>
-            <p>Zbiór różnych opracowanych przez nas narzędzi wspomagających pracę strzelców i droniarzy.</p>
+            <p>
+              Zbiór różnych opracowanych przez nas narzędzi wspomagających pracę strzelców i
+              droniarzy.
+            </p>
             <br />
             <p>
               Jeśli wyniosłeś z tej strony więcej niż 5 PLN wartości, rozważ wsparcie nas na

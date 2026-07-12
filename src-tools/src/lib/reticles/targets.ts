@@ -4,6 +4,9 @@ const targetFillPaint = { color: "rgba(37, 99, 235, 0.18)", fill: true };
 const targetLinePaint = { color: "rgba(37, 99, 235, 0.7)", strokeWidth: 1.25 };
 const correctionPaint = { color: "#dc2626", strokeWidth: 1.5 };
 
+const IDPA_TARGET_WIDTH_IN = 18;
+const IDPA_TARGET_HEIGHT_IN = 30;
+
 export function drawVisualTarget(
   canvas: ReticleCanvas,
   centerX: number,
@@ -80,46 +83,30 @@ function drawIDPA(
 ): void {
   const left = centerX - width / 2;
   const top = centerY - height / 2;
-  const x = (fraction: number) => left + width * fraction;
-  const y = (fraction: number) => top + height * fraction;
+  const x = (inches: number) => left + width * (inches / IDPA_TARGET_WIDTH_IN);
+  const y = (inches: number) => top + height * (inches / IDPA_TARGET_HEIGHT_IN);
+  const radius = (inches: number) =>
+    Math.min(width * (inches / IDPA_TARGET_WIDTH_IN), height * (inches / IDPA_TARGET_HEIGHT_IN));
+  const outline = [
+    { x: x(6), y: y(0) },
+    { x: x(12), y: y(0) },
+    { x: x(12), y: y(6) },
+    { x: x(15), y: y(6) },
+    { x: x(18), y: y(9) },
+    { x: x(18), y: y(25) },
+    { x: x(15), y: y(30) },
+    { x: x(3), y: y(30) },
+    { x: x(0), y: y(25) },
+    { x: x(0), y: y(9) },
+    { x: x(3), y: y(6) },
+    { x: x(6), y: y(6) },
+  ];
 
-  canvas.polygon(
-    [
-      { x: x(0.334), y: y(0) },
-      { x: x(0.666), y: y(0) },
-      { x: x(0.666), y: y(0.202) },
-      { x: x(0.83), y: y(0.202) },
-      { x: x(1), y: y(0.35) },
-      { x: x(1), y: y(0.83) },
-      { x: x(0.83), y: y(1) },
-      { x: x(0.17), y: y(1) },
-      { x: x(0), y: y(0.83) },
-      { x: x(0), y: y(0.35) },
-      { x: x(0.17), y: y(0.202) },
-      { x: x(0.334), y: y(0.202) },
-    ],
-    targetFillPaint
-  );
+  canvas.polygon(outline, targetFillPaint);
+  canvas.polygon(outline, targetLinePaint);
 
-  canvas.polygon(
-    [
-      { x: x(0.334), y: y(0) },
-      { x: x(0.666), y: y(0) },
-      { x: x(0.666), y: y(0.202) },
-      { x: x(0.83), y: y(0.202) },
-      { x: x(1), y: y(0.35) },
-      { x: x(1), y: y(0.83) },
-      { x: x(0.83), y: y(1) },
-      { x: x(0.17), y: y(1) },
-      { x: x(0), y: y(0.83) },
-      { x: x(0), y: y(0.35) },
-      { x: x(0.17), y: y(0.202) },
-      { x: x(0.334), y: y(0.202) },
-    ],
-    targetLinePaint
-  );
-
-  canvas.circle(centerX, y(0.44), Math.min(width * 0.22, height * 0.13), targetLinePaint);
+  canvas.circle(centerX, y(3), radius(2), targetLinePaint);
+  canvas.circle(centerX, y(14), radius(4), targetLinePaint);
 }
 
 function drawPlate(
