@@ -1,0 +1,439 @@
+---
+---
+
+@charset "utf-8";
+
+// Example Defaults
+// $base-font-family: Helvetica, Arial, sans-serif;
+// $base-font-size:   16px;
+// $small-font-size:  $base-font-size * 0.875;
+// $base-line-height: 1.5;
+
+// $spacing-unit:     30px;
+
+// $text-color:       #111;
+// $background-color: #fdfdfd;
+// $brand-color:      #2a7ae2;
+
+// $grey-color:       #828282;
+// $grey-color-light: lighten($grey-color, 40%);
+// $grey-color-dark:  darken($grey-color, 25%);
+
+// // Width of the content area
+// $content-width:    800px;
+
+// $on-palm:          600px;
+// $on-laptop:        800px;
+
+// Using media queries with like this:
+// @include media-query($on-palm) {
+//     .wrapper {
+//         padding-right: $spacing-unit / 2;
+//         padding-left: $spacing-unit / 2;
+//     }
+// }
+
+// variables.less
+$theme-primary: white;
+$theme-dark: #222;
+
+// Import partials from `sass_dir` (defaults to `_sass`)
+@import
+        "mixins",
+        "base",
+        "gallery"
+;
+
+body {
+    color: $theme-primary;
+    background-color: #121212;
+}
+
+p {
+    font-size: 16px;
+    @media (min-width: 768px) {
+        font-size: 18px;
+    }
+}
+
+h1, h2, h3 {
+    color: #ceff51;
+}
+
+body.post {
+    background-color: #121212;
+    color: whitesmoke;
+}
+
+.navbar-default {
+    // background-color: black;
+}
+
+header {
+    height: 100%;
+    .header-content {
+        position: absolute;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        .header-content-inner {
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            p {
+                font-size: 18px;
+                max-width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 2em
+            }
+
+            h1 {
+                color: white;
+            }
+        }
+    }
+}
+
+header {
+    background-image: url('/img/header_vertical.webp');
+    @media (min-width: 768px) {
+        background-image: url('/img/header.webp');
+    }
+}
+
+p.footer-text {
+    color: $theme-primary;
+    @include sans-serif-font;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+    margin-bottom: 0;
+}
+
+.navbar-fixed-bottom, .navbar-static-bottom {
+    text-align: center;
+    padding-top: 5px;
+    line-height: 25px;
+    min-height: 25px;
+    height: 25px;
+    @media (min-width: 768px) {
+        height: 25px;
+    }
+}
+
+.navbar-header {
+    img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+.header-content-inner {
+    img.logo-main {
+        width: 250px;
+        height: 250px;
+    }
+
+    img.logo-square {
+        width: 50px;
+        height: 50px;
+        margin-right: 25px;
+    }
+
+    img.logo-wide {
+        width: 74px;
+        height: 50px;
+        margin-right: 25px;
+    }
+
+    img.logo-patronite {
+        width: 29px;
+        height: 40px;
+        margin-top: -0.25em;
+    }
+}
+
+.post-container {
+    @include sans-serif-font;
+    display: grid;
+    grid-template-columns: 1fr 1fr 10px 90% 10px 1fr 1fr;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr 10px 45% 10px 1fr 1fr;
+    }
+
+    a {
+        color: #ceff51;
+        text-decoration: underline;
+        font-size: 16px;
+        @media (min-width: 768px) {
+            font-size: 18px;
+        }
+    }
+
+    ul, ol, li, ul li, ol li {
+        font-size: 16px;
+        @media (min-width: 768px) {
+            font-size: 18px;
+        }
+    }
+
+    table, td, tr, table td, table tr, table tr td, tr td {
+        font-size: 16px;
+        border: 1px solid white;
+        @media (min-width: 768px) {
+            font-size: 18px;
+        }
+    }
+
+    th, td {
+        padding: 15px;
+        min-width: 100px;
+        @media (min-width: 768px) {
+            min-width: 180px;
+        }
+    }
+}
+
+.post-container > * {
+    grid-column: 4;
+}
+
+.post-container > image-full {
+    grid-column: 1 / -1;
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.post-container > image-mid {
+    grid-column: 2 / -2;
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.post-container > image-small {
+    grid-column: 3 / -3;
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.merch-container {
+    @include sans-serif-font;
+    display: grid;
+    grid-template-columns: 1fr 1fr 10px 90% 10px 1fr 1fr;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr 10px 55% 10px 1fr 1fr;
+    }
+
+    a {
+        color: #ceff51;
+        text-decoration: underline;
+        font-size: 16px;
+        @media (min-width: 768px) {
+            font-size: 18px;
+        }
+    }
+
+    ul, ol, li, ul li, ol li {
+        font-size: 16px;
+        @media (min-width: 768px) {
+            font-size: 18px;
+        }
+    }
+
+    table, td, tr, table td, table tr, table tr td, tr td {
+        font-size: 16px;
+        border: 1px solid white;
+        @media (min-width: 768px) {
+            font-size: 18px;
+        }
+    }
+
+    th, td {
+        padding: 15px;
+        min-width: 100px;
+        @media (min-width: 768px) {
+            min-width: 180px;
+        }
+    }
+}
+
+.merch-container > * {
+    grid-column: 4;
+}
+
+img.image-inline-small {
+    width: 80%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    @media (min-width: 768px) {
+        width: 50%;
+    }
+}
+
+img.image-inline-big {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    @media (min-width: 768px) {
+        width: 80%;
+    }
+}
+
+img.image-inline-vertical {
+    width: 70%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    @media (min-width: 768px) {
+        width: 70%;
+    }
+}
+
+img.image-inline-full {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    @media (min-width: 768px) {
+        width: 100%;
+    }
+}
+
+#toc-container {
+    background: #343434 none repeat scroll 0 0;
+    border: 1px solid #aaa;
+    display: table;
+    font-size: 95%;
+    margin-bottom: 1em;
+    padding: 20px;
+    width: auto;
+    a {
+        color: #ceff51;
+        text-decoration: none;
+    }
+}
+
+.toc-title {
+    font-weight: 700;
+    text-align: center;
+    color: #ceff51;
+}
+
+ul.toc-list {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#toc-container li, #toc-container ul, #toc-container ul li{
+    list-style: outside none none !important;
+}
+
+.next-index-previous {
+    width: 100%;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: none !important;
+    @media (min-width: 768px) {
+        font-size: 18px;
+    }
+
+    table, td, tr, table td, table tr, table tr td, tr td {
+        border: none !important;
+    }
+
+    td {
+        width: 33%;
+    }
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.merch-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    @media (min-width: 768px) {
+        flex-direction: row;
+    }
+}
+
+.merch-main-photo {
+    flex: 0 0 55%;
+}
+
+.merch-main-desc {
+    flex: 1 1 auto;
+}
+
+a.merch-order-button {
+    background-color: #ceff51;
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    font-size: 24px;
+    margin: 40px 2px 20px 0;
+    cursor: pointer;
+    width: 100%;
+}
+
+ul.merch-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li.merch-gallery-item {
+    margin: 0 5px 5px 0;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    width: calc(50% - 5px);
+
+    figure {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+    }
+}

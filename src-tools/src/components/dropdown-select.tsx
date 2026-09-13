@@ -1,0 +1,219 @@
+import * as React from "react";
+import { Check, ChevronDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+export interface SelectItemData {
+  value: any;
+  label: string;
+}
+
+export interface SelectItemGroup {
+  label: string;
+  items: SelectItemData[];
+}
+
+function isGroup(item: SelectItemData | SelectItemGroup): item is SelectItemGroup {
+  return "items" in item && "label" in item;
+}
+
+interface DropdownSelectProps {
+  label?: string;
+  items: (SelectItemData | SelectItemGroup)[];
+  value: any;
+  onValueChange: (value: any) => void;
+  placeholder?: string;
+  className?: string;
+  searchable?: boolean;
+  fullWidth?: boolean;
+  compactOnMobile?: boolean;
+  disabled?: boolean;
+}
+
+export function DropdownSelect({
+  label,
+  items,
+  value,
+  onValueChange,
+  placeholder = "Select option",
+  className,
+  searchable = false,
+  fullWidth = true,
+  compactOnMobile = false,
+  disabled = false,
+}: DropdownSelectProps) {
+  const [open, setOpen] = React.useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const [popoverWidth, setPopoverWidth] = React.useState<number | null>(null);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen && popoverWidth === null) {
+      const width = triggerRef.current?.getBoundingClientRect().width;
+      if (width) {
+        setPopoverWidth(width);
+      }
+    }
+    setOpen(nextOpen);
+  };
+
+  const selectedItem = React.useMemo(() => {
+    for (const itemOrGroup of items) {
+      if (isGroup(itemOrGroup)) {
+        const found = itemOrGroup.items.find((item) => item.value === value);
+        if (found) return found;
+      } else {
+        const item = itemOrGroup as SelectItemData;
+        if (item.value === value) return item;
+      }
+    }
+  }, [items, value]);
+
+  if (searchable) {
+    return (
+      <div className={`space-y-2 ${className || ""}`}>
+        {label && <Label className={cn(compactOnMobile && "text-xs sm:text-sm")}>{label}</Label>}
+        <Popover open={open} onOpenChange={handleOpenChange}>
+          <PopoverTrigger asChild>
+            <Button
+              ref={triggerRef}
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              disabled={disabled}
+              className={cn(
+                "min-w-0 justify-between font-medium",
+                fullWidth ? "w-full" : "w-fit",
+                compactOnMobile && "h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
+              )}
+            >
+              <span className="min-w-0 flex-1 truncate text-left">
+                {selectedItem ? selectedItem.label : placeholder}
+              </span>
+              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="p-0"
+            style={{
+              width: popoverWidth ? `${popoverWidth}px` : "var(--radix-popover-trigger-width)",
+              maxWidth: popoverWidth ? `${popoverWidth}px` : "var(--radix-popover-trigger-width)",
+            }}
+          >
+            <Command>
+              <CommandInput placeholder={`Szukaj ${(label ?? "option").toLowerCase()}...`} />
+              <CommandList className="w-full">
+                <CommandEmpty>No item found.</CommandEmpty>
+                {items.map((itemOrGroup) => {
+                  if (isGroup(itemOrGroup)) {
+                    return (
+                      <CommandGroup key={itemOrGroup.label} heading={itemOrGroup.label}>
+                        {itemOrGroup.items.map((item) => (
+                          <CommandItem
+                            key={item.value}
+                            value={item.label}
+                            onSelect={() => {
+                              onValueChange(item.value);
+                              setOpen(false);
+                            }}
+                            className="min-w-0"
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === item.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    );
+                  }
+                  const item = itemOrGroup as SelectItemData;
+                  return (
+                    <CommandItem
+                      key={item.value}
+                      value={item.label}
+                      onSelect={() => {
+                        onValueChange(item.value);
+                        setOpen(false);
+                      }}
+                      className="min-w-0"
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === item.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                    </CommandItem>
+                  );
+                })}
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`space-y-2 ${className || ""}`}>
+      {label && <Label className={cn(compactOnMobile && "text-xs sm:text-sm")}>{label}</Label>}
+      <Select value={value} onValueChange={onValueChange} disabled={disabled}>
+        <SelectTrigger
+          className={cn(
+            fullWidth ? "w-full" : "w-fit",
+            compactOnMobile && "h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
+          )}
+        >
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          {items.map((itemOrGroup) => {
+            if (isGroup(itemOrGroup)) {
+              return (
+                <SelectGroup key={itemOrGroup.label}>
+                  {/* @ts-ignore */}
+                  <SelectLabel>{itemOrGroup.label}</SelectLabel>
+                  {itemOrGroup.items.map((item) => (
+                    <SelectItem key={item.value} value={item.value}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              );
+            }
+            const item = itemOrGroup as SelectItemData;
+            return (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}

@@ -1,0 +1,7 @@
+_site
+narzedzia/
+.sass-cache
+.jekyll-metadata
+.jekyll-cache/
+.amp/portals/*
+.DS_Store

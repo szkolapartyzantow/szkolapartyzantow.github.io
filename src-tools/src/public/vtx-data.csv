@@ -1,0 +1,608 @@
+id,name,manufacturer,protocol,default_port,default_power_1,default_power_2,default_power_3,warning,table
+akk_alpha_10_10w_80ch,AKK Alpha 10 10W 80ch,AKK,smartaudio,UART1,1,2,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 CUSTOM_P P FACTORY 5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 CUSTOM_L L FACTORY 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 CUSTOM_U U FACTORY 5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable powerlevels 5
+vtxtable powervalues 0 1 2 3 4
+vtxtable powerlabels 1W 3W 5W 7W 10W
+
+#W Betaflight 4.5.0+, użyj define NONCOMPLIANT_SMARTAUDIO"
+akk_alpha_4_4w_80ch,AKK Alpha 4 4W 80ch,AKK,smartaudio,UART1,1,2,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 CUSTOM_P P FACTORY 5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 CUSTOM_L L FACTORY 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 CUSTOM_U U FACTORY 5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable powerlevels 5
+vtxtable powervalues 0 1 2 3 4
+vtxtable powerlabels 25 1W 2W 3W 4W
+
+#W Betaflight 4.5.0+, użyj define NONCOMPLIANT_SMARTAUDIO"
+akk_alpha_5_5w_80ch,AKK Alpha 5 5W 80ch,AKK,smartaudio,UART1,1,2,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 CUSTOM_P P FACTORY 5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 CUSTOM_L L FACTORY 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 CUSTOM_U U FACTORY 5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable powerlevels 5
+vtxtable powervalues 0 1 2 3 4
+vtxtable powerlabels 25 1W 2W 3W 5W
+
+#W Betaflight 4.5.0+, użyj define NONCOMPLIANT_SMARTAUDIO"
+akk_alpha_8_8w_80ch,AKK Alpha 8 8W 80ch,AKK,smartaudio,UART1,1,2,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 CUSTOM_P P FACTORY 5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 CUSTOM_L L FACTORY 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 CUSTOM_U U FACTORY 5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable powerlevels 5
+vtxtable powervalues 0 1 2 3 4
+vtxtable powerlabels 25 1W 3W 5W 8W"
+akk_fx2_dominator_2w_48ch,AKK FX2 Dominator 2w 48ch,AKK,smartaudio,UART1,1,3,4,0,"vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 LOWRACE  L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable powerlevels 4
+vtxtable powervalues 0 1 2 3
+vtxtable powerlabels 250 500 1W 2W
+
+#W Betaflight 4.5.0+, użyj define NONCOMPLIANT_SMARTAUDIO"
+"akk_fx2_dominator_2w_48ch_(l,x_updated_version)","AKK FX2 Dominator 2w 48ch (L,X updated version)",AKK,smartaudio,UART1,1,3,4,0,"vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_L   L FACTORY 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 6 BAND_X   X FACTORY 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 4
+vtxtable powervalues 0 1 2 3
+vtxtable powerlabels 25 500 1W 2W
+
+#W Betaflight 4.5.0+, użyj define NONCOMPLIANT_SMARTAUDIO"
+akk_race_ranger_1.6w_48ch,AKK Race Ranger 1.6w 48ch,AKK,smartaudio,UART1,1,3,4,0,"vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 LOWRACE  L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable powerlevels 4
+vtxtable powervalues 0 1 2 3
+vtxtable powerlabels 200 400 800 1W6
+
+#W Betaflight 4.5.0+, użyj define NONCOMPLIANT_SMARTAUDIO"
+"akk_race_ranger_1.6w_48ch_(l,x_updated_version)","AKK Race Ranger 1.6w 48ch (L,X updated version)",AKK,smartaudio,UART1,1,3,4,0,"vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_L   L FACTORY 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 6 BAND_X   X FACTORY 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 4
+vtxtable powervalues 0 1 2 3
+vtxtable powerlabels 25 400 800 1W6
+
+#W Betaflight 4.5.0+, użyj define NONCOMPLIANT_SMARTAUDIO"
+akk_tx5000ac_5w_96ch,AKK TX5000AC 5W 96ch,AKK,smartaudio,UART1,1,3,6,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5474 5492 5510 5528 5546 5564 5582 5600
+vtxtable band 2 BOSCAM_B B FACTORY 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 3 BOSCAM_E E FACTORY 5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable band 4 FATSHARK F FACTORY 5129 5159 5189 5219 5249 5279 5309 5339
+vtxtable band 5 RACEBAND R FACTORY 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable band 6 CUSTOM_P P FACTORY 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 7 CUSTOM_L L FACTORY 4900 4940 4921 4958 4995 5032 5069 5099
+vtxtable band 8 CUSTOM_U U FACTORY 5960 5980 6000 6020 6030 6040 6050 6060
+
+vtxtable powerlevels 6
+vtxtable powervalues 0 1 2 3 4 5
+vtxtable powerlabels 25 250 500 1W 3W 5W
+
+#W Betaflight 4.5.0+, użyj define NONCOMPLIANT_SMARTAUDIO"
+akk_tx8000ac_8w_56ch_ac_version,AKK TX8000AC 8w 56ch AC version,AKK,smartaudio,UART1,1,2,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5474 5492 5510 5528 5546 5564 5582 5600
+vtxtable band 2 BOSCAM_B B FACTORY 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 3 BOSCAM_E E FACTORY 5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable band 4 FATSHARK F FACTORY 5129 5159 5189 5219 5249 5279 5309 5339
+vtxtable band 5 RACEBAND R FACTORY 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable band 6 CUSTOM_P P FACTORY 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 7 CUSTOM_L L FACTORY 4900 4940 4921 4958 4995 5032 5069 5099
+vtxtable band 8 CUSTOM_U U FACTORY 5960 5980 6000 6020 6030 6040 6050 6060
+vtxtable powerlevels 5
+vtxtable powervalues 0 1 2 3 4
+vtxtable powerlabels 25 1W 3W 5W 8W
+"
+akk_ultra_long_range_3w_48ch,AKK Ultra Long Range 3w 48ch,AKK,smartaudio,UART1,1,3,5,0,"vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 LOWRACE  L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable powerlevels 5
+vtxtable powervalues 0 1 2 3 4
+vtxtable powerlabels 250 500 1W 2W 3W"
+akk_ultra_long_range_3w_56ch_ac_version,AKK Ultra Long Range 3w 56ch AC version,AKK,smartaudio,UART1,1,3,6,0,"vtxtable bands 7
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B   B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E   E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 AIRWAVE  F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 LOWRACE  L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 BAND-X   X CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 6
+vtxtable powervalues 0 1 2 3 4 5
+vtxtable powerlabels 025 250 500 1W 2W 3W
+
+#W Betaflight 4.5.0+, użyj define NONCOMPLIANT_SMARTAUDIO"
+akk_ultra_long_range_3w_96ch_ac_version_v2,AKK Ultra Long Range 3w 96ch AC version V2,AKK,smartaudio,UART1,1,3,6,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5474 5492 5510 5528 5546 5564 5582 5600
+vtxtable band 2 BOSCAM_B B FACTORY 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 3 BOSCAM_E E FACTORY 5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable band 4 FATSHARK F FACTORY 5129 5159 5189 5219 5249 5279 5309 5339
+vtxtable band 5 RACEBAND R FACTORY 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable band 6 CUSTOM_P P FACTORY 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 7 CUSTOM_L L FACTORY 4900 4940 4921 4958 4995 5032 5069 5099
+vtxtable band 8 CUSTOM_U U FACTORY 5960 5980 6000 6020 6030 6040 6050 6060
+vtxtable powerlevels 6
+vtxtable powervalues 0 1 2 3 4 5
+vtxtable powerlabels 025 250 500 1W 2W 3W"
+foxeer_reaper_3.3g_4w_40ch,Foxeer Reaper 3.3G 4W 40CH,Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM 3320 3345 3370 3395 3420 3445 3470 3495
+vtxtable band 2 BAND_B   B CUSTOM 3310 3330 3355 3380 3405 3430 3455 3480
+vtxtable band 3 BAND_C   C CUSTOM 3490 3510 3530 3550 3570 3590 3610 3630
+vtxtable band 4 BAND_D   D CUSTOM 3330 3350 3370 3390 3410 3430 3450 3470
+vtxtable band 5 BAND_E   E CUSTOM 3170 3190 3210 3230 3250 3270 3290 3310
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 250 500 1W 2W 4W"
+foxeer_reaper_extreme_1.8w_72ch,Foxeer Reaper Extreme 1.8W 72Ch,Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BOSCAM_F F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BOSCAM_R R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BOSCAM_H  CUSTOM  5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 BOSCAM_L  CUSTOM  5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 BOSCAM_U  CUSTOM  5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 25 200 500 1 1.8"
+foxeer_reaper_extreme_2.5w_v1_40ch,Foxeer Reaper Extreme 2.5W v1 40Ch,Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 25 200 500 1.5 2.5"
+foxeer_reaper_extreme_2.5w_v2_72ch,Foxeer Reaper Extreme 2.5W v2 72Ch,Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B   B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E   E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BAND_F   F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_R   R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_H     CUSTOM  5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 BAND_L     CUSTOM  5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 BAND_U     CUSTOM  5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 25 200 500 1.5 2.5"
+foxeer_reaper_extreme_2.5w_v3_80ch_(x-band),Foxeer Reaper Extreme 2.5W v3 80Ch (X-band),Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B   B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E   E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BAND_F   F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_R   R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_H   H CUSTOM  5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 BAND_L   L CUSTOM  5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 BAND_X   X CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 25 200 500 1.5 2.5"
+foxeer_reaper_extreme_3w_72ch,Foxeer Reaper Extreme 3W 72Ch,Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B   B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E   E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BAND_F   F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_R   R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_H     CUSTOM  5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 BAND_L     CUSTOM  5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 BAND_U     CUSTOM  5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 25 200 500 1.5 3"
+foxeer_reaper_extreme_3w_v2_80ch,Foxeer Reaper Extreme 3W v2 80Ch,Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B   B CUSTOM 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E   E CUSTOM 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BAND_F   F CUSTOM 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_R   R CUSTOM 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_H   H CUSTOM 5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 BAND_L   L CUSTOM 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 BAND_X   X CUSTOM 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 25 200 500 1.5 3"
+foxeer_reaper_infinity_10w_80ch,Foxeer Reaper Infinity 10W 80Ch,Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B   B CUSTOM 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E   E CUSTOM 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BAND_F   F CUSTOM 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_R   R CUSTOM 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_H   H CUSTOM 5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 BAND_L   L CUSTOM 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 BAND_X   X CUSTOM 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 500 2.5 5 7.5 10"
+foxeer_reaper_infinity_5w_40ch,Foxeer Reaper Infinity 5W 40Ch,Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 50 500 1W 2.5 5W"
+foxeer_reaper_infinity_5w_v2_80ch,Foxeer Reaper Infinity 5W v2 80Ch,Foxeer,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B   B CUSTOM 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E   E CUSTOM 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BAND_F   F CUSTOM 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_R   R CUSTOM 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_H   H CUSTOM 5653 5693 5733 5773 5813 5853 5893 5933
+vtxtable band 7 BAND_L L CUSTOM 5333 5373 5413 5453 5493 5533 5573 5613
+vtxtable band 8 BAND_X X CUSTOM 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 1W 2W 3W 4W 5W
+"
+geprc_maten_1.2g_2w,GEPRC MATEN 1.2G 2W,GEPRC,tramp,UART1,1,2,4,0,"vtxtable bands 1
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM 1080 1120 1160 1200 1240 1280 1320 1360
+vtxtable powerlevels 5
+vtxtable powervalues 25 400 800 2000 0
+vtxtable powerlabels 25 400 800 2W PIT"
+geprc_maten_1.2g_pro_5w,GEPRC MATEN 1.2G PRO 5W,GEPRC,tramp,UART1,1,2,4,0,"vtxtable bands 2
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM  1080 1120 1160 1200 1240 1280 1320 1360
+vtxtable band 2 BAND_B   B CUSTOM  1200 1220 1240 1258 1280 1300 1320 1340
+vtxtable powerlevels 4
+vtxtable powervalues 25 400 800 5000
+vtxtable powerlabels 25 400 800 5W"
+geprc_maten_3.3g_pro_3w,GEPRC MATEN 3.3G PRO 3W,GEPRC,tramp,UART1,1,1,2,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM 3083 3114 3145 3176 3207 3238 3269 3300
+vtxtable band 2 BAND_B   B CUSTOM 3215 3235 3255 3275 3295 3315 3335 3355
+vtxtable band 3 BAND_C   C CUSTOM 3170 3190 3210 3230 3250 3270 3290 3310
+vtxtable band 4 BAND_D   D CUSTOM 3320 3345 3370 3395 3420 3445 3470 3495
+vtxtable band 5 BAND_E   E CUSTOM 3310 3330 3355 3380 3405 3430 3455 3480
+vtxtable powerlevels 2
+vtxtable powervalues 25 3000
+vtxtable powerlabels 25 3W"
+geprc_maten_4.9g_pro_2.5w_8ch,GEPRC MATEN 4.9G PRO 2.5W 8CH,GEPRC,tramp,UART1,1,3,5,0,"vtxtable bands 1
+vtxtable channels 8
+vtxtable band 1 BAND_X   X CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 5
+vtxtable powervalues 25 200 600 1600 2500
+vtxtable powerlabels 25 200 600 1W6 MAX"
+geprc_maten_5.8g_1.6w_72ch,GEPRC MATEN 5.8G 1.6W 72CH,GEPRC,tramp,UART1,1,3,4,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_L   L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 BAND_U   U CUSTOM  5325 5348 5366 5384 5402 5420 5436 5456
+vtxtable band 8 BAND_O   O CUSTOM  5474 5492 5510 5528 5548 5564 5582 5600
+vtxtable powerlevels 4
+vtxtable powervalues 25 200 600 1600
+vtxtable powerlabels 25 200 600 1.6"
+geprc_maten_5.8g_2.5w_72ch,GEPRC MATEN 5.8G 2.5W 72CH,GEPRC,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_L   L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 BAND_U   U CUSTOM  5325 5348 5366 5384 5402 5420 5436 5456
+vtxtable band 8 BAND_O   O CUSTOM  5474 5492 5510 5528 5548 5564 5582 5600
+vtxtable powerlevels 5
+vtxtable powervalues 25 200 600 1600 2500
+vtxtable powerlabels 25 200 600 1W6 MAX"
+geprc_maten_5.8g_pro_10w_96ch,GEPRC MATEN 5.8G PRO 10W 96CH,GEPRC,tramp,UART1,1,2,4,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_L   L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 BAND_X   X CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable band 8 BAND_Z   Z CUSTOM  6002 6028 6064 6080 6106 6132 6158 6184
+vtxtable powerlevels 4
+vtxtable powervalues 25 2500 5000 10000
+vtxtable powerlabels 25 2W5 5W 10W"
+geprc_maten_5.8g_pro_2.5w_72ch,GEPRC MATEN 5.8G PRO 2.5W 72CH,GEPRC,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_L   L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 BAND_U   U CUSTOM  5325 5348 5366 5384 5402 5420 5436 5456
+vtxtable band 8 BAND_O   O CUSTOM  5474 5492 5510 5528 5548 5564 5582 5600
+vtxtable powerlevels 5
+vtxtable powervalues 25 200 600 1600 2500
+vtxtable powerlabels 25 200 600 1W6 MAX"
+geprc_maten_5.8g_pro_3w_80ch,GEPRC MATEN 5.8G PRO 3W 80CH,GEPRC,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_L   L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 BAND_U   U CUSTOM  5325 5348 5366 5384 5402 5420 5436 5456
+vtxtable band 8 BAND_X   X CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 5
+vtxtable powervalues 25 200 600 1600 3000
+vtxtable powerlabels 25 200 600 1W6 MAX"
+geprc_maten_5.8g_pro_5w_80ch,GEPRC MATEN 5.8G PRO 5W 80CH,GEPRC,tramp,UART1,1,3,5,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_L   L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 BAND_U   U CUSTOM  5325 5348 5366 5384 5402 5420 5438 5456
+vtxtable band 8 BAND_X   X CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 5
+vtxtable powervalues 300 600 1600 3000 5000
+vtxtable powerlabels 300 600 1W6 3W 5W"
+geprc_rad_5.8g_1.6w_40ch,GEPRC RAD 5.8G 1.6W 40CH,GEPRC,tramp,UART1,1,3,4,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable powerlevels 4
+vtxtable powervalues 25 200 600 1600
+vtxtable powerlabels 25 200 600 1.6"
+geprc_rad_5.8g_2.5w_40ch,GEPRC RAD 5.8G 2.5W 40CH,GEPRC,tramp,UART1,1,3,5,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable powerlevels 5
+vtxtable powervalues 25 200 600 1600 2500
+vtxtable powerlabels 25 200 600 1W6 2W5"
+geprc_rad_mini_5.8g_1w_48ch,GEPRC RAD Mini 5.8G 1W 48CH,GEPRC,tramp,UART1,1, ,4,0,"vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_L   L CUSTOM  5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable powerlevels 4
+vtxtable powervalues 25 200 500 1000
+vtxtable powerlabels 25 200 500 1W"
+iflight_blitz_1.2g_1.6w,IFlight BLITZ 1.2G 1.6W,IFlight,tramp,UART1,1,2,4,0,"vtxtable bands 1
+vtxtable channels 8
+vtxtable band 1 1G2      A CUSTOM 1080 1120 1160 1200 1240 1280 1320 1360
+vtxtable powerlevels 1
+vtxtable powervalues 1600
+vtxtable powerlabels 1W6"
+iflight_blitz_3.3g_2w,IFlight BLITZ 3.3G 2W,IFlight,tramp,UART1,1,2,4,0,"vtxtable bands 4
+vtxtable channels 8
+vtxtable band 3 BAND_A   A CUSTOM  3320 3345 3370 3395 3420 3445 3470 3495
+vtxtable band 4 BAND_B   B CUSTOM  3310 3330 3355 3380 3405 3430 3455 3480
+vtxtable band 1 BAND_C   C CUSTOM  3000 3025 3050 3075 3100 3125 3150 3175
+vtxtable band 2 BAND_D   D CUSTOM  3200 3225 3250 3275 3300 3325 3350 3375
+vtxtable powerlevels 4
+vtxtable powervalues 25 400 1000 2000
+vtxtable powerlabels 25 400 1W 2W"
+iflight_blitz_whoop_1.6w,IFlight BLITZ Whoop 1.6W,IFlight,tramp,UART1,1,3,4,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable powerlevels 4
+vtxtable powervalues 25 400 800 1600
+vtxtable powerlabels 25 400 800 1K6"
+iflight_blitz_whoop_2.5w,IFlight BLITZ Whoop 2.5W,IFlight,tramp,UART1,1,3,4,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable powerlevels 4
+vtxtable powervalues 25 400 1000 2500
+vtxtable powerlabels 25 400 1W 2W5"
+iflight_blitz_whoop_4.9g_2.5w,IFlight BLITZ Whoop 4.9G 2.5W,IFlight,tramp,UART1,1,3,4,0,"vtxtable bands 1
+vtxtable channels 8
+vtxtable band 1 XBAND X CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 4
+vtxtable powervalues 25 500 1000 2500
+vtxtable powerlabels 25 500 1W 2W5"
+rush_1.2/1.3ghz_4w,Rush 1.2/1.3GHz 4W,Rush,tramp,UART1,1,2,4,1,"vtxtable bands 2
+vtxtable channels 8
+vtxtable band 1 BAND-A  A CUSTOM 0 0 0 0 0 0 0 0
+vtxtable band 2 BAND-B  B CUSTOM 1200 1220 1240 1258 1280 1300 1320 1340
+vtxtable powerlevels 4
+vtxtable powervalues 200 800 2000 4000
+vtxtable powerlabels 200 800 2W 4W"
+rush_1.2/1.3ghz_4w_v2,Rush 1.2/1.3GHz 4W V2,Rush,tramp,UART1,1,2,4,1,"vtxtable bands 2
+vtxtable channels 8
+vtxtable band 1 BAND-A  A CUSTOM 1080 1120 1160 1200 1240 1280 1320 1360
+vtxtable band 2 BAND-A  B CUSTOM 1200 1220 1240 1258 1280 1300 1320 1340
+vtxtable powerlevels 4
+vtxtable powervalues 25 200 1000 4000
+vtxtable powerlabels 25 200 1W 4W"
+rush_1.3g/3.3g_dual-band_32ch,Rush 1.3G/3.3G Dual-Band 32Ch,Rush,tramp,UART1,1,2,4,0,"vtxtable bands 4
+vtxtable channels 8
+vtxtable band 1 BAND-A  A CUSTOM 3330 3350 3370 3390 3410 3430 3450 3470
+vtxtable band 2 BAND-B  B CUSTOM 3170 3190 3210 3230 3250 3270 3290 3310
+vtxtable band 3 BAND-E  A CUSTOM 1080 1120 1160 1200 1240 1280 1320 1360
+vtxtable band 4 BAND-F  B CUSTOM 1200 1220 1240 1258 1280 1300 1320 1340
+vtxtable powerlevels 4
+vtxtable powervalues 25 200 1000 2500
+vtxtable powerlabels PA1 PA2 PA3 PA4"
+rush_3.3g_2w_(band_a),Rush 3.3G 2W (band A),Rush,tramp,UART1,1,3,4,0,"vtxtable bands 1
+vtxtable channels 8
+vtxtable band 1 BAND-A  A CUSTOM 3330 3350 3370 3390 3410 3430 3450 3470
+vtxtable powerlevels 4
+vtxtable powervalues 25 200 1000 2000
+vtxtable powerlabels 25 200 1W 2W"
+rush_3.3g_2w_(band_b),Rush 3.3G 2W (band B),Rush,tramp,UART1,1,3,4,0,"vtxtable bands 1
+vtxtable channels 8
+vtxtable band 1 BAND-B  B CUSTOM 3170 3190 3210 3230 3250 3270 3290 3310
+vtxtable powerlevels 4
+vtxtable powervalues 25 200 1000 2000
+vtxtable powerlabels 25 200 1W 2W"
+rush_3.3g_4w,Rush 3.3G 4W,Rush,tramp,UART1,1,3,4,1,"vtxtable bands 2
+vtxtable channels 8
+vtxtable band 1 BAND-A  A CUSTOM 3330 3350 3370 3390 3410 3430 3450 3470
+vtxtable band 2 BAND-B  B CUSTOM 3170 3190 3210 3230 3250 3270 3290 3310
+vtxtable powerlevels 5
+vtxtable powervalues 0 25 200 1000 4000
+vtxtable powerlabels PIT 25 200 1W 4W"
+rush_4.9g/5.8g_2.5w_dual-band_56ch,Rush 4.9G/5.8G 2.5W Dual-Band 56Ch,Rush,tramp,UART1,1,2,4,0,"vtxtable bands 7
+vtxtable channels 8
+vtxtable band 1 BAND-A  A CUSTOM 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND-B  B CUSTOM 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND-E  E CUSTOM 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BAND-F  F CUSTOM 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND-R  R CUSTOM 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND-L  L CUSTOM 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 BAND-X  X CUSTOM 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 4
+vtxtable powervalues 25 200 1000 2500
+vtxtable powerlabels 25 200 1W 2W5"
+rush_max_solo_2.5w,Rush Max Solo 2.5W,Rush,smartaudio,UART1,1,3,4,0,"vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BAND_A  A CUSTOM 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B  B CUSTOM 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E  E CUSTOM 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 AIRWAVE F CUSTOM 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 LOWRACE L CUSTOM 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable powerlevels 4
+vtxtable powervalues 14 27 30 34
+vtxtable powerlabels 25 500 1 2.5"
+rush_max_solo_2.5w_(+_x-band),Rush Max Solo 2.5W (+ X-band),Rush,smartaudio,UART1,1,3,4,0,"vtxtable bands 7
+vtxtable channels 8
+vtxtable band 1 BAND_A  A CUSTOM 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B  B CUSTOM 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E  E CUSTOM 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 AIRWAVE F CUSTOM 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 LOWRACE L CUSTOM 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 XBAND X CUSTOM 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 4
+vtxtable powervalues 14 27 30 34
+vtxtable powerlabels 25 500 1 2.5"
+rush_max_solo_xband_4.9g_2.5w,Rush Max Solo XBAND 4.9G 2.5W,Rush,tramp,UART1,1,3,4,0,"vtxtable bands 1
+vtxtable channels 8
+vtxtable band 1 XBAND X CUSTOM 4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 4
+vtxtable powervalues 25 500 1000 2500
+vtxtable powerlabels 25 500 1W 2W5"
+rush_tank_solo_1.6w,Rush Tank Solo 1.6W,Rush,smartaudio,UART1,1,3,4,0,"vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BAND_A  A CUSTOM 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B  B CUSTOM 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E  E CUSTOM 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 AIRWAVE F CUSTOM 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R CUSTOM 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 LOWRACE L CUSTOM 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable powerlevels 4
+vtxtable powervalues 14 26 29 32
+vtxtable powerlabels 25 400 800 MAX"
+tbs_sixty9,TBS Sixty9,TBS,smartaudio,UART1,1,2,4,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable powerlevels 4
+vtxtable powervalues 14 20 26 36
+vtxtable powerlabels 25 100 400 MAX"
+tbs_unify_pro32_dp_3w,TBS Unify Pro32 DP 3W,TBS,smartaudio,UART1,1,3,6,0,"vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BAND_A   A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B   B FACTORY 5733 5752 5771 5790 5999 5828 5847 5866
+vtxtable band 3 BAND_E   E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BAND_F   F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_R   R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_L   L FACTORY 5362 5399 5436 5473 5510 5547 5584 5621
+vtxtable band 7 BAND_S   S CUSTOM  6002 6028 6054 6002 6002 6002 6002 6002
+vtxtable band 8 BAND_X   X FACTORY 4990 5020 5050 5080 5110 5140 5170 5200
+
+vtxtable powerlevels 6
+vtxtable powervalues 10 23 27 30 33 65
+vtxtable powerlabels 25 200 500 1W 2W 3W"
+tbs_unify_pro32_hv,TBS Unify Pro32 HV,TBS,smartaudio,UART1,1,2,4,0,"vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BOSCAM_E E FACTORY 5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 FATSHARK F FACTORY 5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 RACEBAND R FACTORY 5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable powerlevels 4
+vtxtable powervalues 14 20 26 36
+vtxtable powerlabels 25 100 400 1W+"

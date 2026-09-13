@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+printf '[orb setup] Installing system prerequisites\n'
+packages=(
+  autoconf
+  bison
+  build-essential
+  curl
+  libdb-dev
+  libffi-dev
+  libgdbm-dev
+  libgmp-dev
+  libncurses-dev
+  libreadline-dev
+  libssl-dev
+  libyaml-dev
+  patch
+  uuid-dev
+  zlib1g-dev
+)
+missing_packages=()
+for package in "${packages[@]}"; do
+  if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q 'install ok installed'; then
+    missing_packages+=("$package")
+  fi
+done
+if ((${#missing_packages[@]})); then
+  sudo apt-get update
+  sudo apt-get install -y "${missing_packages[@]}"
+fi
+
+mise_bin="$HOME/.local/bin/mise"
+if [[ ! -x "$mise_bin" ]]; then
+  printf '[orb setup] Installing mise\n'
+  curl https://mise.run | sh
+fi
+
+profile_marker='# szkolapartyzantow.github.io mise activation'
+if ! grep -Fqx "$profile_marker" "$HOME/.bash_profile" 2>/dev/null; then
+  cat >> "$HOME/.bash_profile" <<'EOF'
+
+# szkolapartyzantow.github.io mise activation
+if [[ -x "$HOME/.local/bin/mise" ]]; then
+  eval "$("$HOME/.local/bin/mise" activate bash)"
+fi
+EOF
+fi
+
+printf '[orb setup] Installing Ruby and Node.js\n'
+"$mise_bin" install
+
+printf '[orb setup] Installing Ruby dependencies\n'
+if ! "$mise_bin" exec -- bundle _2.6.3_ --version >/dev/null 2>&1; then
+  "$mise_bin" exec -- gem install bundler -v 2.6.3 --no-document
+fi
+"$mise_bin" exec -- bundle _2.6.3_ install
+
+printf '[orb setup] Installing src-tools dependencies\n'
+(
+  cd src-tools
+  "$mise_bin" exec -- npm ci --no-audit --no-fund
+)
+
+printf '[orb setup] Complete\n'

@@ -1,0 +1,1399 @@
+import * as React from "react";
+import { PageContainer } from "./page-container";
+import { Card, CardContent } from "./ui/card";
+import { DropdownSelect } from "./dropdown-select";
+import type { SelectItemData, SelectItemGroup } from "./dropdown-select";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
+import { ToastNotification } from "./ui/toast-notification";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
+import { ChevronDown, Upload } from "lucide-react";
+import { getToolByUrl } from "@/lib/tools";
+import { ToolHelp } from "./tool-help";
+
+const AUX = {
+  // AUX1,
+  AUX2: 1,
+  AUX3: 2,
+  AUX4: 3,
+  AUX5: 4,
+  AUX6: 5,
+  AUX7: 6,
+  AUX8: 7,
+} as const;
+type AUX = (typeof AUX)[keyof typeof AUX];
+
+const SWITCH_TYPE = {
+  POS2: 0,
+  POS3: 1,
+  POS6: 2,
+} as const;
+type SWITCH_TYPE = (typeof SWITCH_TYPE)[keyof typeof SWITCH_TYPE];
+
+const UART = {
+  UART1: 0,
+  UART2: 1,
+  UART3: 2,
+  UART4: 3,
+  UART5: 4,
+  UART6: 5,
+} as const;
+type UART = (typeof UART)[keyof typeof UART];
+
+const PROTOCOL = {
+  SMART_AUDIO: "2048",
+  TRAMP: "8192",
+} as const;
+type PROTOCOL = (typeof PROTOCOL)[keyof typeof PROTOCOL];
+
+const CHANNEL = {
+  CHANNEL_1: 1,
+  CHANNEL_2: 2,
+  CHANNEL_3: 3,
+  CHANNEL_4: 4,
+  CHANNEL_5: 5,
+  CHANNEL_6: 6,
+  CHANNEL_7: 7,
+  CHANNEL_8: 8,
+} as const;
+type CHANNEL = (typeof CHANNEL)[keyof typeof CHANNEL];
+
+interface PowerLevel {
+  index: number;
+  label: string;
+  value: string;
+}
+
+interface VtxData {
+  id: string;
+  name: string;
+  manufacturer: string;
+  protocol: PROTOCOL;
+  port: UART;
+  powers: number[];
+  warning: number;
+  table: string;
+  switch_type: SWITCH_TYPE;
+  vtx_power_aux: AUX;
+  default_band: number;
+  default_channel: CHANNEL;
+  power_levels: PowerLevel[];
+  band_channel_mode: number;
+  band_channel_aux: AUX;
+  band_channel_settings: { band: number; channel: number }[];
+}
+
+const AUX_DROPDOWN_MAP = [
+  // { value: AUX.AUX1, label: "AUX1" },
+  { value: AUX.AUX2, label: "AUX2" },
+  { value: AUX.AUX3, label: "AUX3" },
+  { value: AUX.AUX4, label: "AUX4" },
+  { value: AUX.AUX5, label: "AUX5" },
+  { value: AUX.AUX6, label: "AUX6" },
+  { value: AUX.AUX7, label: "AUX7" },
+  { value: AUX.AUX8, label: "AUX8" },
+];
+
+const SWITCH_DROPDOWN_MAP = [
+  { value: SWITCH_TYPE.POS2, label: "2POS" },
+  { value: SWITCH_TYPE.POS3, label: "3POS" },
+  { value: SWITCH_TYPE.POS6, label: "6POS" },
+];
+
+const BAND_CHANNEL_SWITCH_DROPDOWN_MAP = [
+  { value: -1, label: "BRAK" },
+  { value: SWITCH_TYPE.POS2, label: "2POS" },
+  { value: SWITCH_TYPE.POS3, label: "3POS" },
+  { value: SWITCH_TYPE.POS6, label: "6POS" },
+];
+
+const VTX_PROTOCOL_DROPDOWN_MAP = [
+  { value: PROTOCOL.SMART_AUDIO, label: "SmartAudio" },
+  { value: PROTOCOL.TRAMP, label: "Tramp" },
+];
+
+const VTX_UART_DROPDOWN_MAP = [
+  { value: UART.UART1, label: "UART 1" },
+  { value: UART.UART2, label: "UART 2" },
+  { value: UART.UART3, label: "UART 3" },
+  { value: UART.UART4, label: "UART 4" },
+  { value: UART.UART5, label: "UART 5" },
+  { value: UART.UART6, label: "UART 6" },
+];
+
+const VTX_CHANNEL_DROPDOWN_MAP = [
+  { value: CHANNEL.CHANNEL_1, label: String(CHANNEL.CHANNEL_1) },
+  { value: CHANNEL.CHANNEL_2, label: String(CHANNEL.CHANNEL_2) },
+  { value: CHANNEL.CHANNEL_3, label: String(CHANNEL.CHANNEL_3) },
+  { value: CHANNEL.CHANNEL_4, label: String(CHANNEL.CHANNEL_4) },
+  { value: CHANNEL.CHANNEL_5, label: String(CHANNEL.CHANNEL_5) },
+  { value: CHANNEL.CHANNEL_6, label: String(CHANNEL.CHANNEL_6) },
+  { value: CHANNEL.CHANNEL_7, label: String(CHANNEL.CHANNEL_7) },
+  { value: CHANNEL.CHANNEL_8, label: String(CHANNEL.CHANNEL_8) },
+];
+
+const CUSTOM_VTX_ID = "custom";
+
+const VTX_DATA_URL =
+  "https://docs.google.com/spreadsheets/d/1pSce3OR-ZkvILul03hWvtaR-mHh861qv2u8pIxIHbWQ/export?format=csv";
+
+const BUNDLED_VTX_DATA_URL = "./vtx-data.csv";
+const RUNTIME_DATA_CACHE_NAME = "szkolapartyzantow-tools-data-v1";
+const DB_NAME = "VTX_SETTINGS_DB";
+const STORE_NAME = "vtx_store";
+const DB_VERSION = 2;
+const CACHE_KEY = "vtx_data_cache_v3";
+const VTX_URL_PARAM = "vtx";
+const VTX_SETTING_URL_PARAMS = [
+  "uart",
+  "protocol",
+  "band",
+  "channel",
+  "aux",
+  "sw",
+  "p",
+  "bcm",
+  "bcaux",
+  "bc",
+] as const;
+
+interface CachedData {
+  csv: string;
+  data: VtxData[];
+}
+
+function getVtxIdFromUrl(): string | null {
+  const hashQuery = window.location.hash.split("?")[1];
+  if (!hashQuery) return null;
+
+  return new URLSearchParams(hashQuery).get(VTX_URL_PARAM);
+}
+
+function getHashSearchParams(): URLSearchParams {
+  const hashQuery = window.location.hash.split("?")[1] ?? "";
+  return new URLSearchParams(hashQuery);
+}
+
+function setVtxUrlParams(vtxId: string | null, vtxData?: VtxData, defaultVtxData?: VtxData) {
+  const url = new URL(window.location.href);
+  const [hashPath = "", hashQuery = ""] = url.hash.split("?");
+  const hashParams = new URLSearchParams(hashQuery);
+
+  for (const param of VTX_SETTING_URL_PARAMS) {
+    hashParams.delete(param);
+  }
+
+  if (vtxId) {
+    hashParams.set(VTX_URL_PARAM, vtxId);
+  } else {
+    hashParams.delete(VTX_URL_PARAM);
+  }
+
+  if (vtxData && defaultVtxData) {
+    setVtxSettingUrlParams(hashParams, vtxData, defaultVtxData);
+  }
+
+  const nextHashQuery = hashParams.toString();
+  url.hash = nextHashQuery ? `${hashPath}?${nextHashQuery}` : hashPath;
+  window.history.replaceState(window.history.state, "", url);
+}
+
+function isAux(value: number): value is AUX {
+  return AUX_DROPDOWN_MAP.some((item) => item.value === value);
+}
+
+function isSwitchType(value: number): value is SWITCH_TYPE {
+  return SWITCH_DROPDOWN_MAP.some((item) => item.value === value);
+}
+
+function isBandChannelSwitchType(value: number) {
+  return BAND_CHANNEL_SWITCH_DROPDOWN_MAP.some((item) => item.value === value);
+}
+
+function isChannel(value: number): value is CHANNEL {
+  return VTX_CHANNEL_DROPDOWN_MAP.some((item) => item.value === value);
+}
+
+function parseNumberParam(params: URLSearchParams, key: string): number | null {
+  const value = params.get(key);
+  if (value === null) return null;
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function setIfDifferent(
+  params: URLSearchParams,
+  key: string,
+  value: string | number,
+  defaultValue: string | number
+) {
+  if (value !== defaultValue) {
+    params.set(key, String(value));
+  }
+}
+
+function setVtxSettingUrlParams(
+  params: URLSearchParams,
+  vtxData: VtxData,
+  defaultVtxData: VtxData
+) {
+  setIfDifferent(params, "uart", vtxData.port, defaultVtxData.port);
+  setIfDifferent(params, "protocol", vtxData.protocol, defaultVtxData.protocol);
+  setIfDifferent(params, "band", vtxData.default_band, defaultVtxData.default_band);
+  setIfDifferent(params, "channel", vtxData.default_channel, defaultVtxData.default_channel);
+  setIfDifferent(params, "aux", vtxData.vtx_power_aux, defaultVtxData.vtx_power_aux);
+  setIfDifferent(params, "sw", vtxData.switch_type, defaultVtxData.switch_type);
+
+  const powerValue = vtxData.powers.join(",");
+  const defaultPowerValue = defaultVtxData.powers.join(",");
+  setIfDifferent(params, "p", powerValue, defaultPowerValue);
+
+  setIfDifferent(params, "bcm", vtxData.band_channel_mode, defaultVtxData.band_channel_mode);
+  setIfDifferent(params, "bcaux", vtxData.band_channel_aux, defaultVtxData.band_channel_aux);
+
+  const bandChannelValue = vtxData.band_channel_settings
+    .map((setting) => `${setting.band}.${setting.channel}`)
+    .join(",");
+  const defaultBandChannelValue = defaultVtxData.band_channel_settings
+    .map((setting) => `${setting.band}.${setting.channel}`)
+    .join(",");
+  setIfDifferent(params, "bc", bandChannelValue, defaultBandChannelValue);
+}
+
+function applyVtxSettingsFromUrl(vtxData: VtxData): VtxData {
+  const params = getHashSearchParams();
+  const nextVtx: VtxData = {
+    ...vtxData,
+    powers: [...vtxData.powers],
+    band_channel_settings: vtxData.band_channel_settings.map((setting) => ({ ...setting })),
+  };
+
+  const uart = parseNumberParam(params, "uart");
+  if (uart !== null && VTX_UART_DROPDOWN_MAP.some((item) => item.value === uart)) {
+    nextVtx.port = uart as UART;
+  }
+
+  const protocol = params.get("protocol");
+  if (protocol === PROTOCOL.SMART_AUDIO || protocol === PROTOCOL.TRAMP) {
+    nextVtx.protocol = protocol;
+  }
+
+  const validBands = getBandsFromTable(nextVtx.table).map((band) => band.value);
+  const defaultBand = parseNumberParam(params, "band");
+  if (defaultBand !== null && validBands.includes(defaultBand)) {
+    nextVtx.default_band = defaultBand;
+  }
+
+  const defaultChannel = parseNumberParam(params, "channel");
+  if (defaultChannel !== null && isChannel(defaultChannel)) {
+    nextVtx.default_channel = defaultChannel;
+  }
+
+  const powerAux = parseNumberParam(params, "aux");
+  if (powerAux !== null && isAux(powerAux)) {
+    nextVtx.vtx_power_aux = powerAux;
+  }
+
+  const switchType = parseNumberParam(params, "sw");
+  if (switchType !== null && isSwitchType(switchType)) {
+    nextVtx.switch_type = switchType;
+  }
+
+  const validPowerIndexes = new Set(nextVtx.power_levels.map((level) => level.index));
+  const powerParam = params.get("p");
+  if (powerParam) {
+    const powers = powerParam.split(",").map((item) => Number(item));
+    if (
+      powers.length === nextVtx.powers.length &&
+      powers.every((power) => validPowerIndexes.has(power))
+    ) {
+      nextVtx.powers = powers;
+    }
+  }
+
+  const bandChannelMode = parseNumberParam(params, "bcm");
+  if (bandChannelMode !== null && isBandChannelSwitchType(bandChannelMode)) {
+    nextVtx.band_channel_mode = bandChannelMode;
+  }
+
+  const bandChannelAux = parseNumberParam(params, "bcaux");
+  if (
+    bandChannelAux !== null &&
+    isAux(bandChannelAux) &&
+    bandChannelAux !== nextVtx.vtx_power_aux
+  ) {
+    nextVtx.band_channel_aux = bandChannelAux;
+  }
+
+  const bandChannelParam = params.get("bc");
+  if (bandChannelParam) {
+    const settings = bandChannelParam.split(",").map((item) => {
+      const [bandValue, channelValue] = item.split(".");
+      return { band: Number(bandValue), channel: Number(channelValue) };
+    });
+
+    if (
+      settings.length === nextVtx.band_channel_settings.length &&
+      settings.every(
+        (setting) =>
+          Number.isFinite(setting.band) &&
+          Number.isFinite(setting.channel) &&
+          (setting.band === 0 || validBands.includes(setting.band)) &&
+          (setting.channel === 0 || isChannel(setting.channel))
+      )
+    ) {
+      nextVtx.band_channel_settings = settings;
+    }
+  }
+
+  return nextVtx;
+}
+
+function openDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+  });
+}
+
+async function getCachedData(): Promise<CachedData | null> {
+  try {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, "readonly");
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.get(CACHE_KEY);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve((request.result as CachedData) || null);
+    });
+  } catch (err) {
+    console.warn("Failed to read from cache", err);
+    return null;
+  }
+}
+
+async function setCachedData(data: CachedData): Promise<void> {
+  try {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.put(data, CACHE_KEY);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve();
+    });
+  } catch (err) {
+    console.warn("Failed to write to cache", err);
+  }
+}
+
+async function fetchVtxCsv(): Promise<string> {
+  const request = new Request(VTX_DATA_URL);
+
+  try {
+    const response = await fetch(request);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    if ("caches" in window) {
+      const cache = await caches.open(RUNTIME_DATA_CACHE_NAME);
+      await cache.put(request, response.clone());
+    }
+
+    return response.text();
+  } catch (err) {
+    if ("caches" in window) {
+      const cachedResponse = await caches.match(request, { cacheName: RUNTIME_DATA_CACHE_NAME });
+      if (cachedResponse) {
+        return cachedResponse.text();
+      }
+    }
+
+    try {
+      const bundledResponse = await fetch(BUNDLED_VTX_DATA_URL);
+      if (!bundledResponse.ok) {
+        throw new Error(`Bundled VTX data HTTP ${bundledResponse.status}`);
+      }
+
+      return bundledResponse.text();
+    } catch {
+      throw err;
+    }
+  }
+}
+
+function getPowerLevelsFromTable(table: string): PowerLevel[] {
+  const levels: PowerLevel[] = [];
+  const lines = table.split("\n");
+  let labels: string[] = [];
+  let values: string[] = [];
+
+  for (const line of lines) {
+    const parts = line.trim().split(/\s+/);
+    if (parts.length < 3) continue;
+
+    if (parts[0] === "vtxtable" && parts[1] === "powerlabels") {
+      labels = parts.slice(2);
+    } else if (parts[0] === "vtxtable" && parts[1] === "powervalues") {
+      values = parts.slice(2);
+    }
+  }
+
+  // Combine labels and values
+  for (let i = 0; i < labels.length; i++) {
+    levels.push({
+      index: i + 1,
+      label: labels[i] || "",
+      value: values[i] || "",
+    });
+  }
+
+  return levels;
+}
+
+function getBandsFromTable(table: string): { value: number; label: string }[] {
+  const bands: { value: number; label: string }[] = [];
+  const lines = table.split("\n");
+  for (const line of lines) {
+    const parts = line.trim().split(/\s+/);
+    if (parts[0] === "vtxtable" && parts[1] === "band" && parts.length >= 5) {
+      const numStr = parts[2];
+      const label = parts[4]; // using the letter/short label
+      if (numStr && label) {
+        const num = parseInt(numStr, 10);
+        if (!isNaN(num)) {
+          bands.push({ value: num, label: label });
+        }
+      }
+    }
+  }
+  return bands;
+}
+
+function parseCSV(text: string): VtxData[] {
+  const rows: string[][] = [];
+  let currentRow: string[] = [];
+  let currentField = "";
+  let inQuote = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    if (inQuote) {
+      if (char === '"' && nextChar === '"') {
+        currentField += '"';
+        i++;
+      } else if (char === '"') {
+        inQuote = false;
+      } else {
+        currentField += char;
+      }
+    } else {
+      if (char === '"') {
+        inQuote = true;
+      } else if (char === ",") {
+        currentRow.push(currentField);
+        currentField = "";
+      } else if (char === "\n" || char === "\r") {
+        if (char === "\r" && nextChar === "\n") i++;
+        if (currentRow.length > 0 || currentField.length > 0) {
+          currentRow.push(currentField);
+          rows.push(currentRow);
+        }
+        currentRow = [];
+        currentField = "";
+      } else {
+        currentField += char;
+      }
+    }
+  }
+  if (currentRow.length > 0 || currentField.length > 0) {
+    currentRow.push(currentField);
+    rows.push(currentRow);
+  }
+
+  // Remove header
+  const dataRows = rows.slice(1);
+
+  return dataRows
+    .map((row) => {
+      // Basic validation: ensure we have enough columns
+      if (row.length < 10) return null;
+
+      // Extract raw values safely
+      const id = row[0] ?? "";
+      const name = row[1] ?? "";
+      const manufacturer = row[2] ?? "";
+      const protocolStr = row[3] ?? "";
+      const portStr = row[4] ?? "";
+      const power1Str = row[5] ?? "0";
+      const power2Str = row[6] ?? "0";
+      const power3Str = row[7] ?? "0";
+      const warningStr = row[8] ?? "0";
+      const tableData = row[9] ?? "";
+
+      let port: UART = UART.UART1;
+      const portMatch = portStr.match(/UART\s*(\d+)/i);
+      if (portMatch && portMatch[1]) {
+        const portNum = parseInt(portMatch[1], 10);
+        if (!isNaN(portNum) && portNum >= 1 && portNum <= 6) {
+          port = (portNum - 1) as UART;
+        }
+      }
+
+      const protocolEnum = protocolStr.toLowerCase().includes("smartaudio")
+        ? PROTOCOL.SMART_AUDIO
+        : PROTOCOL.TRAMP;
+
+      const bands = getBandsFromTable(tableData);
+      const powerLevels = getPowerLevelsFromTable(tableData);
+
+      // Default to R (5) if available, otherwise first available band, or 1 as fallback
+      const defaultBand = bands.find((b) => b.value === 5)
+        ? 5
+        : bands.length > 0 && bands[0]
+          ? bands[0].value
+          : 1;
+
+      // Safely parse power values
+      const p1 = parseInt(power1Str, 10);
+      const p2 = parseInt(power2Str, 10);
+      const p3 = parseInt(power3Str, 10);
+      const warn = parseInt(warningStr, 10);
+
+      return {
+        id,
+        name,
+        manufacturer,
+        protocol: protocolEnum,
+        port: port,
+        powers: [isNaN(p1) ? 0 : p1, isNaN(p2) ? 0 : p2, isNaN(p3) ? 0 : p3, 0, 0, 0],
+        warning: isNaN(warn) ? 0 : warn,
+        table: tableData,
+        switch_type: SWITCH_TYPE.POS3,
+        vtx_power_aux: AUX.AUX2,
+        default_band: defaultBand,
+        default_channel: CHANNEL.CHANNEL_1,
+        power_levels: powerLevels,
+        band_channel_mode: -1,
+        band_channel_aux: AUX.AUX3,
+        band_channel_settings: [
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+        ],
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null);
+}
+
+function generateConfig(vtxData: VtxData): string {
+  let switch_settings = "";
+  switch (vtxData.switch_type) {
+    case SWITCH_TYPE.POS2:
+      switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[0]} 900 1400
+vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[2]} 1600 2100`;
+      break;
+    case SWITCH_TYPE.POS3:
+      switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[0]} 900 1100
+vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[1]} 1400 1600
+vtx 2 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[2]} 1900 2100`;
+      break;
+    case SWITCH_TYPE.POS6:
+      switch_settings = `vtx 0 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[0]} 900 1050
+vtx 1 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[1]} 1225 1325
+vtx 2 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[2]} 1375 1475
+vtx 3 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[3]} 1525 1625
+vtx 4 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[4]} 1675 1775
+vtx 5 ${vtxData.vtx_power_aux} 0 0 ${vtxData.powers[5]} 1950 2100`;
+      break;
+  }
+
+  let band_channel_config = "";
+  if (vtxData.band_channel_mode !== -1) {
+    band_channel_config += "# Ustawienia zmiany pasma/kanału\n";
+    const count =
+      vtxData.band_channel_mode === SWITCH_TYPE.POS2
+        ? 2
+        : vtxData.band_channel_mode === SWITCH_TYPE.POS3
+          ? 3
+          : 6;
+
+    const ranges =
+      vtxData.band_channel_mode === SWITCH_TYPE.POS2
+        ? [
+            [900, 1400],
+            [1600, 2100],
+          ]
+        : vtxData.band_channel_mode === SWITCH_TYPE.POS3
+          ? [
+              [900, 1100],
+              [1400, 1600],
+              [1900, 2100],
+            ]
+          : [
+              [900, 1050],
+              [1225, 1325],
+              [1375, 1475],
+              [1525, 1625],
+              [1675, 1775],
+              [1950, 2100],
+            ];
+
+    const startIndex =
+      vtxData.switch_type === SWITCH_TYPE.POS2
+        ? 2
+        : vtxData.switch_type === SWITCH_TYPE.POS3
+          ? 3
+          : 6;
+
+    for (let i = 0; i < count; i++) {
+      const setting = vtxData.band_channel_settings?.[i];
+      // If we don't have setting, fallback to 0 0
+      const band = setting?.band ?? 0;
+      const channel = setting?.channel ?? 0;
+      const range = ranges[i]!;
+
+      band_channel_config += `vtx ${startIndex + i} ${vtxData.band_channel_aux} ${band} ${channel} 0 ${range[0]} ${range[1]}\n`;
+    }
+  }
+
+  return `# Ustawienia połączenia i protokołu
+serial ${vtxData.port} ${vtxData.protocol} 115200 57600 0 115200
+
+# Tabela VTX
+${vtxData.table}
+
+# Domyślne pasmo/kanał
+set vtx_band = ${vtxData.default_band}
+set vtx_channel = ${vtxData.default_channel}
+
+# Ustawienia zmiany mocy
+${switch_settings}
+
+${band_channel_config}
+save
+`;
+}
+
+export function GeneratorUstawienVTX() {
+  const [vtxDataMap, setVtxDataMap] = React.useState<Record<string, VtxData>>({});
+  const [vtxOptions, setVtxOptions] = React.useState<(SelectItemData | SelectItemGroup)[]>([]);
+  const [currentVtx, setCurrentVtx] = React.useState<VtxData | null>(null);
+  const [configText, setConfigText] = React.useState<string>("");
+  const [isErrorOpen, setIsErrorOpen] = React.useState(false);
+  const [isProtocolWarningOpen, setIsProtocolWarningOpen] = React.useState(false);
+  const [pendingProtocol, setPendingProtocol] = React.useState<PROTOCOL | null>(null);
+  const [isShareToastVisible, setIsShareToastVisible] = React.useState(false);
+
+  const lastDataRef = React.useRef<string | null>(null);
+  const initializedRef = React.useRef(false);
+
+  const vtxBandOptions = React.useMemo(() => {
+    if (!currentVtx) return [];
+    return getBandsFromTable(currentVtx.table);
+  }, [currentVtx]);
+
+  const vtxPowerOptions = React.useMemo(() => {
+    if (!currentVtx) return [];
+    return currentVtx.power_levels.map((level) => ({
+      value: level.index,
+      label: level.label,
+    }));
+  }, [currentVtx]);
+
+  React.useEffect(() => {
+    const updateState = (data: VtxData[]) => {
+      // Sanitize/Migrate data
+      const sanitizedData = data.map((item) => ({
+        ...item,
+        band_channel_mode: item.band_channel_mode ?? -1,
+        band_channel_aux: item.band_channel_aux ?? AUX.AUX3,
+        band_channel_settings: item.band_channel_settings ?? [
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+        ],
+      }));
+
+      const map: Record<string, VtxData> = {};
+      for (const item of sanitizedData) {
+        map[item.id] = item;
+      }
+
+      const grouped: { [key: string]: VtxData[] } = {};
+      for (const item of sanitizedData) {
+        const m = item.manufacturer || "Inne";
+        if (!grouped[m]) {
+          grouped[m] = [];
+        }
+        grouped[m]!.push(item);
+      }
+
+      const options: (SelectItemData | SelectItemGroup)[] = [
+        { value: CUSTOM_VTX_ID, label: "Własna tabela VTX" },
+      ];
+
+      for (const manufacturer in grouped) {
+        options.push({
+          label: manufacturer,
+          items: grouped[manufacturer]!.map((item) => ({
+            value: item.id,
+            label: item.name,
+          })),
+        });
+      }
+
+      setVtxDataMap(map);
+      setVtxOptions(options);
+
+      // Initialize selection only once
+      if (!initializedRef.current) {
+        const vtxIdFromUrl = getVtxIdFromUrl();
+        const selectedFromUrl = vtxIdFromUrl ? map[vtxIdFromUrl] : null;
+        if (selectedFromUrl) {
+          const selectedWithUrlSettings = applyVtxSettingsFromUrl(selectedFromUrl);
+          setVtxUrlParams(selectedFromUrl.id, selectedWithUrlSettings, selectedFromUrl);
+          setCurrentVtx(selectedWithUrlSettings);
+          setConfigText(generateConfig(selectedWithUrlSettings));
+        } else if (sanitizedData.length > 0) {
+          const first = sanitizedData[0]!;
+          setCurrentVtx(first);
+          setConfigText(generateConfig(first));
+        } else {
+          // Fallback to custom
+          handleVtxChange(CUSTOM_VTX_ID);
+        }
+        initializedRef.current = true;
+      }
+    };
+
+    const processCsv = (text: string) => {
+      if (text === lastDataRef.current) return;
+      lastDataRef.current = text;
+
+      const data = parseCSV(text);
+      setCachedData({ csv: text, data });
+      updateState(data);
+    };
+
+    // 1. Try cache
+    getCachedData().then((cached) => {
+      if (cached && cached.data) {
+        lastDataRef.current = cached.csv;
+        updateState(cached.data);
+      }
+    });
+
+    // 2. Fetch network
+    fetchVtxCsv()
+      .then((text) => {
+        processCsv(text);
+      })
+      .catch((err) => console.error("Error fetching VTX data:", err));
+  }, []);
+
+  // Update config whenever currentVtx changes
+  React.useEffect(() => {
+    if (currentVtx) {
+      if (currentVtx.id === CUSTOM_VTX_ID) {
+        const bands = getBandsFromTable(currentVtx.table);
+        const levels = getPowerLevelsFromTable(currentVtx.table);
+        if (bands.length === 0 || levels.length === 0) {
+          setConfigText("");
+          return;
+        }
+      }
+      setConfigText(generateConfig(currentVtx));
+    }
+  }, [currentVtx]);
+
+  const handleVtxChange = (val: string) => {
+    if (val === CUSTOM_VTX_ID) {
+      setVtxUrlParams(null);
+      setCurrentVtx({
+        id: CUSTOM_VTX_ID,
+        name: "Własna tabela VTX",
+        manufacturer: "Custom",
+        protocol: PROTOCOL.SMART_AUDIO,
+        port: UART.UART1,
+        powers: [0, 0, 0, 0, 0, 0],
+        warning: 0,
+        table: "",
+        switch_type: SWITCH_TYPE.POS3,
+        vtx_power_aux: AUX.AUX2,
+        default_band: 1,
+        default_channel: CHANNEL.CHANNEL_1,
+        power_levels: [],
+        band_channel_mode: -1,
+        band_channel_aux: AUX.AUX3,
+        band_channel_settings: [
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+          { band: 0, channel: 0 },
+        ],
+      });
+      return;
+    }
+
+    const selected = vtxDataMap[val];
+    if (selected) {
+      const bands = getBandsFromTable(selected.table);
+      if (bands.length === 0) {
+        setIsErrorOpen(true);
+        return;
+      }
+      // When switching VTX, we reset to the defaults from that VTX
+      setVtxUrlParams(selected.id);
+      setCurrentVtx(selected);
+    }
+  };
+
+  const updateCurrentVtx = (updates: Partial<VtxData>) => {
+    if (currentVtx) {
+      const nextVtx = { ...currentVtx, ...updates };
+
+      // Case 3 from requirements:
+      // If we are updating vtx_power_aux, we must check if band_channel_aux conflicts.
+      // If it does, we pick the first available one from the list (excluding the new power aux).
+      if (
+        updates.vtx_power_aux !== undefined &&
+        nextVtx.band_channel_aux === updates.vtx_power_aux
+      ) {
+        // Find first available AUX that is not the new vtx_power_aux
+        const firstAvailable = AUX_DROPDOWN_MAP.find((opt) => opt.value !== updates.vtx_power_aux);
+        if (firstAvailable) {
+          nextVtx.band_channel_aux = firstAvailable.value as AUX;
+        }
+      }
+
+      const defaultVtx = vtxDataMap[nextVtx.id];
+      if (nextVtx.id !== CUSTOM_VTX_ID && defaultVtx) {
+        setVtxUrlParams(nextVtx.id, nextVtx, defaultVtx);
+      }
+
+      setCurrentVtx(nextVtx);
+    }
+  };
+
+  const updatePower = (index: number, val: string) => {
+    if (!currentVtx) return;
+    const newPowers = [...currentVtx.powers];
+    newPowers[index] = Number(val);
+    updateCurrentVtx({ powers: newPowers });
+  };
+
+  const handleSwitchTypeChange = (newType: SWITCH_TYPE) => {
+    if (!currentVtx) return;
+
+    const updates: Partial<VtxData> = { switch_type: newType };
+
+    if (newType === SWITCH_TYPE.POS6) {
+      const powerLevels = currentVtx.power_levels;
+      const numLevels = powerLevels.length;
+      const powerIndices = powerLevels.map((p) => p.index);
+      const lastPower = powerIndices[numLevels - 1]!;
+      const newPowers = [...currentVtx.powers];
+      newPowers[0] = powerIndices[0] ?? lastPower;
+      newPowers[1] = powerIndices[1] ?? lastPower;
+      newPowers[2] = powerIndices[2] ?? lastPower;
+      newPowers[3] = powerIndices[3] ?? lastPower;
+      newPowers[4] = powerIndices[4] ?? lastPower;
+      newPowers[5] = powerIndices[5] ?? lastPower;
+      updates.powers = newPowers;
+    }
+
+    updateCurrentVtx(updates);
+  };
+
+  const updateBandChannelSetting = (index: number, field: "band" | "channel", value: number) => {
+    if (!currentVtx) return;
+    const newSettings = [...currentVtx.band_channel_settings];
+    if (!newSettings[index]) {
+      newSettings[index] = { band: 0, channel: 0 };
+    }
+    newSettings[index] = { ...newSettings[index]!, [field]: value };
+    updateCurrentVtx({ band_channel_settings: newSettings });
+  };
+
+  const bandChannelBandOptions = React.useMemo(() => {
+    return [{ value: 0, label: "BEZ ZMIAN" }, ...vtxBandOptions];
+  }, [vtxBandOptions]);
+
+  const bandChannelChannelOptions = React.useMemo(() => {
+    return [{ value: 0, label: "BEZ ZMIAN" }, ...VTX_CHANNEL_DROPDOWN_MAP];
+  }, []);
+
+  // Filter out the currently selected VTX Power AUX from the options for Band/Channel AUX
+  const bandChannelAuxOptions = React.useMemo(() => {
+    if (!currentVtx) return [];
+    return AUX_DROPDOWN_MAP.filter((opt) => opt.value !== currentVtx.vtx_power_aux);
+  }, [currentVtx]);
+
+  const handleProtocolWarningOpenChange = (open: boolean) => {
+    setIsProtocolWarningOpen(open);
+    if (!open) {
+      setPendingProtocol(null);
+    }
+  };
+
+  const handleProtocolChange = (val: PROTOCOL) => {
+    if (!currentVtx) return;
+
+    // Case 1: No change, do nothing.
+    if (val === currentVtx.protocol) {
+      return;
+    }
+
+    // Case 2: Custom VTX table, always allow change.
+    if (currentVtx.id === CUSTOM_VTX_ID) {
+      updateCurrentVtx({ protocol: val });
+      return;
+    }
+
+    // Case 3: It's a preset. Check against original protocol.
+    const originalVtxData = vtxDataMap[currentVtx.id];
+    if (originalVtxData) {
+      // If going back to original, allow it without warning.
+      if (val === originalVtxData.protocol) {
+        updateCurrentVtx({ protocol: val });
+        return;
+      }
+    }
+
+    // If we reach here, it means it's a preset and the user is selecting
+    // a protocol that is NOT the original one. Show warning.
+    setPendingProtocol(val);
+    setIsProtocolWarningOpen(true);
+  };
+
+  const handleCustomTableChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newTable = e.target.value;
+    const powerLevels = getPowerLevelsFromTable(newTable);
+    const bands = getBandsFromTable(newTable);
+
+    if (!currentVtx) return;
+
+    const updates: Partial<VtxData> = {
+      table: newTable,
+      power_levels: powerLevels,
+    };
+
+    if (powerLevels.length > 0) {
+      const newPowers = [...currentVtx.powers];
+      newPowers[0] = powerLevels[0]?.index ?? 0;
+      newPowers[1] = powerLevels[1]?.index ?? powerLevels[0]?.index ?? 0;
+      newPowers[2] = powerLevels[2]?.index ?? powerLevels[1]?.index ?? powerLevels[0]?.index ?? 0;
+      updates.powers = newPowers;
+    }
+
+    if (bands.length > 0) {
+      const defaultBand = bands.find((b) => b.value === 5) ? 5 : bands[0]!.value;
+      updates.default_band = defaultBand;
+    }
+
+    updateCurrentVtx(updates);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(configText);
+  };
+
+  const copyShareUrlToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setIsShareToastVisible(true);
+  };
+
+  const toolInfo = getToolByUrl("#generator-ustawien-vtx");
+
+  if (!currentVtx) {
+    return (
+      <PageContainer title={toolInfo?.title || "Generator ustawień VTX"}>
+        <div className="flex justify-center p-8">Ładowanie danych...</div>
+      </PageContainer>
+    );
+  }
+
+  return (
+    <PageContainer title={toolInfo?.title || "Generator ustawień VTX"}>
+      <ToolHelp>
+        <p>
+          Narzędzie pozwala nam wygenerować komendy do Betaflight, które dla danej tabeli VTX
+          skonfigurują zmianę mocy VTX za pomocą wybranego przełącznika.
+        </p>
+        <br />
+        <p>
+          Jeśli Twojego VTX nie ma na liście, możesz wybrać opcję "Własna tabela VTX" i wkleić
+          ręcznie tabelę dla Twojego nadajnika. Jeśli się z nami skontaktujesz (
+          <a href="#kontakt" className="text-primary">
+            Kontakt
+          </a>
+          ), dodamy ten VTX do naszej bazy.
+        </p>
+        <br />
+        <p>
+          Po wygenerowaniu komend naciśnij przycisk "Kopiuj", aby skopiować je do schowka, i wklej
+          je do CLI w Betaflight, aby je zastosować.
+        </p>
+        <br />
+        <h1 className="font-semibold text-lg">Podstawowe ustawienia</h1>
+        <ul className="list-disc">
+          <li>
+            <b>UART</b> - UART do którego VTX jest podłączony.
+          </li>
+          <li>
+            <b>Protokół</b> - protokół którego VTX używa do komunikacji.
+          </li>
+          <li>
+            <b>Domyślne pasmo/kanał</b> - kanał i pasmo które zostanie ustawione jako domyślne -
+            będzie aktywne po włączeniu drona.
+          </li>
+          <li>
+            <b>AUX do kontroli mocy VTX</b> - numer AUX przełącznika, którego chcesz użyć do zmiany
+            mocy VTX. Numer AUX sprawdzenia w zakładce Receiver (Odbiornik) w Betaflight.
+          </li>
+          <li>
+            <b>Typ przełącznika</b> - wybierz czy Twój przełącznik jest 2, 3 czy 6 pozycyjny.
+            Ustawienie 6POS może być też użyte do slidera.
+          </li>
+          <li>
+            <b>Moc 1/2/3/4/5/6</b> - ustawienia mocy. Moc 1 z zasady powinna być najniższa i
+            odpowiada górnemu położeniu przełącznika.
+          </li>
+        </ul>
+        <br />
+        <h1 className="font-semibold text-lg">Zmiana pasma/kanału</h1>
+        <p>Te ustawienia pozwalają przypisać do przełącznika funkcję zmiany pasma/kanału</p>
+        <p>
+          <b>UWAGA:</b> Użycie tej opcji w locie jest niemożliwe w standardowej wersji Betaflight!
+        </p>
+        <ul className="list-disc">
+          <li>
+            <li>
+              <b>Typ przełącznika</b> - wybierz czy Twój przełącznik jest 2, 3 czy 6 pozycyjny.
+              Ustawienie 6POS może być też użyte do slidera. Wybór BRAK wyłącza generowanie komend
+              to zmiany pasma/kanału.
+            </li>
+            <b>AUX</b> - numer AUX przełącznika, którego chcesz użyć do zmiany pasma/kanału VTX. Nie
+            może być taki sam jak AUX do kontroli mocy. Numer AUX do sprawdzenia w zakładce Receiver
+            (Odbiornik) w Betaflight.
+          </li>
+        </ul>
+      </ToolHelp>
+
+      <div className="grid gap-6 md:grid-cols-2 mb-6">
+        <Card className="min-w-0 py-4 sm:py-6">
+          <CardContent className="space-y-3 px-3 sm:space-y-4 sm:px-6">
+            <DropdownSelect
+              label="VTX"
+              items={vtxOptions}
+              value={currentVtx.id}
+              onValueChange={handleVtxChange}
+              placeholder="Wybierz VTX"
+              searchable
+              compactOnMobile
+            />
+
+            {currentVtx.warning === 1 && (
+              <Label className="text-yellow-600 block">
+                UWAGA: Nie jesteśmy pewni, czy tabela VTX jest poprawna
+              </Label>
+            )}
+
+            {currentVtx.id === CUSTOM_VTX_ID && (
+              <div className="space-y-2">
+                <Label>Wklej tabelę VTX poniżej:</Label>
+                {currentVtx.table.length > 0 &&
+                  (getBandsFromTable(currentVtx.table).length === 0 ||
+                    getPowerLevelsFromTable(currentVtx.table).length === 0) && (
+                    <Label className="text-red-500 block">Błąd parsowania tabeli VTX!</Label>
+                  )}
+                <Textarea
+                  value={currentVtx.table}
+                  onChange={handleCustomTableChange}
+                  className="font-mono text-xs whitespace-pre overflow-x-auto min-h-[150px]"
+                  placeholder={`vtxtable bands 6
+vtxtable channels 8
+vtxtable band 1 BOSCAM_A A FACTORY 5865 5845 5825 5805 5786 5765 5745 5725
+vtxtable band 2 BOSCAM_B B FACTORY 5733 5752 5771 5790 5809 5828 5847 5866
+...
+vtxtable powerlevels 5
+vtxtable powerlabels 25 100 200 400 600
+vtxtable powervalues 14 20 23 26 28`}
+                  rows={11}
+                />
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-2 sm:gap-4">
+              <DropdownSelect
+                label="UART"
+                items={VTX_UART_DROPDOWN_MAP}
+                value={currentVtx.port}
+                onValueChange={(val) => updateCurrentVtx({ port: val as UART })}
+                placeholder="Wybierz UART VTX"
+                compactOnMobile
+              />
+              <DropdownSelect
+                label="Protokół"
+                items={VTX_PROTOCOL_DROPDOWN_MAP}
+                value={currentVtx.protocol}
+                onValueChange={(val) => handleProtocolChange(val as PROTOCOL)}
+                placeholder="Wybierz Protokół VTX"
+                compactOnMobile
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 sm:gap-4">
+              <DropdownSelect
+                label="Domyślne pasmo"
+                items={vtxBandOptions}
+                value={currentVtx.default_band}
+                onValueChange={(val) => updateCurrentVtx({ default_band: Number(val) })}
+                placeholder="Wybierz domyślne pasmo"
+                compactOnMobile
+              />
+              <DropdownSelect
+                label="Domyślny kanał"
+                items={VTX_CHANNEL_DROPDOWN_MAP}
+                value={currentVtx.default_channel}
+                onValueChange={(val) => updateCurrentVtx({ default_channel: val as CHANNEL })}
+                placeholder="Wybierz domyślny kanal"
+                compactOnMobile
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 sm:gap-4">
+              <DropdownSelect
+                label="AUX do kontroli mocy VTX"
+                items={AUX_DROPDOWN_MAP}
+                value={currentVtx.vtx_power_aux}
+                onValueChange={(val) => updateCurrentVtx({ vtx_power_aux: val as AUX })}
+                placeholder="Wybierz AUX"
+                compactOnMobile
+              />
+              <DropdownSelect
+                label="Typ przełącznika"
+                items={SWITCH_DROPDOWN_MAP}
+                value={currentVtx.switch_type}
+                onValueChange={(val) => handleSwitchTypeChange(val as SWITCH_TYPE)}
+                placeholder="Wybierz typ przelacznika"
+                compactOnMobile
+              />
+            </div>
+
+            <div
+              className={`grid grid-cols-2 gap-2 sm:gap-4 ${
+                currentVtx.switch_type !== SWITCH_TYPE.POS2 ? "sm:grid-cols-3" : ""
+              }`}
+            >
+              {(currentVtx.switch_type === SWITCH_TYPE.POS2
+                ? [0, 2]
+                : currentVtx.switch_type === SWITCH_TYPE.POS3
+                  ? [0, 1, 2]
+                  : [0, 1, 2, 3, 4, 5]
+              ).map((powerIndex, i) => (
+                <DropdownSelect
+                  key={powerIndex}
+                  label={`Moc ${i + 1}`}
+                  items={vtxPowerOptions}
+                  value={currentVtx.powers[powerIndex]}
+                  onValueChange={(val) => updatePower(powerIndex, val)}
+                  placeholder="Wybierz moc"
+                  compactOnMobile
+                />
+              ))}
+            </div>
+
+            <Collapsible>
+              <CollapsibleTrigger className="flex w-full items-center justify-between py-2 font-medium hover:underline">
+                Zmiana pasma/kanału
+                <ChevronDown className="h-4 w-4" />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-4 pt-2">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                  <DropdownSelect
+                    label="Typ przełącznika"
+                    items={BAND_CHANNEL_SWITCH_DROPDOWN_MAP}
+                    value={currentVtx.band_channel_mode}
+                    onValueChange={(val) => updateCurrentVtx({ band_channel_mode: Number(val) })}
+                    placeholder="Wybierz typ"
+                    compactOnMobile
+                  />
+                  <DropdownSelect
+                    label="AUX"
+                    items={bandChannelAuxOptions}
+                    value={currentVtx.band_channel_aux}
+                    onValueChange={(val) =>
+                      updateCurrentVtx({ band_channel_aux: Number(val) as AUX })
+                    }
+                    placeholder="Wybierz AUX"
+                    disabled={currentVtx.band_channel_mode === -1}
+                    compactOnMobile
+                  />
+                </div>
+
+                {currentVtx.band_channel_mode !== -1 && (
+                  <div
+                    className={`grid grid-cols-2 gap-2 sm:gap-4 ${
+                      currentVtx.band_channel_mode === SWITCH_TYPE.POS6
+                        ? "sm:grid-cols-3"
+                        : currentVtx.band_channel_mode === SWITCH_TYPE.POS3
+                          ? "sm:grid-cols-3"
+                          : ""
+                    }`}
+                  >
+                    {(currentVtx.band_channel_mode === SWITCH_TYPE.POS2
+                      ? [0, 1]
+                      : currentVtx.band_channel_mode === SWITCH_TYPE.POS3
+                        ? [0, 1, 2]
+                        : [0, 1, 2, 3, 4, 5]
+                    ).map((index) => (
+                      <div key={index} className="space-y-2 rounded-md border p-2">
+                        <Label className="text-xs font-semibold">Pasmo/kanał {index + 1}</Label>
+                        <DropdownSelect
+                          items={bandChannelBandOptions}
+                          value={currentVtx.band_channel_settings[index]?.band ?? 0}
+                          onValueChange={(val) =>
+                            updateBandChannelSetting(index, "band", Number(val))
+                          }
+                          placeholder="Pasmo"
+                          compactOnMobile
+                        />
+                        <DropdownSelect
+                          items={bandChannelChannelOptions}
+                          value={currentVtx.band_channel_settings[index]?.channel ?? 0}
+                          onValueChange={(val) =>
+                            updateBandChannelSetting(index, "channel", Number(val))
+                          }
+                          placeholder="Kanał"
+                          compactOnMobile
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CollapsibleContent>
+            </Collapsible>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-muted/50 min-w-0 py-4 sm:py-6">
+          <CardContent className="space-y-3 px-3 sm:space-y-4 sm:px-6">
+            <Textarea
+              value={configText}
+              onChange={(e) => setConfigText(e.target.value)}
+              className="font-mono text-[11px] whitespace-pre overflow-x-auto sm:text-xs"
+              rows={configText.split("\n").length + 1}
+              readOnly
+            />
+
+            <Button onClick={copyToClipboard} className="w-full">
+              Kopiuj
+            </Button>
+            <Button onClick={copyShareUrlToClipboard} variant="outline" className="w-full">
+              <Upload className="h-4 w-4" />
+              Udostępnij
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      <ToastNotification open={isShareToastVisible} onOpenChange={setIsShareToastVisible}>
+        Link do ustawień VTX skopiowano do schowka.
+      </ToastNotification>
+
+      <Dialog open={isProtocolWarningOpen} onOpenChange={handleProtocolWarningOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>UWAGA</DialogTitle>
+            <DialogDescription>
+              Zmieniasz protokół VTX. Na 99% procent nie powinieneś tego robić! Zrób to tylko wtedy
+              jeśli sądzisz, że w naszym gotowym schemacie jest błąd i VTX używa innego protokołu
+              niż sądziliśmy.
+              <br />
+              <br />
+              Jeśli rzeczywiście mamy bład - daj nam znać (
+              <a href="#kontakt" className="text-primary">
+                Kontakt
+              </a>
+              )
+              <br />
+              <br />
+              Czy na pewno chcesz kontynuować?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Anuluj</Button>
+            </DialogClose>
+            <Button
+              onClick={() => {
+                if (pendingProtocol) {
+                  updateCurrentVtx({ protocol: pendingProtocol });
+                }
+                handleProtocolWarningOpenChange(false);
+              }}
+            >
+              Tak
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={isErrorOpen}
+        onOpenChange={(open) => {
+          setIsErrorOpen(open);
+          if (!open) {
+            handleVtxChange(CUSTOM_VTX_ID);
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Błąd</DialogTitle>
+            <DialogDescription>
+              Błąd parsowania tabeli VTX. Wybierz inny VTX. Prosimy zgłoś nam błąd, najlepiej przez
+              wiadomość na Instagramie!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button>OK</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </PageContainer>
+  );
+}
