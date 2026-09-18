@@ -64,35 +64,38 @@ describe("Rust parity checks", () => {
     expect(node.mach).toBeCloseTo(0.6, 6);
   });
 
-  it.fails("documents intentional divergence from Rust trajectory behavior for cant-only shots", () => {
-    const calculator = new TrajectoryCalculator();
-    const bc = new BallisticCoefficient(
-      0.222,
-      BallisticCoefficientType.Coefficient,
-      DragTableId.G1
-    );
-    const ammunition = new Ammunition(Mass.grains(55), bc, Velocity.mps(825));
-    const rifle = new Rifle(
-      new Sight(Length.centimeters(6.5)),
-      new ZeroingParameters(Length.meters(50))
-    );
-    const atmosphere = Atmosphere.standard();
-    const sightAngle = calculator.calculateSightAngle(ammunition, rifle, atmosphere);
+  it.fails(
+    "documents intentional divergence from Rust trajectory behavior for cant-only shots",
+    () => {
+      const calculator = new TrajectoryCalculator();
+      const bc = new BallisticCoefficient(
+        0.222,
+        BallisticCoefficientType.Coefficient,
+        DragTableId.G1
+      );
+      const ammunition = new Ammunition(Mass.grains(55), bc, Velocity.mps(825));
+      const rifle = new Rifle(
+        new Sight(Length.centimeters(6.5)),
+        new ZeroingParameters(Length.meters(50))
+      );
+      const atmosphere = Atmosphere.standard();
+      const sightAngle = calculator.calculateSightAngle(ammunition, rifle, atmosphere);
 
-    const flat = calculator.calculateTrajectory(
-      ammunition,
-      rifle,
-      atmosphere,
-      ShotParameters.new(sightAngle, Length.meters(200), Length.meters(200))
-    );
-    const canted = calculator.calculateTrajectory(
-      ammunition,
-      rifle,
-      atmosphere,
-      ShotParameters.new(sightAngle, Length.meters(200), Length.meters(200), Angle.degrees(90))
-    );
+      const flat = calculator.calculateTrajectory(
+        ammunition,
+        rifle,
+        atmosphere,
+        ShotParameters.new(sightAngle, Length.meters(200), Length.meters(200))
+      );
+      const canted = calculator.calculateTrajectory(
+        ammunition,
+        rifle,
+        atmosphere,
+        ShotParameters.new(sightAngle, Length.meters(200), Length.meters(200), Angle.degrees(90))
+      );
 
-    expect(canted[1]!.drop.inCentimeters).toBeCloseTo(flat[1]!.drop.inCentimeters, 6);
-    expect(canted[1]!.windage.inCentimeters).toBeCloseTo(flat[1]!.windage.inCentimeters, 6);
-  });
+      expect(canted[1]!.drop.inCentimeters).toBeCloseTo(flat[1]!.drop.inCentimeters, 6);
+      expect(canted[1]!.windage.inCentimeters).toBeCloseTo(flat[1]!.windage.inCentimeters, 6);
+    }
+  );
 });

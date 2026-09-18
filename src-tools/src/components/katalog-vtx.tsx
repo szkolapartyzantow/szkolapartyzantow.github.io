@@ -22,14 +22,11 @@ interface VtxCatalogItem {
   fields: Record<string, string>;
 }
 
-const photoAssets = import.meta.glob<string>(
-  "../assets/vtx-catalog/photos/**/*.webp",
-  {
-    eager: true,
-    import: "default",
-    query: "?url",
-  },
-);
+const photoAssets = import.meta.glob<string>("../assets/vtx-catalog/photos/**/*.webp", {
+  eager: true,
+  import: "default",
+  query: "?url",
+});
 
 const manualAssets = import.meta.glob<string>(
   "../assets/vtx-catalog/manuals/**/*.{pdf,webp,jpg,jpeg}",
@@ -37,7 +34,7 @@ const manualAssets = import.meta.glob<string>(
     eager: true,
     import: "default",
     query: "?url",
-  },
+  }
 );
 
 function parseCsvRows(text: string): string[][] {
@@ -96,11 +93,9 @@ function parseCatalogCsv(text: string): VtxCatalogItem[] {
   return dataRows
     .map((row, index) => {
       const fields = Object.fromEntries(
-        headers.map((header, fieldIndex) => [header, row[fieldIndex]?.trim() ?? ""]),
+        headers.map((header, fieldIndex) => [header, row[fieldIndex]?.trim() ?? ""])
       );
-      const title = [fields["Producent"], fields["Nazwa"], fields["Moc"]]
-        .filter(Boolean)
-        .join(" ");
+      const title = [fields["Producent"], fields["Nazwa"], fields["Moc"]].filter(Boolean).join(" ");
 
       if (!title) {
         return null;
@@ -158,11 +153,7 @@ function getField(item: VtxCatalogItem, field: string) {
 }
 
 function getSearchText(item: VtxCatalogItem) {
-  return [
-    item.title,
-    getField(item, "Producent"),
-    getField(item, "Nazwa"),
-  ]
+  return [item.title, getField(item, "Producent"), getField(item, "Nazwa")]
     .filter(Boolean)
     .join(" ")
     .toLocaleLowerCase("pl");
@@ -181,7 +172,7 @@ function getPhotoUrl(item: VtxCatalogItem, photoNumber: number) {
 
 function getPhotos(item: VtxCatalogItem) {
   return PHOTO_COLUMNS.map((column, index) =>
-    getField(item, column) ? getPhotoUrl(item, index + 1) : null,
+    getField(item, column) ? getPhotoUrl(item, index + 1) : null
   ).filter((photo): photo is string => Boolean(photo));
 }
 
@@ -193,8 +184,8 @@ function getManual(item: VtxCatalogItem) {
 
   const fileName = decodeURIComponent(
     instructionUrl.startsWith("http://") || instructionUrl.startsWith("https://")
-      ? new URL(instructionUrl).pathname.split("/").pop() ?? ""
-      : instructionUrl.split("/").pop() ?? "",
+      ? (new URL(instructionUrl).pathname.split("/").pop() ?? "")
+      : (instructionUrl.split("/").pop() ?? "")
   );
   return manualAssets[`../assets/vtx-catalog/manuals/${fileName}`] ?? instructionUrl;
 }
@@ -309,16 +300,17 @@ function VtxCard({ item }: { item: VtxCatalogItem }) {
   const [failedPhotoUrls, setFailedPhotoUrls] = React.useState<Set<string>>(() => new Set());
   const photos = React.useMemo(
     () => allPhotos.filter((photo) => !failedPhotoUrls.has(photo)),
-    [allPhotos, failedPhotoUrls],
+    [allPhotos, failedPhotoUrls]
   );
   const primaryPhoto = photos[0];
   const manual = getManual(item);
   const configGeneratorUrl = getField(item, CONFIG_GENERATOR_COLUMN);
   const [activePhotoIndex, setActivePhotoIndex] = React.useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = React.useState(false);
-  const links = LINK_COLUMNS.map((column) => ({ label: column, url: getField(item, column) })).filter(
-    (link): link is { label: string; url: string } => Boolean(link.url),
-  );
+  const links = LINK_COLUMNS.map((column) => ({
+    label: column,
+    url: getField(item, column),
+  })).filter((link): link is { label: string; url: string } => Boolean(link.url));
 
   React.useEffect(() => {
     setFailedPhotoUrls(new Set());

@@ -240,7 +240,8 @@ export function KalkulatorBalistyczny() {
   const [singleShotDistance, setSingleShotDistance] = React.useState("100");
   const [singleShotDistanceUnit, setSingleShotDistanceUnit] = React.useState("m");
   const [correctionUnit, setCorrectionUnit] = React.useState<CorrectionUnit>("cm");
-  const [correctionDisplay, setCorrectionDisplay] = React.useState<CorrectionDisplay>("directional");
+  const [correctionDisplay, setCorrectionDisplay] =
+    React.useState<CorrectionDisplay>("directional");
   const [resultVelocityUnit, setResultVelocityUnit] = React.useState<ResultVelocityUnit>("m/s");
   const [resultEnergyUnit, setResultEnergyUnit] = React.useState<ResultEnergyUnit>("J");
   const [visibleResultColumns, setVisibleResultColumns] = React.useState(
@@ -515,33 +516,33 @@ export function KalkulatorBalistyczny() {
     label: string;
     render: (point: TrajectoryPoint) => React.ReactNode;
   }[] = [
-      {
-        id: "distance",
-        label: `Dystans (${maxDistanceUnit})`,
-        render: (point) =>
-          (maxDistanceUnit === "m" ? point.distance.inMeters : point.distance.inYards).toFixed(0),
-      },
-      {
-        id: "vertical",
-        label: `Poprawka pionowa (${correctionUnitLabel})`,
-        render: formatVerticalCorrection,
-      },
-      {
-        id: "horizontal",
-        label: `Poprawka pozioma (${correctionUnitLabel})`,
-        render: formatHorizontalCorrection,
-      },
-      {
-        id: "velocity",
-        label: `Prędkość pocisku (${resultVelocityUnitLabel})`,
-        render: formatResultVelocity,
-      },
-      {
-        id: "energy",
-        label: `Energia pocisku (${resultEnergyUnitLabel})`,
-        render: formatResultEnergy,
-      },
-    ];
+    {
+      id: "distance",
+      label: `Dystans (${maxDistanceUnit})`,
+      render: (point) =>
+        (maxDistanceUnit === "m" ? point.distance.inMeters : point.distance.inYards).toFixed(0),
+    },
+    {
+      id: "vertical",
+      label: `Poprawka pionowa (${correctionUnitLabel})`,
+      render: formatVerticalCorrection,
+    },
+    {
+      id: "horizontal",
+      label: `Poprawka pozioma (${correctionUnitLabel})`,
+      render: formatHorizontalCorrection,
+    },
+    {
+      id: "velocity",
+      label: `Prędkość pocisku (${resultVelocityUnitLabel})`,
+      render: formatResultVelocity,
+    },
+    {
+      id: "energy",
+      label: `Energia pocisku (${resultEnergyUnitLabel})`,
+      render: formatResultEnergy,
+    },
+  ];
 
   const optionalResultColumns = resultColumns.filter(
     (column): column is typeof column & { id: OptionalResultColumnId } => column.id !== "distance"
@@ -847,11 +848,7 @@ export function KalkulatorBalistyczny() {
           className="hidden"
           onChange={importCalculatorData}
         />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => importFileInputRef.current?.click()}
-        >
+        <Button type="button" variant="outline" onClick={() => importFileInputRef.current?.click()}>
           <Download />
           Importuj dane
         </Button>
@@ -1186,10 +1183,11 @@ export function KalkulatorBalistyczny() {
                 type="button"
                 role="tab"
                 aria-selected={calculatorMode === "table"}
-                className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${calculatorMode === "table"
-                  ? "bg-background text-foreground shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-                  }`}
+                className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${
+                  calculatorMode === "table"
+                    ? "bg-background text-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
                 onClick={() => setCalculatorMode("table")}
               >
                 Tabela
@@ -1198,10 +1196,11 @@ export function KalkulatorBalistyczny() {
                 type="button"
                 role="tab"
                 aria-selected={calculatorMode === "singleShot"}
-                className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${calculatorMode === "singleShot"
-                  ? "bg-background text-foreground shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-                  }`}
+                className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${
+                  calculatorMode === "singleShot"
+                    ? "bg-background text-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
                 onClick={() => setCalculatorMode("singleShot")}
               >
                 Pojedyńczy Strzał
